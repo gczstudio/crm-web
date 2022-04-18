@@ -1,6 +1,6 @@
 // 服务端地址
-// export const baseUrl = 'http://192.168.35.52:8080'; // 金融云
-export const baseUrl = 'http://192.16.68.153:8080'; // 测试
+export const baseUrl = 'http://192.168.46.2:8080'; // 金融云  107075/123456
+// export const baseUrl = 'http://192.16.68.153:8080'; // 测试
 // export const baseUrl = 'http://192.16.77.161:8080'; // 压测环境  
 // export const baseUrl = 'http://192.16.71.153:8080'; // 回归环境
 // export const baseUrl = 'http://192.168.5.97:9099'; // 生产环境
