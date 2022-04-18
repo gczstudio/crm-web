@@ -1,0 +1,252 @@
+@import './index.css';
+.custom-theme{
+  .iconfont {
+    color: $blue;
+  }
+
+  .yu-tabs {
+    .el-tabs__item {
+      color: $blue;
+    }
+    &.el-tabs .el-tabs__item.is-active, &.el-tabs .el-tabs__item:hover {
+      background: $blue;
+    }
+  }
+
+  .view-more {
+    &:hover{
+      color: $blue;
+    }
+  }
+
+  .noticeBoard-container {
+    .more {
+      color: $blue;
+    }
+    .notice-content {
+      li:hover {
+        color: $blue;
+      }
+    }
+  }
+
+  .chart-container {
+    &.edit-class {
+      border: 1px dashed $blue;
+    }
+    .el-icon-close {
+      color: $blue;
+    }
+    .edit-chart {
+      color: $blue;
+    }
+  }
+
+
+  .navbar {
+    .right-search {
+      .el-input {
+        input {
+          border-color: $blue;
+        }
+        .el-input-group__append {
+          background: $blue;
+          border-color: $blue;
+        }
+      }
+    }
+  }
+  .sidebar-container {
+    .nav-item {
+      &:hover {
+        background: $blue;
+      }
+      &.active {
+        background: $blue;
+      }
+    }
+    .nav-item__children {
+      .nav-item__children-item {
+        .nav-item__title {
+          border-left: 4px solid  $blue;
+        }
+        ul {
+          li {
+            &:hover {
+              color: $blue;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .tags-view-container {
+    .tags-view-wrapper {
+      .tags-view-item {
+        &.active {
+          color: $blue!important;
+          border-bottom: 2px solid $blue;
+        }
+      }
+    }
+  }
+
+  .yufp-self-tabs {
+    .yufp-self-tabs-bar{
+      .yufp-self-tabs-li {
+        &.active{
+          color: $blue;
+        }
+        &::before, &::after {
+          background: $blue;
+        }
+      }
+    }
+  }
+
+  .commonFuns-container{
+    .func {
+      &:hover {
+          p{
+            color: $blue;
+          }
+      }
+    }
+  }
+
+  .task-container {
+    .task-content {
+      .task-card {
+        &:hover {
+          border-color: $blue;
+        }
+      }
+    }
+  }
+
+  .remind-container {
+    .remind-content {
+      li {
+        &:hover {
+          color: $blue;
+        }
+      }
+    }
+  }
+
+  .yufp-small-tab ol li.active, .yufp-small-tab ol li:hover{ color: $blue;}
+
+  .task-dialog, .remind-dialog {
+    .section-title {
+      border-left: 4px solid $blue;
+    }
+  }
+  
+  .chart-title { 
+    border-left: 4px solid $blue;
+  }
+
+  .yu-table__company {
+    color: $blue;
+  }
+
+  .yu-xform .arrow-down { border-top: 8px solid $blue; }
+  .yu-xform .arrow-up { border-bottom: 8px solid $blue; }
+
+  .custView-container {
+    .custView-left {
+      .nav {
+        li {
+          &.active{
+            background: rgba(0, 134, 179, 0.1);
+            border-right: 4px solid $blue;
+            color: $blue;
+          }
+        }
+      }
+    }
+  }
+
+  .yufp-small-tab.top ol {border: 1px solid $blue;}
+  .yufp-small-tab.top ol li {  color: $blue; }
+  .yufp-small-tab.top ol li+li { border-left: 1px solid $blue; }
+  .yufp-small-tab.top ol li.active{ background: $blue;}
+
+  .form-arrow {
+    .iconfont {
+      &:hover {
+        color: $blue;
+      }
+    }
+  }
+
+  .common-funcs__tabs {
+    li { 
+      &.active {
+        background: $blue; 
+      }
+    }
+  }
+
+  .common-funcs__search .yu-input .el-input-group__append {
+    background-color: $blue;
+    border: 1px solid $blue;
+  }
+
+  .yu-tree__left
+  .el-tree--highlight-current
+  .el-tree-node.is-current
+  > .el-tree-node__content {
+    position: relative;
+    background: rgba(0, 134, 179, 0.1);
+  }
+
+  .yu-tree__left
+  .el-tree--highlight-current
+  .el-tree-node.is-current
+  > .el-tree-node__content
+  .yu-tree-node
+  > span {
+    color: $blue;
+  }
+  .yu-tree__left
+    .el-tree--highlight-current
+    .el-tree-node.is-current
+    > .el-tree-node__content::after {
+    background: $blue;
+  }
+
+  .chart-container {
+    .el-carousel__indicators--outside {
+      button {
+        background: $blue;
+      }
+    }
+  }
+
+  .FixedRightTool-component{
+    .tool-box{
+      .tool-item{
+        &:hover{
+          background: $blue;
+        }
+      }
+    }
+  }
+
+  .remind-dialog .custName, .task-dialog .custName {
+    color: $blue;
+  }
+
+  .CustFlex-container {
+    .tabs {
+      li {
+        &.active {
+          background: $blue;
+        }
+      }
+    }
+  }
+
+}
