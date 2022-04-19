@@ -15,3 +15,14 @@
     <!-- built files will be auto injected -->
   </body>
 </html>
+<script>
+  function changeSize() {
+    let designSize = 1920;
+    let html = document.documentElement;
+    let rem = html.clientWidth * 100 / designSize;
+    document.documentElement.style.fontSize  = rem + 'px';
+  }
+
+  window.addEventListener('resize', changeSize)
+  changeSize()
+</script>

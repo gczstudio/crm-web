@@ -20,12 +20,14 @@ service.interceptors.request.use(
   (config) => {
     // Add X-Access-Token header to every request, you can add other custom headers here
     if (UserModule.token) {
-      
       // config.headers['Authorization'] = 'Bearer ' + UserModule.token
       if(!config.url?.includes('oauth/token')) {
         config.headers['Authorization'] = 'Bearer ' + UserModule.token
       }
-     
+    }
+
+    if(config.url?.includes('mock-api')) {
+      config.baseURL = ''
     }
     
     return config

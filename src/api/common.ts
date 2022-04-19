@@ -50,14 +50,6 @@ export const getIndsTree = (params: any) =>
 
 
 
-  export const getUserInfo = (params: any) =>
-  request({
-    url: 'http://localhost:9527/dev-api/users/info',
-    method: 'get',
-    params
-  })
-
-
 
   
 

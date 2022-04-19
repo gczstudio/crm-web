@@ -6,7 +6,7 @@
     "dev": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "server": "nodemon --verbose ./server/index.js",
+    "server": "nodemon ./server/index.js",
     "mock": "concurrently --kill-others \"npm run server\" \"npm run dev\""
   },
   "dependencies": {

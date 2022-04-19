@@ -7,6 +7,7 @@ export const baseUrl = 'http://192.168.46.2:8080'; // 金融云  107075/123456
 
 // 微服务前缀
 export const backend = {
+  mockService: '/mock-api', // mock
   appOcaService: '/yusp-app-oca',   // 组织机构、菜单权限微服务-kqf-lyq
   uaaService: '/yusp-uaa',    // 用户认证微服务
   appCommonService: '/yusp-app-common', // 基础服务
