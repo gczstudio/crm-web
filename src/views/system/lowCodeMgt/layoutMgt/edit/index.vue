@@ -41,7 +41,9 @@
               v-if="chunkHeight"
             >
               <transition-group>
-              <div v-for="(item, index) in layoutArr" :key="index" :class="['drag-section__chunk', 'chunk-type' + item.type ]" :style="getChunkHeight(item.type)"></div>
+              <div v-for="(item, index) in layoutArr" :key="index" :class="['drag-section__chunk', 'chunk-type' + item.type ]" :style="getChunkHeight(item.type)">
+                <i class="el-icon-close" @click="deleteFn(index)"></i>
+              </div>
               </transition-group>
             </draggable>
         </div>
@@ -133,6 +135,10 @@ export default class extends Vue {
       height: chunkHeight + 'px'
     }
     
+  }
+
+  deleteFn(index: number) {
+    this.layoutArr.splice(index, 1);
   }
 
   closeFn () {
@@ -230,8 +236,9 @@ export default class extends Vue {
 }
 
 .drag-section {
-  overflow-y: auto;
-  padding-bottom: 16px;
+
+  
+  
   &>div{
     width: 100%;
     height: 100%;
@@ -240,18 +247,34 @@ export default class extends Vue {
       width: 100%;
       height: 100%;
       padding-right: 16px;
-      // display: flex;
-      // flex-wrap: wrap;
+      overflow-y: auto;
+      padding-bottom: 16px;
     }
   }
  
   .drag-section__chunk {
-    display: inline-block;
+    float: left;
     margin: 16px 0 0 16px;
     width: calc(25% - 16px);
     height: 3rem;
     background: #fff;
     border-radius: 5px;
+    position: relative;
+    &:hover {
+      cursor: move;
+      border: 1px dashed #007EFF;
+      .el-icon-close {
+        display: block;
+      }
+    }
+    .el-icon-close {
+      cursor: pointer;
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      display: none;
+      font-size: 16px;
+    }
     &.chunk-type1 {
       width: calc(25% - 16px);
     }
@@ -264,7 +287,10 @@ export default class extends Vue {
 
     &.chunk-type4 {
       width: calc(50% - 16px);
-    }
+    } 
+  }
+  .mode-item__name{
+    display: none;
   }
   
 

@@ -650,3 +650,13 @@ aside {
 }
 
 
+.lowcode-tabs {
+  .el-tabs__content { overflow: visible;}
+  .el-tabs__nav-wrap::after {
+    height: 0;
+  }
+  .el-tabs__nav-wrap {
+    padding-left: 20px;
+  }
+}
+

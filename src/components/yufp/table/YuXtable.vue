@@ -1,6 +1,6 @@
 <template>
   <div class="yu-xtable" v-mloading="loading">
-    <div class="yu-xtable__table">
+    <div class="yu-xtable__table" v-if="type==='table'">
       <el-table ref="table" :height="height || tableHeight" v-bind="$attrs" v-on="$listeners" :data="tableData" highlight-current-row @row-click="rowClickFn" @select="selectChange" @select-all="selectAllChange" @sort-change="sortChangeFn">
         <el-table-column
           v-if="selectionType==='checkbox'"
@@ -36,6 +36,9 @@
         </div>
       </el-table>
     </div>
+    <div v-else class="yu-xtable__custom" ref="customRef" :style="{height: tableHeight ? tableHeight + 'px' : 'auto'}">
+      <slot :tableData="tableData"></slot>
+    </div>
     <div class="yu-pagination" v-if="pageable">
       <el-pagination
         @size-change="handleSizeChangeFn"
@@ -62,6 +65,10 @@ export default {
     };
   },
   props: {
+    type: {
+      type: String,
+      default: 'table'   // table custom
+    },
     height: {
       type: [Number, String],
       default: null
@@ -195,7 +202,7 @@ export default {
     setTableHeight() {
       // 点击展开的时候，涉及到300ms的动画，获取top值不准确
       setTimeout(() => {
-        const { top } = this.$refs.table.$el.getBoundingClientRect();
+        const { top } = this.type === 'table' ? this.$refs.table.$el.getBoundingClientRect() : this.$refs.customRef.getBoundingClientRect();
         let dHeight = document.body.clientHeight - top - (this.pageable ? (this.isMaxScreen ? 70 : 63) : (this.isMaxScreen ? 34 : 24));
         this.tableHeight = dHeight;
       }, 300)
@@ -546,6 +553,10 @@ export default {
 
   
   
+}
+
+.yu-xtable__custom {
+  overflow-y: auto;
 }
 
 @media screen and (min-width: 1920px) {

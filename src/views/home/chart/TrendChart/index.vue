@@ -21,7 +21,7 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from "vue-property-decorator";
-import LineChart, { ILineChartData } from "@/components/Charts/LineChart.vue";
+import LineChart, { ILineChartData } from "@/components/LineChart/index.vue";
 import { HomeModule } from "@/store/modules/home";
 import request from "@/utils/request";
 import { backend } from "@/config";

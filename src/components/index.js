@@ -29,6 +29,7 @@ import YufpTreeSelect from './YufpTreeSelect/index.vue'
 import YufpTagSelector from './YufpTagSelector/index.vue'
 import CstgroupModal from './CstgroupModal/index.vue'
 import YufpCstgroupModal from './CstgroupModal/YufpCstgroupModal.vue'
+import Charts from './Charts/index.vue'
 
 const components = [
   YuXform,
@@ -60,7 +61,8 @@ const components = [
   YufpTreeSelect,
   YufpTagSelector,
   CstgroupModal,
-  YufpCstgroupModal
+  YufpCstgroupModal,
+  Charts
 ]
 
 components.forEach(component => {

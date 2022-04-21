@@ -61,7 +61,7 @@
 import { Component, Vue, Ref } from 'vue-property-decorator'
 import { addLayout } from '@/api/lowCode'
 import { backend } from '@/config'
-import Edit from './edit/index'
+import Edit from './edit/index.vue'
 import Draggable from "vuedraggable";
 
 export interface LayoutListItem  {
@@ -81,7 +81,7 @@ export default class extends Vue {
   @Ref('refTable') refTable: any;
   @Ref('layoutFormRef') layoutFormRef: any;
 
-  private dataUrl = backend.mockService + '/layout/list'
+  private dataUrl = backend.mockService + '/lowcode/layout/list'
   private searchForm = {}
   private addVisible = false
   private layoutForm = {}

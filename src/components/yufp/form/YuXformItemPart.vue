@@ -1,5 +1,5 @@
 <template>
-  <components v-model="conponentValue" v-bind="$attrs" v-on="$listeners" :is="getRealCtype()">
+  <component v-model="conponentValue" v-bind="$attrs" v-on="$listeners" :is="getRealCtype()">
      <template v-if="ctype==='select'">
         <el-option
           v-for="item in optionData"
@@ -11,7 +11,7 @@
       <template v-if="ctype==='radio'">
         <el-radio v-for="item in optionData" :key="item.key" :label="item.key">{{item.value}}</el-radio>
       </template>
-    </components>
+    </component>
 </template>
 
 <script>
