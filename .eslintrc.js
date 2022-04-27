@@ -1,6 +1,14 @@
+/*
+ * @Descripttion: 
+ * @Author: gaocz
+ * @Date: 2021-09-06 18:01:30
+ * @LastEditors: gaocz
+ * @LastEditTime: 2022-04-27 09:08:38
+ * @FilePath: /edmp-web/.eslintrc.js
+ */
 module.exports = {
   root: true,
-  env: {
+  env: {   // 启用环境
     node: true,
   },
   

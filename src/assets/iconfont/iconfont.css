@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 2767658 */
-  src: url('iconfont.woff2?t=1642646237562') format('woff2'),
-       url('iconfont.woff?t=1642646237562') format('woff'),
-       url('iconfont.ttf?t=1642646237562') format('truetype');
+  src: url('iconfont.woff2?t=1650616572321') format('woff2'),
+       url('iconfont.woff?t=1650616572321') format('woff'),
+       url('iconfont.ttf?t=1650616572321') format('truetype');
 }
 
 .iconfont {
@@ -11,6 +11,90 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-fenlan:before {
+  content: "\ec7f";
+}
+
+.icon-xuanxiangqia:before {
+  content: "\e69f";
+}
+
+.icon-biaodanzujian-biaoge:before {
+  content: "\eb94";
+}
+
+.icon-tubiao1:before {
+  content: "\e653";
+}
+
+.icon-biaoge:before {
+  content: "\e656";
+}
+
+.icon-m-biaodan:before {
+  content: "\e7da";
+}
+
+.icon-zhibiaoka:before {
+  content: "\e687";
+}
+
+.icon-fanhui1:before {
+  content: "\e655";
+}
+
+.icon-baocun:before {
+  content: "\e650";
+}
+
+.icon-37yulan:before {
+  content: "\e651";
+}
+
+.icon-fabu:before {
+  content: "\e652";
+}
+
+.icon-nothing:before {
+  content: "\e64f";
+}
+
+.icon-zidingyibuju:before {
+  content: "\e64e";
+}
+
+.icon-buju:before {
+  content: "\e64b";
+}
+
+.icon-daimashili:before {
+  content: "\e64d";
+}
+
+.icon-zujian:before {
+  content: "\e7c2";
+}
+
+.icon-zujian1:before {
+  content: "\e7c7";
+}
+
+.icon-person:before {
+  content: "\e64a";
+}
+
+.icon-company:before {
+  content: "\e649";
+}
+
+.icon-jigou:before {
+  content: "\e648";
+}
+
+.icon-fangan:before {
+  content: "\e647";
 }
 
 .icon-bangzhu:before {

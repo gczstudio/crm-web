@@ -1,19 +1,19 @@
 <template>
   <div class="edit-container yu-main-wrapper">
     <div class="layout-box">
-      <div class="layout-header">
+      <div class="layout-header" v-if="type==='edit'">
         <div class="layout-title" v-if="isEditName"><input type="text" v-model="row.name"><el-button type="text" icon="el-icon-mobile" @click="saveNameFn"></el-button></div>
         <div class="layout-title" v-else>{{row.name}}<el-button type="text" icon="el-icon-edit" @click="editNameFn"></el-button></div>
         <div class="layout-btns fr">
           <el-button class="yu-button-text" icon="el-icon-edit" @click="closeFn">返回</el-button>
           <el-button class="yu-button-text" icon="el-icon-edit">清空</el-button>
-          <el-button class="yu-button-text" icon="el-icon-delete">保存</el-button>
+          <el-button class="yu-button-text" icon="el-icon-delete" @click="saveFn">保存</el-button>
           <el-button class="yu-button-text" icon="el-icon-folder-add">保存并上架</el-button>
         </div>
       </div>
     </div>
     <el-row>
-      <el-col :span="5">
+      <el-col :span="5" v-if="type==='edit'">
         <div class="basic-mode" :style="{height: cHeight - 25 + 'px'}">
           <draggable
             v-model="mode"
@@ -23,17 +23,20 @@
             @end="drag = false"
           >
             <div class="mode-item" v-for="item in mode" :key="item.type">
-              <div :class="['mode-item__box', 'mode-type' + item.type ]"></div>
+              <div class="mode-item__box">
+                <div class="mode-item__chunk" :style="getModeChunkStyle(item)"></div>
+              </div>
               <p class="mode-item__name">{{item.name}}</p>
             </div>
           </draggable>
         </div>
       </el-col>
-      <el-col :span="19">
+      <el-col :span="type==='edit' ? 19 : 24">
         <div ref="chunkRef" class="drag-section" :style="{height: cHeight - 25 + 'px'}">
             <draggable
               v-model="layoutArr"
               pull="clone"
+              :disabled="type!=='edit'"
               :options="{group:{name: 'mode',pull:'clone'}}"
               animation="300"
               @start="drag = true"
@@ -41,8 +44,8 @@
               v-if="chunkHeight"
             >
               <transition-group>
-              <div v-for="(item, index) in layoutArr" :key="index" :class="['drag-section__chunk', 'chunk-type' + item.type ]" :style="getChunkHeight(item.type)">
-                <i class="el-icon-close" @click="deleteFn(index)"></i>
+              <div v-for="(item, index) in layoutArr" :key="index" :class="{'drag-section__chunk': true, 'is-hover': type==='edit'}" :style="getChunkStyle(item)">
+                <i v-if="type==='edit'" class="el-icon-close" @click="deleteFn(index)"></i>
               </div>
               </transition-group>
             </draggable>
@@ -53,16 +56,24 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Ref, Prop } from 'vue-property-decorator'
+import { Component, Vue, Ref, Prop, Watch } from 'vue-property-decorator'
 import { addLayout } from '@/api/lowCode'
 import { backend } from '@/config'
 import Draggable from "vuedraggable";
 
 export interface Mode {
-  type: number
+  type: string
   name: string
+  row: number
+  col: number
 }
 
+export let mode: Mode[] = [
+  { type: '1', name: '1*1模式', col: 1, row: 1 },
+  { type: '2', name: '1*2模式', col: 1, row: 2 },
+  { type: '3', name: '2*1模式', col: 2, row: 1 },
+  { type: '4', name: '2*2模式', col: 2, row: 2 }
+]
 
 @Component({
   name: 'Edit',
@@ -71,7 +82,8 @@ export interface Mode {
   }
 })
 export default class extends Vue {
-  @Prop() private instance!: any;
+  @Prop({ default: 'edit' }) type!:string;    // edit  // render
+  @Prop() private instance: any;
   @Prop() private row!: any;
   @Ref('refTable') refTable: any;
   @Ref('layoutFormRef') layoutFormRef: any;
@@ -81,24 +93,19 @@ export default class extends Vue {
   private dragItem = {}
  
   private isEditName = false
-  private mode = [
-    { type: 1, name: '1*1模式' },
-    { type: 2, name: '1*2模式' },
-    { type: 3, name: '2*1模式' },
-    { type: 4, name: '2*2模式' }
-  ]
+  private mode: Mode[] = mode
 
-  private layoutArr = [
-    // { type: 1, name: '1*1模式' },
-    // { type: 1, name: '1*1模式' },
-    // { type: 3, name: '1*1模式' },
-    // { type: 4, name: '1*1模式' },
-    // { type: 4, name: '1*1模式' },
-    // { type: 4, name: '1*1模式' },
-  ]
+  private layoutArr = []
 
   private chunkHeight:number = 0
-  
+
+  @Watch('row', { immediate: true })
+  onRowChange(){
+    let layoutConfig = this.row.layoutConfig;
+    this.layoutArr = layoutConfig.split(',').map((item:string) => {
+      return this.mode.find((ele:Mode)=> ele.type == item)
+    })
+  }
 
   mounted() {
     this.changeSize()
@@ -118,21 +125,19 @@ export default class extends Vue {
     this.drag = false;
   }
 
-  getChunkHeight(type: number) {
-    if(!this.chunkHeight) return;
-    let chunkHeight = 0;
-    switch (type) {
-      case 1:
-      case 2:
-      chunkHeight = this.chunkHeight;
-      break
-      case 3:
-      case 4: 
-      chunkHeight = this.chunkHeight * 2 + 16;
-      break
-    }
+  getModeChunkStyle(item: Mode) {
     return {
-      height: chunkHeight + 'px'
+      width: 0.6 * item.col + 'rem',
+      height:  0.4 * item.row + 'rem'
+    }
+    
+  }
+
+  getChunkStyle(item: Mode) {
+    if(!this.chunkHeight) return;
+    return {
+      width: `calc(${25*item.col}% - 16px)`,
+      height: this.chunkHeight * item.row + (item.row - 1) * 16 + 'px'
     }
     
   }
@@ -151,6 +156,10 @@ export default class extends Vue {
 
   saveNameFn() {
     this.isEditName = false
+  }
+
+  saveFn() {
+    console.log(JSON.stringify(this.layoutArr), 888)
   }
 
 
@@ -192,7 +201,7 @@ export default class extends Vue {
       height: 1.4rem;
       border: 1px solid #d9d9d9;
       border-radius: 3px;
-      &::before {
+      .mode-item__chunk{
         content: '';
         position: absolute;
         top: 50%;
@@ -200,32 +209,6 @@ export default class extends Vue {
         transform: translate(-50%, -50%);
         display: inline-block;
         background: #d2d2d2;
-      }
-      
-    }
-    .mode-type1 {
-      &::before {
-        width: 0.6rem;
-        height: 0.4rem;
-      }
-    }
-    .mode-type2 {
-      &::before {
-        width: 1.2rem;
-        height: 0.4rem;
-      }
-    }
-    .mode-type3 {
-      &::before {
-        width: 0.6rem;
-        height: 0.8rem;
-      }
-    }
-
-    .mode-type4 {
-      &::before {
-        width: 1.2rem;
-        height: 0.8rem;
       }
     }
     .mode-item__name {
@@ -260,11 +243,13 @@ export default class extends Vue {
     background: #fff;
     border-radius: 5px;
     position: relative;
-    &:hover {
-      cursor: move;
-      border: 1px dashed #007EFF;
-      .el-icon-close {
-        display: block;
+    &.is-hover {
+      &:hover {
+        cursor: move;
+        border: 1px dashed #007EFF;
+        .el-icon-close {
+          display: block;
+        }
       }
     }
     .el-icon-close {
@@ -275,19 +260,6 @@ export default class extends Vue {
       display: none;
       font-size: 16px;
     }
-    &.chunk-type1 {
-      width: calc(25% - 16px);
-    }
-    &.chunk-type2 {
-      width: calc(50% - 16px);
-    }
-    &.chunk-type3 {
-      width: calc(25% - 16px);
-    }
-
-    &.chunk-type4 {
-      width: calc(50% - 16px);
-    } 
   }
   .mode-item__name{
     display: none;

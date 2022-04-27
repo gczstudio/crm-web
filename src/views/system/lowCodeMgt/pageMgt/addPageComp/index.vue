@@ -1,0 +1,152 @@
+<template>
+  <div class="addPageComp-container">
+    <div class="header">
+      <div class="yu-button-group">
+        <el-button class="yu-button-text" icon="iconfont icon-37yulan"><i></i>预览</el-button>
+        <el-button class="yu-button-text" icon="iconfont icon-baocun">保存</el-button>
+        <el-button class="yu-button-text" icon="iconfont icon-fabu">发布</el-button>
+        <el-button class="yu-button-text" icon="iconfont icon-fanhui1" @click="instance.hide()">返回</el-button>
+      </div>
+    </div>
+    <div class="content">
+      <div class="left-box">
+        <el-row>
+          <el-col :span="5">
+            <div class="sider-tab">
+              <div :class="{'tab-item': true, 'active': item.key===curTab}" v-for="item in siderTabs" :key="item.key" @click="tabClickFn(item.key)">
+                <i :class="`iconfont icon-${item.icon}`"></i>
+                <p>{{item.name}}</p>
+              </div>
+            </div>
+          </el-col>
+          <el-col :span="19">
+            <LayoutList v-show="curTab=='layout'" />
+            <CompList v-show="curTab=='comp'" />
+          </el-col>
+        </el-row>
+      </div>
+      <div class="center-box">
+        <tool-bar />
+      </div>
+      <div class="right-box"></div>
+    </div>
+  </div>
+</template>
+
+<script lang="ts">
+import { Component, Vue, Prop, Ref } from 'vue-property-decorator'
+import { backend } from '@/config'
+import { getUserInfo } from '@/utils'
+import LayoutList from '../layoutList/index.vue'
+import CompList from '../compList/index.vue'
+import ToolBar from '../toolBar/index.vue'
+@Component({
+  name: 'AddPageComp',
+  components: {
+    LayoutList,
+    CompList,
+    ToolBar
+  }
+})
+export default class extends Vue { 
+  @Prop() private instance!: any;
+  private curTab = 'layout'
+  private siderTabs = [
+    { key: 'layout', name: '布局', icon: 'buju' },
+    { key: 'comp', name: '组件', icon: 'zujian' },
+    // { key: 'code', name: '代码', icon: 'daimashili' },
+  ]
+
+
+  // let data = {
+  //   type: 'page',
+  //   title: '页面名称',
+  //   body: [
+  //     {
+  //       type: 'fixed-layout',
+  //       title: '布局名称',
+  //       body: [
+  //         {
+  //           row: 1,
+  //           col: 1,
+  //           type: 'chart',
+  //           chartId: '11111',
+  //         }
+  //       ]
+  //     }
+  //   ]
+  // }
+
+  tabClickFn(key: string) {
+    this.curTab = key;
+  }
+
+}
+</script>
+
+<style lang="scss" scoped>
+  .addPageComp-container {
+    position: relative;
+    height: calc(100vh - 100px);
+    background: #FFFFFF;
+    .header{
+      padding-top: 10px;
+      height: 36px;
+      border-bottom: 1px solid #e6e6e8;
+      text-align: right;
+    }
+    .content{
+      height: calc(100% - 36px);
+      display: grid;
+      grid-template-columns: 314px auto 300px;
+      grid-template-rows: 100%;
+      .left-box {
+        width: 314px;
+        height: 100%;
+        &>.el-row{
+          height: 100%;
+          &>.el-col{
+            height: 100%;
+          }
+        }
+        .sider-tab {
+          height: 100%;
+          width: 60px;
+          border-right: 1px solid #e6e6e8;
+          padding-top: 20px;
+          .tab-item {
+            cursor: pointer;
+            text-align: center;
+            margin-bottom: 20px;
+            .iconfont {
+              font-size: 20px;
+              color: #666;
+              font-weight: bold;
+            }
+            p{
+              margin-top: 6px;
+              color: #999;
+            }
+            &.active{
+              .iconfont {
+              color: #007EFF;
+              }
+              p{
+              color: #007EFF;
+              }
+              
+            }
+          }
+        }
+      }
+      .center-box {
+        height: 100%;
+        background: #f2f2f4;
+      }
+      .right-box {
+        width: 300px;
+        height: 100%;
+      }
+    }
+  }
+</style>

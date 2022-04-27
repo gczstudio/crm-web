@@ -543,6 +543,16 @@ aside {
   top: -44px;
 }
 
+.yu-button-group {
+  .yu-button-text {
+    &.el-button+.el-button {
+      margin-left: 0;
+      border-left: 1px solid #707070;
+    }
+   
+  }
+}
+
 .yu-button-text {
   &.el-button {
     padding: 0 20px!important;
@@ -552,6 +562,9 @@ aside {
     &:active, &:hover, &:visited {
       color: #007EFF;
       background: #fff;
+    }
+    .iconfont {
+      color: #333;
     }
   }
 }

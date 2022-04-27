@@ -10,22 +10,21 @@
         <CheckboxList :multiple="false" title="指标" v-model="quota" :data="quotaOptions" height="calc(100% - 102px)"/>
       </div>
     </el-col>
-    <el-col :span="20">
+    <el-col :span="16">
       <div class="config-section">
-        <el-row>
-          <el-col :span="12">
-            <div class="config-section__title">配置区域</div>
-            <div class="center-section">
-              <CenterSection />
-            </div>
-          </el-col>
-          <el-col :span="12">
-            <div class="config-section__title">预览区域</div>
-            <div class="preview-section">
-              <PreviewSection />
-            </div>
-          </el-col>
-        </el-row>
+        <div class="config-section__title">配置区域</div>
+          <div class="center-section">
+            <!--卡片一-->
+            <Card1 />
+          </div>
+      </div>
+    </el-col>
+    <el-col :span="4">
+      <div class="switch-section">
+        <div class="switch-section__title">指标卡切换</div>
+        <div class="card-box">
+            <div class="card-item active" v-for="(item, index) in cardTypes" :key="item.type"><img :src="require(`@/assets/images/lowCode/card/card${index+1}.png`)" alt=""></div>
+        </div>
       </div>
     </el-col>
   </el-row>
@@ -37,124 +36,19 @@ import { backend } from '@/config'
 import { CreateElement } from 'vue';
 import CheckboxList from '../components/CheckboxList.vue'
 import CommonSection from '../components/CommonSection.vue'
+import Card1 from './ components/Card1.vue'
 
 export interface Options {
   key: string,
   value: any
 }
 
-/**区域组件 */
-@Component
-export class CenterSection extends Vue {
-  @Prop() title!: string;
-
-  private quotaConfigList = [
-    { type: 1, key: 'key1', name: '对公贷款余额'},
-    { type: 2, key: 'key2', name: '比上年'},
-    { type: 2, key: 'key3', name: '比上月'},
-    { type: 2, key: 'key4', name: '比上日'},
-  ]
-
-  private active = 0
-  
-  clickFn(index:number) {
-    this.active = index
-  }
-  // 获取箭头
-  getArrow(money: number) {
-    return money >= 0 ? "icon-shangsheng" : "icon-xiajiang";
-  }
-
-  render(h: CreateElement) {
-    return (
-      <ul class="section-wrapper">
-      {
-        this.quotaConfigList.map((item, index) => {
-          return (
-            <li key={index} class={index===this.active? 'active': ''} onClick={() => this.clickFn(index)}>
-              {
-                item.type == 1 && <div class="top center">
-                  <img src={require("@/assets/images/theme/custom/quota/icon-quota1.png")} alt=""/>
-                  <div class="total">
-                    <p>对公贷款余额</p>
-                    <p>
-                      <span class="num">1212</span>
-                      <span class="unit">亿元</span>
-                    </p>
-                  </div>
-                </div>
-              }
-              {
-                item.type == 2 && <div class="bottom center">
-                  <p class="label">比上日<i class={["iconfont", this.getArrow(111)]}></i></p>
-                  <p class="value"><span class="num">11111</span><span class="unit">亿元</span></p>
-                </div>
-              }
-              {
-                !item.key && <div class="tip">请勾选指标</div>
-              }
-            </li>
-          )
-        })
-      }
-      </ul>
-    )
-  }
-}
-
-/**预览组件 */
-@Component
-export class PreviewSection extends Vue {
-  @Prop() title!: string;
-
-  // 获取箭头
-  getArrow(money: number) {
-    return money >= 0 ? "icon-shangsheng" : "icon-xiajiang";
-  }
-
-  render(h: CreateElement) {
-    return (
-      <div class="section-wrapper">
-        <div class="top center">
-          <img src={require("@/assets/images/theme/custom/quota/icon-quota1.png")} alt=""/>
-          <div class="total">
-            <p>对公贷款余额</p>
-            <p>
-              <span class="num">1212</span>
-              <span class="unit">亿元</span>
-            </p>
-          </div>
-          <div class="bottom center">
-            <el-row>
-              <el-col span={8}>
-                <p class="label">比上日<i class={["iconfont", this.getArrow(111)]}></i></p>
-                <p class="value"><span class="num">11111</span><span class="unit">亿元</span></p>
-              </el-col>
-              <el-col span={8}>
-                <p class="label">比上日<i class={["iconfont", this.getArrow(111)]}></i></p>
-                <p class="value"><span class="num">11111</span><span class="unit">亿元</span></p>
-              </el-col>
-              <el-col span={8}>
-                <p class="label">比上日<i class={["iconfont", this.getArrow(111)]}></i></p>
-                <p class="value"><span class="num">11111</span><span class="unit">亿元</span></p>
-              </el-col>
-            </el-row>
-           
-          </div>
-        </div>
-      </div> 
-    )
-  }
-}
-
-
 @Component({
   name: 'ChartSet',
   components: {
     CheckboxList,
     CommonSection,
-    CenterSection,
-    PreviewSection
+    Card1
   }
 })
 export default class extends Vue { 
@@ -162,6 +56,10 @@ export default class extends Vue {
   @Ref('compFormRef') compFormRef: any;
   private activeName = '1'
   private modelValue = ''
+
+  private cardTypes = [
+    { type: '1', name: '卡片一' }
+  ]
 
   private dimension = []
   private quota = []
@@ -388,28 +286,33 @@ export default class extends Vue {
     }
   }
 
-  .chart-type {
-    background: #fbfdff;
-    .chart-type__item {
-      display: inline-block;
-      width: 25%;
-      text-align: center;
-      img{
-        width: 0.3rem
+ .switch-section {
+    height: 100%;
+    border-left: 1px solid #D8D8D8;
+    .switch-section__title {
+      padding: 0 10px;
+      height: 36px;
+      line-height: 36px;
+      background: #fff;
+      font-weight: bold;
+    }
+    .card-box {
+      height: calc(100% - 36px);
+      overflow-y: auto;
+      .card-item {
+        margin: 10px 10px 0;
+        padding: 10px;
+        border: 1px solid #ccc;
+        img {
+          text-align: center;
+          width: 100%;
+        }
+        &.active{
+          border: 1px solid #007EFF;
+        }
       }
     }
   }
-
-  .preview-section {
-    ::v-deep .section-wrapper {
-      margin: 1rem auto 0;
-      width: 5rem;
-      height: 3rem;
-      box-shadow: 0px 2px 10px rgba(0, 92, 187, 0.3);
-      border-radius: 5px;
-    }
-  }
-
 
 
   

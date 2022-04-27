@@ -13,8 +13,8 @@
           </template>
           <template v-slot:table>
             <yu-xtable ref="refTable" :data-url="dataUrl" :dynamic-height="true" :border="false" layout="total, prev, pager, next" @row-click="rowClickFn">
-              <yu-xtable-column label="布局名称" prop="name"  :show-overflow-tooltip="true"></yu-xtable-column>
-              <yu-xtable-column label="状态" prop="status" width="80" :show-overflow-tooltip="true">
+              <yu-xtable-column label="布局名称" prop="layoutName"  :show-overflow-tooltip="true"></yu-xtable-column>
+              <yu-xtable-column label="状态" prop="layoutSts" width="80" :show-overflow-tooltip="true">
                 <template slot-scope="scoped">
                   <el-tag v-if="scoped.row.status" type="success" size="mini">生效</el-tag>
                   <el-tag v-else type="danger"  size="mini">未生效</el-tag>
@@ -34,6 +34,9 @@
               <el-button class="yu-button-text" icon="el-icon-folder-add">下架</el-button>
             </div>
           </div>
+          <div class="layout-content">
+            <edit type="render" :row="currentRow" />
+          </div>
         </div>
       </el-col>
     </el-row>
@@ -41,7 +44,7 @@
     <yu-dialog title="新增布局" :visible.sync="addVisible" width="400px" height="350px">
       <yu-xform ref="layoutFormRef" :model="layoutForm" label-width="100px">
         <yu-xform-group :column="1">
-          <yu-xform-item label="布局名称" placeholder="布局名称" name="name" ctype="input" :rules="globalRules.requiredInput50"></yu-xform-item>
+          <yu-xform-item label="布局名称" placeholder="布局名称" name="layoutName" ctype="input" :rules="globalRules.requiredInput50"></yu-xform-item>
         </yu-xform-group>
       </yu-xform>
       <div slot="footer" align="center">
@@ -69,6 +72,7 @@ export interface LayoutListItem  {
   name: string,
   status: boolean
 }
+
 
 @Component({
   name: 'LayoutMgt',
@@ -121,12 +125,13 @@ export default class extends Vue {
 .layout-box {
   .layout-header {
     position: relative;
+    z-index: 99;
     background: #fff;
     padding: 10px;
     box-shadow: 0px 3px 6px rgba($color: #000000, $alpha: .1);
   }
   .layout-title {
-
+    font-weight: bold;
   }
   .layout-btns{
     position: absolute;

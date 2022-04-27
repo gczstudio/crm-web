@@ -3,8 +3,9 @@ var Mock = require('mockjs')
 var layoutList = Mock.mock({
   'list|1-10': [{
     'id|+1': 1,
-    'name': '@ctitle',
-    'status': '@boolean'
+    'layoutName': '@ctitle',
+    'layoutSts': '@boolean',
+    'layoutConfig': '1,1,1,1,1,2,3,4,1,2'
   }]
 })
 
