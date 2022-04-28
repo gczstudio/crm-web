@@ -17,7 +17,7 @@
         </template>
         <template v-slot:table>
           <yu-xtable ref="refTable" :data-url="dataUrl" row-number :dynamic-height="true" border>
-            <yu-xtable-column label="机构名称" prop="orgName"  :show-overflow-tooltip="true" sortable="custom"></yu-xtable-column>
+            <yu-xtable-column label="机构名称" prop="orgName" :show-overflow-tooltip="true" sortable="custom"></yu-xtable-column>
             <yu-xtable-column label="员工人数" prop="userNum" is-num align="right" :show-overflow-tooltip="true" sortable="custom"></yu-xtable-column>
             <yu-xtable-column label="期间使用系统人数" prop="loginedUserNum" is-num align="right" :show-overflow-tooltip="true" sortable="custom"></yu-xtable-column>
             <yu-xtable-column label="工作日天数" prop="workDay" is-num align="right" :show-overflow-tooltip="true" sortable="custom"></yu-xtable-column>
@@ -32,50 +32,50 @@
 
 <script lang="ts">
 import { Component, Ref, Vue } from "vue-property-decorator";
-import { backend } from '@/config'
+import { backend } from "@/config";
 
 @Component({
   name: "OrgSysLog",
 })
 export default class extends Vue {
-  @Ref('searchForm') searchForm: any;
-  @Ref('refTable') refTable: any;
-  private dataUrl = backend.appOcaService + '/api/sysorgbusiness/queryorgbusi'
-  private queryFormData = {}
+  @Ref("searchForm") searchForm: any;
+  @Ref("refTable") refTable: any;
+  private dataUrl = backend.appOcaService + "/api/sysorgbusiness/queryorgbusi";
+  private queryFormData = {};
   private startPickerOptions = {
-    disabledDate:  (time: Date) => {
+    disabledDate: (time: Date) => {
       if ((this.queryFormData as any).endDate) {
         return time.getTime() >= new Date((this.queryFormData as any).endDate).getTime();
       }
-    }
-  }
+    },
+  };
 
   private endPickerOptions = {
     disabledDate: (time: Date) => {
       if ((this.queryFormData as any).startDate) {
         return time.getTime() <= new Date((this.queryFormData as any).startDate).getTime() - 86400000;
       }
-    }
+    },
+  };
+
+  mounted() {
+    this.$checkCtr("export") && this.$exportQueue.addQueue(this.$route.path, this.exportFn);
   }
 
-  mounted () {
-    this.$checkCtr('export') && this.$exportQueue.addQueue(this.$route.path, this.exportFn)
-  }
-
-  exportFn (showTipModal?:boolean) {
+  exportFn(showTipModal?: boolean) {
     var searchQuery: any = (this as any)._.assign({}, this.searchForm.searchModel, {
-      fileName: '机构系统使用情况分析',
-      queryField: this.searchForm.searchQueryField
+      fileName: "机构系统使用情况分析",
+      queryField: this.searchForm.searchQueryField,
     });
     var apiParams = {
-      url: backend.appOcaService + '/api/sysorgbusiness/exportqueryorgbusi',
+      url: backend.appOcaService + "/api/sysorgbusiness/exportqueryorgbusi",
       params: searchQuery,
-      sort: this.refTable.sort
+      sort: this.refTable.sort,
     };
     (this as any).$util.exportTable({
       _this: this,
       apiParams,
-      showTipModal
+      showTipModal,
     });
   }
 }

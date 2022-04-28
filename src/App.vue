@@ -5,22 +5,19 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue } from "vue-property-decorator";
 
 @Component({
-  name: 'App',
-  components: {
-  }
+  name: "App",
+  components: {},
 })
 export default class extends Vue {
-
-  mounted () {
+  mounted() {
     this.$exportQueue.addEvent();
   }
 
-  destroyed () {
+  destroyed() {
     this.$exportQueue.removeEvent();
   }
-
 }
 </script>

@@ -77,7 +77,7 @@
         <yu-xtable :data="errTableDate" :total="errTotal" :pageable="false" row-number border>
           <yu-xtable-column label="客户名称" prop="custNm" :show-overflow-tooltip="true">
             <template slot-scope="scope">
-            <div class="yu-table__company" @click.prevent="customerViewFn(scope.row)"><i class="iconfont icon-qiyelogo"></i>{{scope.row.custNm}}</div>
+              <div class="yu-table__company" @click.prevent="customerViewFn(scope.row)"><i class="iconfont icon-qiyelogo"></i>{{ scope.row.custNm }}</div>
             </template>
           </yu-xtable-column>
           <yu-xtable-column label="核心客户号" prop="custId" :show-overflow-tooltip="true"></yu-xtable-column>
@@ -89,49 +89,47 @@
 
 <script lang="ts">
 import { Component, Provide, ProvideReactive, Ref, Vue } from "vue-property-decorator";
-import { backend } from '@/config';
-import CreateGroupModal from './components/CreateGroupModal/index.vue';
-import MaintainGroup from './maintainGroup.vue';
-import GroupDetail from './groupDetail.vue';
-import { deletecrowd, addnewappro } from '@/api/customer';
+import { backend } from "@/config";
+import CreateGroupModal from "./components/CreateGroupModal/index.vue";
+import MaintainGroup from "./maintainGroup.vue";
+import GroupDetail from "./groupDetail.vue";
+import { deletecrowd, addnewappro } from "@/api/customer";
 import moment from "moment";
-import { getCheckedRole } from '@/utils'
+import { getCheckedRole } from "@/utils";
 @Component({
   name: "CustGroup",
   components: {
     CreateGroupModal,
     MaintainGroup,
-    GroupDetail
-  }
+    GroupDetail,
+  },
 })
 export default class extends Vue {
-  @Ref('searchForm') searchForm: any;
-  @Ref('refTable') refTable: any;
-  private roleInfo = getCheckedRole()
-  private dataUrl = backend.custService + '/api/custcrowd/querycrowd';
-  private dataDt = sessionStorage.getItem('dataDt');
+  @Ref("searchForm") searchForm: any;
+  @Ref("refTable") refTable: any;
+  private roleInfo = getCheckedRole();
+  private dataUrl = backend.custService + "/api/custcrowd/querycrowd";
+  private dataDt = sessionStorage.getItem("dataDt");
   private queryFormData = {
-    etlDate: moment(this.dataDt).format('YYYY-MM-DD'),
+    etlDate: moment(this.dataDt).format("YYYY-MM-DD"),
     creatorName: this.roleInfo.userName,
-    creatorId: this.roleInfo.userId
-  }
+    creatorId: this.roleInfo.userId,
+  };
   private baseParams = {
     condition: JSON.stringify({
-      etlDate: moment(this.dataDt).format('YYYY-MM-DD'),
+      etlDate: moment(this.dataDt).format("YYYY-MM-DD"),
       creatorName: this.roleInfo.userName,
-      creatorId: this.roleInfo.userId
-    })
-  }
+      creatorId: this.roleInfo.userId,
+    }),
+  };
   private uploadVisible = false;
   private uploadOptions = {
     url: backend.custService + "/api/crowdmember/importexcel",
-    exportUrl: backend.custService + '/api/crowdmember/exporterrorCwdcust',
+    exportUrl: backend.custService + "/api/crowdmember/exporterrorCwdcust",
     uploadType: true,
-    tip: '可输入任意一列，按照核心客户号、客户名称的顺序进行校验',
-    params: {}
-  }
-
-  
+    tip: "可输入任意一列，按照核心客户号、客户名称的顺序进行校验",
+    params: {},
+  };
 
   private createVisible = false;
   private contentVisible = false;
@@ -140,9 +138,8 @@ export default class extends Vue {
   private errTableDate = [];
   private errTotal = 0;
 
-  @Provide('groupInstance') groupInstance = this;
-  @ProvideReactive('row') currentRow = {};
-  
+  @Provide("groupInstance") groupInstance = this;
+  @ProvideReactive("row") currentRow = {};
 
   viewFn(row: any) {
     row.etlDate = this.searchForm.searchModel.etlDate;
@@ -150,44 +147,44 @@ export default class extends Vue {
     this.detailVisible = true;
   }
 
-  refreshTable () {
+  refreshTable() {
     this.refTable.remoteData();
   }
 
-  createFn () {
+  createFn() {
     this.createVisible = true;
   }
 
-  mounted () {
-    this.$checkCtr('export') && this.$exportQueue.addQueue(this.$route.path, this.exportFn, true);
+  mounted() {
+    this.$checkCtr("export") && this.$exportQueue.addQueue(this.$route.path, this.exportFn, true);
   }
 
   resetFn() {
     this.queryFormData = {
-      etlDate: moment(this.dataDt).format('YYYY-MM-DD'),
-      creatorName: '',
-      creatorId: ''
-    }
+      etlDate: moment(this.dataDt).format("YYYY-MM-DD"),
+      creatorName: "",
+      creatorId: "",
+    };
   }
 
   customerViewFn(row: any) {
     this.applyErrCloseFn();
-    this.$router.push({ path: '/custInfo/custView/' + row.crmCustId, query: { crmCustId: row.crmCustId, custId: row.custId, title: '客户详情-' + row.custNm }})
+    this.$router.push({ path: "/custInfo/custView/" + row.crmCustId, query: { crmCustId: row.crmCustId, custId: row.custId, title: "客户详情-" + row.custNm } });
   }
 
-  maintainFn () {
+  maintainFn() {
     let selections = this.refTable.selections;
-    if(selections.length != 1) {
-      this.$message.warning('请选择一条数据！');
+    if (selections.length != 1) {
+      this.$message.warning("请选择一条数据！");
       return;
     }
     // 只有创建人且状态为初始或空时才可以操作
-    if(this.roleInfo.userId !== selections[0].creatorId) {
+    if (this.roleInfo.userId !== selections[0].creatorId) {
       this.$message.warning("只能创建人才能维护！");
       return;
     }
 
-    if(!['01', '02'].includes(selections[0].custGroupStatus)) {
+    if (!["01", "02"].includes(selections[0].custGroupStatus)) {
       this.$message.warning("只能维护初始和无审批状态的数据！");
       return;
     }
@@ -196,107 +193,107 @@ export default class extends Vue {
     this.currentRow = selections[0];
   }
 
-  deleteFn () {
+  deleteFn() {
     /**
      * 1.审批不通过、初始化以及无状态的，创建人可删除 ['01','02', '06', '07']
      * 2.审批通过的，总行营销管理岗和系统管理员可以删除 ['05'] ['R100001', 'R100107']
      * 3.其他状态不可删除（待初审，待复审）
      */
     let selections = this.refTable.selections;
-    if(!selections.length) {
-      this.$message.warning('请至少选择一条数据！');
+    if (!selections.length) {
+      this.$message.warning("请至少选择一条数据！");
       return;
     }
-    let applySuccess = ['01','02', '06', '07'], 
-        applyFail = ['05'],
-        applyOther = ['03','04'];
-        
-    for(var i = 0;i < selections.length; i++) {
+    let applySuccess = ["01", "02", "06", "07"],
+      applyFail = ["05"],
+      applyOther = ["03", "04"];
+
+    for (var i = 0; i < selections.length; i++) {
       let item = selections[i];
       if (applySuccess.includes(item.custGroupStatus) && this.roleInfo.userId !== item.creatorId) {
-        this.$message.warning('审批不通过、初始以及无审批的， 只有创建人可删除！');
+        this.$message.warning("审批不通过、初始以及无审批的， 只有创建人可删除！");
         return;
       }
-      if (applyFail.includes(item.custGroupStatus) && !['R100001', 'R100107'].includes(this.roleInfo.roleCode)) {
-        this.$message.warning('审批通过的，只有总行营销管理岗和系统管理员可以删除！');
+      if (applyFail.includes(item.custGroupStatus) && !["R100001", "R100107"].includes(this.roleInfo.roleCode)) {
+        this.$message.warning("审批通过的，只有总行营销管理岗和系统管理员可以删除！");
         return;
       }
-      if(applyOther.includes(item.custGroupStatus)) {
-        this.$message.warning('待初审，待复审, 无法删除！');
+      if (applyOther.includes(item.custGroupStatus)) {
+        this.$message.warning("待初审，待复审, 无法删除！");
         return;
       }
     }
 
-    this.$confirm('此操作将删除所选客户群, 是否继续?', '提示', {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'warning',
+    this.$confirm("此操作将删除所选客户群, 是否继续?", "提示", {
+      confirmButtonText: "确定",
+      cancelButtonText: "取消",
+      type: "warning",
       callback: (action) => {
-        if (action === 'confirm') {
+        if (action === "confirm") {
           deletecrowd({
-            custGroupId: selections.map((item: any) => item.custGroupId).join(',')
-          }).then(res => {
-            this.$message.success('删除成功');
+            custGroupId: selections.map((item: any) => item.custGroupId).join(","),
+          }).then((res) => {
+            this.$message.success("删除成功");
             this.refreshTable();
-          })
+          });
         }
-      }
+      },
     });
   }
 
-  downTempFn () {
+  downTempFn() {
     this.$util.downFile({
-      url: backend.custService + '/api/crowdmember/downloadtemplate',
+      url: backend.custService + "/api/crowdmember/downloadtemplate",
       method: "get",
       fileName: "客户群模板.xlsx",
     });
   }
 
-  uploadFn () {
+  uploadFn() {
     let selections = this.refTable.selections;
-    if(selections.length!==1) {
-      this.$message.warning('请选择一条数据！');
+    if (selections.length !== 1) {
+      this.$message.warning("请选择一条数据！");
       return;
     }
 
     // 只有创建人且状态为初始或空时才可以操作
-    if(this.roleInfo.userId !== selections[0].creatorId) {
+    if (this.roleInfo.userId !== selections[0].creatorId) {
       this.$message.warning("只能创建人才能导入！");
       return;
     }
 
-    if(!['01', '02'].includes(selections[0].custGroupStatus)) {
+    if (!["01", "02"].includes(selections[0].custGroupStatus)) {
       this.$message.warning("只有初始和无审批状态的数据才能导入！");
       return;
     }
 
     this.uploadOptions.params = {
-      custGroupId: selections[0].custGroupId
-    }
+      custGroupId: selections[0].custGroupId,
+    };
     this.uploadVisible = true;
   }
 
   // 导入成功
-  successFn () {
-   this.refTable.remoteData();
+  successFn() {
+    this.refTable.remoteData();
   }
 
-  applyFn () {
+  applyFn() {
     let selections = this.refTable.selections;
-    if(selections.length !== 1) {
-      this.$message.warning('请选择一条数据！');
+    if (selections.length !== 1) {
+      this.$message.warning("请选择一条数据！");
       return;
     }
     /**
      * 自主分析,无需审批
      */
     const { custGroupType, custGroupNm, custGroupId, custGroupStatus, custGroupMember } = selections[0];
-    if(custGroupType === '0') {
+    if (custGroupType === "0") {
       this.$message.warning("自主分析，无需审批！");
       return;
     }
 
-    if(custGroupStatus != '02') {
+    if (custGroupStatus != "02") {
       this.$message.warning("只能提交审批初始状态的数据！");
       return;
     }
@@ -306,23 +303,22 @@ export default class extends Vue {
       return;
     }
 
-
-    this.$confirm('确认提交审批吗？', '提示', {
-      confirmButtonText: '是',
-      cancelButtonText: '否',
-      type: 'warning',
+    this.$confirm("确认提交审批吗？", "提示", {
+      confirmButtonText: "是",
+      cancelButtonText: "否",
+      type: "warning",
       callback: (action) => {
-        if (action === 'confirm') {
+        if (action === "confirm") {
           let params = {
             taskId: custGroupId,
             taskNm: custGroupNm,
-            apprProcess: '0101'
-          }
+            apprProcess: "0101",
+          };
           addnewappro(params, {
-            customHandler: true
+            customHandler: true,
           }).then((res: any) => {
-            if(res.code === 0) {
-              this.$message.success('提交审批成功');
+            if (res.code === 0) {
+              this.$message.success("提交审批成功");
               this.refreshTable();
             } else if (res.code === -2) {
               this.errVisible = true;
@@ -331,49 +327,48 @@ export default class extends Vue {
             }
           });
         }
-      }
+      },
     });
   }
 
-  applyErrCloseFn () {
+  applyErrCloseFn() {
     this.errVisible = false;
     this.errTableDate = [];
     this.errTotal = 0;
   }
 
-  exportFn (showTipModal?:boolean) {
+  exportFn(showTipModal?: boolean) {
     var searchQuery: any = (this as any)._.assign({}, this.searchForm.searchModel, {
-      etlDate: moment(this.dataDt).format('YYYY-MM-DD'),
-      fileName: '客户群管理',
+      etlDate: moment(this.dataDt).format("YYYY-MM-DD"),
+      fileName: "客户群管理",
       queryField: this.searchForm.searchQueryField,
     });
     var apiParams = {
-      url: backend.custService + '/api/custcrowd/exportcrowd',
+      url: backend.custService + "/api/custcrowd/exportcrowd",
       params: searchQuery,
-      sort: this.refTable.sort
+      sort: this.refTable.sort,
     };
     (this as any).$util.exportTable({
       _this: this,
       apiParams,
-      showTipModal
+      showTipModal,
     });
   }
-
 }
 </script>
 <style lang="scss" scoped>
-  .apply-error-modal {
-    .check {
-      height: 48px;
-      line-height: 48px;
-      font-size: 15px;
-      background-color: #feece8;
-    }
-    .icon-guanbixuanjiao {
-      position: relative;
-      top: -2px;
-      padding: 0 10px;
-      color: #f14922;
-    }
+.apply-error-modal {
+  .check {
+    height: 48px;
+    line-height: 48px;
+    font-size: 15px;
+    background-color: #feece8;
   }
+  .icon-guanbixuanjiao {
+    position: relative;
+    top: -2px;
+    padding: 0 10px;
+    color: #f14922;
+  }
+}
 </style>

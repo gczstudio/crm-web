@@ -19,8 +19,8 @@
             <yu-xform-item label="经济类型" name="economyType" ctype="select" data-code="ECONOMY_TYPE"></yu-xform-item>
             <yu-xform-item label="组织形式" name="orgForm" ctype="select" data-code="ORG_FORM"></yu-xform-item>
             <yu-xform-item label="单位隶属" name="orgBelong" ctype="input" data-code="CORP_BELONG"></yu-xform-item>
-            <yu-xform-item label="经营状态" name="operStat" ctype="input" data-code="OPER_STAT" :colspan="isMaxScreen?12:8"></yu-xform-item>
-            <yu-xform-item label="主营业务" name="mainBusi" ctype="input" :rowspan="isMaxScreen?6:5" :colspan="24"></yu-xform-item>
+            <yu-xform-item label="经营状态" name="operStat" ctype="input" data-code="OPER_STAT" :colspan="isMaxScreen ? 12 : 8"></yu-xform-item>
+            <yu-xform-item label="主营业务" name="mainBusi" ctype="input" :rowspan="isMaxScreen ? 6 : 5" :colspan="24"></yu-xform-item>
           </yu-xform-group>
         </yu-xform>
       </div>
@@ -35,9 +35,9 @@
             <yu-xform-item label="员工人数" name="empNum" ctype="input" is-num></yu-xform-item>
             <yu-xform-item label="企业规模" name="entScale" ctype="input" data-code="ENT_SCALE_MIS"></yu-xform-item>
             <yu-xform-item label="客户类型" name="custType" ctype="select" data-code="CUST_TYPE_MIS"></yu-xform-item>
-            <yu-xform-item label="国标行业（一级）" name="natStdIndsOne" ctype="select"  data-code="NAT_STD_INDS_MIS"></yu-xform-item>
-            <yu-xform-item label="国标行业（二级）" name="natStdIndsTwo" ctype="select"  data-code="NAT_STD_INDS_MIS"></yu-xform-item>
-            <yu-xform-item label="国标行业（三级）" name="natStdIndsThree" ctype="select"  data-code="NAT_STD_INDS_MIS"></yu-xform-item>
+            <yu-xform-item label="国标行业（一级）" name="natStdIndsOne" ctype="select" data-code="NAT_STD_INDS_MIS"></yu-xform-item>
+            <yu-xform-item label="国标行业（二级）" name="natStdIndsTwo" ctype="select" data-code="NAT_STD_INDS_MIS"></yu-xform-item>
+            <yu-xform-item label="国标行业（三级）" name="natStdIndsThree" ctype="select" data-code="NAT_STD_INDS_MIS"></yu-xform-item>
             <yu-xform-item label="是否上市公司" name="listFlg" ctype="select" data-code="YESNO"></yu-xform-item>
             <yu-xform-item label="是否集团客户" name="groupCustFlg" ctype="select" data-code="YESNO"></yu-xform-item>
             <yu-xform-item label="是否本行股东" name="ownerFlg" ctype="select" data-code="YESNO"></yu-xform-item>
@@ -75,16 +75,15 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue } from "vue-property-decorator";
 import * as customerApi from "@/api/customer";
 
 @Component({
-  name: 'CustInfo',
-  components: {
-  }
+  name: "CustInfo",
+  components: {},
 })
 export default class extends Vue {
-  private baseInfFormData = {}
+  private baseInfFormData = {};
   private crmCustId = this.$route.query.crmCustId as string;
   private show = false;
 
@@ -93,46 +92,45 @@ export default class extends Vue {
   }
 
   getCustdetailinfo() {
-    customerApi.getCustdetailinfo(this.crmCustId).then(res => {
-      this.baseInfFormData = res.data?.[0] || {}
+    customerApi.getCustdetailinfo(this.crmCustId).then((res) => {
+      this.baseInfFormData = res.data?.[0] || {};
       this.show = true;
-    })
+    });
   }
-
 }
 </script>
 
 <style lang="scss" scoped>
-  .custInfo-container {
-    .custInfo-section{
-      background: #FFFFFF;
-      box-shadow: 0px 3px 6px  rgba(0, 0, 0, 0.2);
-      border-radius: 5px;
-      .title{
-        padding: 16px;
-        border-bottom: 1px solid #E5E5E5;
-        span{
-          margin-left: 8px;
-          font-weight: bold;
-        }
+.custInfo-container {
+  .custInfo-section {
+    background: #ffffff;
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    .title {
+      padding: 16px;
+      border-bottom: 1px solid #e5e5e5;
+      span {
+        margin-left: 8px;
+        font-weight: bold;
       }
-      .content {
-        padding: 16px;
-        table {
-          tr {
-            td {
-              line-height: 30px;
-            }
-            td:nth-child(1) {
-              font-weight: bold;
-            }
-            td:nth-child(2) {
-              color: #666;
-              padding-left: 20px;
-            }
+    }
+    .content {
+      padding: 16px;
+      table {
+        tr {
+          td {
+            line-height: 30px;
+          }
+          td:nth-child(1) {
+            font-weight: bold;
+          }
+          td:nth-child(2) {
+            color: #666;
+            padding-left: 20px;
           }
         }
       }
     }
   }
+}
 </style>

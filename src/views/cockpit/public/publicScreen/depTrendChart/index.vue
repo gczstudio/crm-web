@@ -3,7 +3,7 @@
     <div ref="chartRef" style="widht: 100%; height: 182px" @mouseenter="mouseenter" @mouseleave="mouseleave"></div>
     <div class="tab">
       <ol class="clearfix">
-        <li v-for="(item, index) in tabs" :key="index" :class="{active: curTab === index}" @click="clickHandler(index)">{{item}}</li>
+        <li v-for="(item, index) in tabs" :key="index" :class="{ active: curTab === index }" @click="clickHandler(index)">{{ item }}</li>
       </ol>
     </div>
   </div>
@@ -11,165 +11,175 @@
 
 <script lang="ts">
 import { Component, Ref, Vue, Inject, Watch } from "vue-property-decorator";
-import * as echarts from 'echarts'
-import * as screenApi from '@/api/screen'
+import * as echarts from "echarts";
+import * as screenApi from "@/api/screen";
 import { parseInt } from "lodash";
 import moment from "moment";
-import { ScreenModule } from '@/store/modules/screen'
+import { ScreenModule } from "@/store/modules/screen";
 @Component({
-  name: "DepTrendChart"
+  name: "DepTrendChart",
 })
 export default class extends Vue {
   @Inject() readonly screenInstance!: any;
-  @Ref('chartRef') chartRef: any;
+  @Ref("chartRef") chartRef: any;
 
-  private tabs = ['日', '月']
-  private curTab = 0
+  private tabs = ["日", "月"];
+  private curTab = 0;
 
-  private timer:any = null
-  private chart:any = null
+  private timer: any = null;
+  private chart: any = null;
 
-  private orgDepD = null
-  private orgDepM = null
+  private orgDepD = null;
+  private orgDepM = null;
 
   get uniqueKey() {
-    return ScreenModule.uniqueKey
+    return ScreenModule.uniqueKey;
   }
 
-  @Watch('uniqueKey')
+  @Watch("uniqueKey")
   onChangeUniqueKey() {
-    this.curTab = this.curTab === 0 ? 1 : 0
-    this.clickHandler(this.curTab)
+    this.curTab = this.curTab === 0 ? 1 : 0;
+    this.clickHandler(this.curTab);
   }
 
   mounted() {
-    this.queryOrgDepD()
+    this.queryOrgDepD();
   }
 
   mouseenter() {
-    this.screenInstance.stopAutoSwitch()
+    this.screenInstance.stopAutoSwitch();
   }
 
   mouseleave() {
-    this.screenInstance.startAutoSwitch()
+    this.screenInstance.startAutoSwitch();
   }
 
   // 日
   queryOrgDepD() {
-    if(this.orgDepD) {
-      return this.renderChart(this.orgDepD)
+    if (this.orgDepD) {
+      return this.renderChart(this.orgDepD);
     }
-    screenApi.queryOrgDepD({
-      condition: JSON.stringify({
-        busiType: this.screenInstance.busiLine
+    screenApi
+      .queryOrgDepD({
+        condition: JSON.stringify({
+          busiType: this.screenInstance.busiLine,
+        }),
       })
-    }).then((res: any) => {
-      this.orgDepD = res.data;
-      this.renderChart(res.data)
-    })
+      .then((res: any) => {
+        this.orgDepD = res.data;
+        this.renderChart(res.data);
+      });
   }
 
   // 月
   queryOrgDepM() {
-    if(this.orgDepM) {
-      return this.renderChart(this.orgDepM)
+    if (this.orgDepM) {
+      return this.renderChart(this.orgDepM);
     }
-    screenApi.queryOrgDepM({
-      condition: JSON.stringify({
-        busiType: this.screenInstance.busiLine
+    screenApi
+      .queryOrgDepM({
+        condition: JSON.stringify({
+          busiType: this.screenInstance.busiLine,
+        }),
       })
-    }).then((res: any) => {
-      this.orgDepM = res.data;
-      this.renderChart(res.data)
-    })
+      .then((res: any) => {
+        this.orgDepM = res.data;
+        this.renderChart(res.data);
+      });
   }
 
   clickHandler(index: number) {
-    this.curTab = index
-    index === 0 ? this.queryOrgDepD() : this.queryOrgDepM()
+    this.curTab = index;
+    index === 0 ? this.queryOrgDepD() : this.queryOrgDepM();
   }
 
-  renderChart(data:any) {
+  renderChart(data: any) {
     if (this.chart) {
-      this.chart.dispose()
-      this.chart = null
+      this.chart.dispose();
+      this.chart = null;
     }
-    this.chart = echarts.init(this.chartRef)
-    let xData: any = [], data1: any = [], data2: any = []
+    this.chart = echarts.init(this.chartRef);
+    let xData: any = [],
+      data1: any = [],
+      data2: any = [];
     data.forEach((item: any) => {
-      let etlDate = moment(item.etlDate).format('YYYY-MM-DD')
-      xData.push(this.curTab === 0 ? etlDate : etlDate.slice(0, 7))
-      data1.push(this.$util.toFixed(item.depBal / 100000000))
-      data2.push(this.$util.toFixed(item.depBalAvg / 100000000))
-    })
+      let etlDate = moment(item.etlDate).format("YYYY-MM-DD");
+      xData.push(this.curTab === 0 ? etlDate : etlDate.slice(0, 7));
+      data1.push(this.$util.toFixed(item.depBal / 100000000));
+      data2.push(this.$util.toFixed(item.depBalAvg / 100000000));
+    });
 
     let option = {
-      color: ['#44F0FF', '#FFC801'],
+      color: ["#44F0FF", "#FFC801"],
       grid: {
         left: 10,
         right: 15,
         bottom: 5,
         top: 45,
-        containLabel: true
+        containLabel: true,
       },
       legend: {
         selectedMode: false,
         top: 10,
-        icon: 'circle',
+        icon: "circle",
         itemWidth: 10,
         itemHeight: 10,
         textStyle: {
-          color: '#fff',
+          color: "#fff",
           fontSize: 14,
-          padding: [0,0,0,4]
+          padding: [0, 0, 0, 4],
         },
-        data: ['余额', '日均']
+        data: ["余额", "日均"],
       },
       tooltip: {
-        trigger: 'axis',
+        trigger: "axis",
         axisPointer: {
-          type: 'cross'
+          type: "cross",
         },
         padding: 0,
         borderWidth: 0,
-        backgroundColor: 'transparent',
+        backgroundColor: "transparent",
         position: function (point: any, params: any, dom: any, rect: any, size: any) {
           // 提示框位置
-          let x = 0, y = 0
+          let x = 0,
+            y = 0;
           // 鼠标位置 特殊情况，去除左边菜单栏的宽度
-          let pointX = point[0], pointY = point[1]
+          let pointX = point[0],
+            pointY = point[1];
           // 外面div大小
-          let viweWdith = size.viewSize[0], viewHeight = size.viewSize[1]
+          let viweWdith = size.viewSize[0],
+            viewHeight = size.viewSize[1];
           //提示框大小
-          let boxWdith = size.contentSize[0], boxHeight = size.contentSize[1]
+          let boxWdith = size.contentSize[0],
+            boxHeight = size.contentSize[1];
 
-          
-          if(boxWdith > pointX) {
-            x = 5
+          if (boxWdith > pointX) {
+            x = 5;
           } else {
-            x = pointX - boxWdith - 10
+            x = pointX - boxWdith - 10;
           }
 
-          if(boxHeight > pointY) {
-            y = 5
+          if (boxHeight > pointY) {
+            y = 5;
           } else {
-            y = pointY - boxHeight - 10
+            y = pointY - boxHeight - 10;
           }
 
-          return [x, y]
-
+          return [x, y];
         },
         formatter: (data: any) => {
-          var params = data[0]
-          var str = ''
+          var params = data[0];
+          var str = "";
           data.forEach((item: any) => {
-            str += `<p><span class="chart-dot" style="background:${item.color}"></span>${item.seriesName}：<span class="amount num">${(this as any).$util.toFixed(item.value)}</span><span class="unit">亿元</span></span></p>`
-          })
+            str += `<p><span class="chart-dot" style="background:${item.color}"></span>${item.seriesName}：<span class="amount num">${(this as any).$util.toFixed(
+              item.value
+            )}</span><span class="unit">亿元</span></span></p>`;
+          });
           return `<div class="chart-tooltip">
             <p class="num">${params.axisValue}</p>
             ${str}
-          </div>`
-        }
+          </div>`;
+        },
       },
       xAxis: {
         data: xData,
@@ -179,107 +189,110 @@ export default class extends Vue {
         },
         axisLine: {
           lineStyle: {
-            color: '#162B5F'
-          }
+            color: "#162B5F",
+          },
         },
         axisLabel: {
-          color: '#44F0FF',
-          fontFamily: 'Times New Roman',
+          color: "#44F0FF",
+          fontFamily: "Times New Roman",
           formatter: (data: any) => {
-            if(this.curTab === 0){
-              return data.substring(5)
-            }else {
-              return parseInt(data.substring(5,7)) + 'M'
+            if (this.curTab === 0) {
+              return data.substring(5);
+            } else {
+              return parseInt(data.substring(5, 7)) + "M";
             }
-          }
-        }
+          },
+        },
       },
       yAxis: {
-        name: '亿元',
+        name: "亿元",
         nameTextStyle: {
-          padding: [0,6,0,0],
-          align: 'right',
-          color: '#44F0FF',
-          fontSize: 12
+          padding: [0, 6, 0, 0],
+          align: "right",
+          color: "#44F0FF",
+          fontSize: 12,
         },
         axisTick: {
-          show: false
+          show: false,
         },
         axisLabel: {
-          color: '#44F0FF',
-          fontFamily: 'Times New Roman'
+          color: "#44F0FF",
+          fontFamily: "Times New Roman",
         },
         splitLine: {
           lineStyle: {
-            color: '#162B5F'
-          }
+            color: "#162B5F",
+          },
         },
-        min: parseInt((Math.min.apply(null, data1.concat(data2) as any)) as any)
+        min: parseInt(Math.min.apply(null, data1.concat(data2) as any) as any),
       },
       series: [
         {
-          name: '余额',
-          type: 'line',
+          name: "余额",
+          type: "line",
           data: data1,
           smooth: true,
-          symbol: 'none',
+          symbol: "none",
           areaStyle: {
             color: {
-              type: 'linear',
-              x:0,
-              y:0,
-              x2:0,
-              y2:1,
-              colorStops: [{
-                offset: 0, color: 'rgba(68, 240, 255, 0.3)'
-              },{
-                offset: 1, color: 'rgba(2, 17, 50, 0.3)'
-              }],
-              global: false
-            }
+              type: "linear",
+              x: 0,
+              y: 0,
+              x2: 0,
+              y2: 1,
+              colorStops: [
+                {
+                  offset: 0,
+                  color: "rgba(68, 240, 255, 0.3)",
+                },
+                {
+                  offset: 1,
+                  color: "rgba(2, 17, 50, 0.3)",
+                },
+              ],
+              global: false,
+            },
           },
           animationDuration: 2000,
-          animationEasing: 'cubicInOut'
+          animationEasing: "cubicInOut",
         },
         {
-          name: '日均',
-          type: 'line',
+          name: "日均",
+          type: "line",
           data: data2,
           smooth: true,
-          symbol: 'none',
+          symbol: "none",
           animationDuration: 2000,
-          animationEasing: 'cubicInOut'
-        }]
-    }
-    this.chart.setOption(option, true)
+          animationEasing: "cubicInOut",
+        },
+      ],
+    };
+    this.chart.setOption(option, true);
   }
-
 }
 </script>
 
 <style lang="scss" scoped>
-  .depTrendChart-component {
-    position: relative;
-    .tab {
-      font-size: 12px;
-      position: absolute;
-      top: 10px;
-      right: 0;
-      border: 1px solid rgba(64, 214, 246, 0.6);
-      border-radius: 3px;
-      li {
-        cursor: pointer;
-        float: left;
-        padding: 0 14px;
-        height: 20px;
-        line-height: 20px;
-        color: #40D5F5;
-        &.active {
-          background: rgba(64, 214, 246, 0.2);
-        }
-
+.depTrendChart-component {
+  position: relative;
+  .tab {
+    font-size: 12px;
+    position: absolute;
+    top: 10px;
+    right: 0;
+    border: 1px solid rgba(64, 214, 246, 0.6);
+    border-radius: 3px;
+    li {
+      cursor: pointer;
+      float: left;
+      padding: 0 14px;
+      height: 20px;
+      line-height: 20px;
+      color: #40d5f5;
+      &.active {
+        background: rgba(64, 214, 246, 0.2);
       }
     }
-   
   }
+}
 </style>

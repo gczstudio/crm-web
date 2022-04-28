@@ -1,39 +1,39 @@
-import { VuexModule, Module, Mutation, getModule } from 'vuex-module-decorators'
-import { Route } from 'vue-router'
-import store from '@/store'
+import { VuexModule, Module, Mutation, getModule } from "vuex-module-decorators";
+import { Route } from "vue-router";
+import store from "@/store";
 
 export interface ITagView extends Partial<Route> {
-  title?: string
+  title?: string;
 }
 
 export interface IHomeState {
-  chartStatus: string
-  chartConfig: Array<any>
-  dragStatus: string
-  dragType: string
-  customTreeData:  Array<any>
-  cardData:  Array<any>
-  chartData:  Array<any>
-  rankData:  Array<any>
-  needAlignUpdate: boolean
+  chartStatus: string;
+  chartConfig: Array<any>;
+  dragStatus: string;
+  dragType: string;
+  customTreeData: Array<any>;
+  cardData: Array<any>;
+  chartData: Array<any>;
+  rankData: Array<any>;
+  needAlignUpdate: boolean;
 }
 
-@Module({ dynamic: true, store, name: 'home' })
+@Module({ dynamic: true, store, name: "home" })
 class Home extends VuexModule implements IHomeState {
-  chartStatus: string = 'closed';
+  chartStatus = "closed";
   chartConfig: Array<any> = [];
-  dragStatus: string = '';
-  dragType: string = '';
+  dragStatus = "";
+  dragType = "";
   customTreeData: Array<any> = [];
   cardData: Array<any> = [];
   chartData: Array<any> = [];
   rankData: Array<any> = [];
-  noticeTotal: string = '';
-  needAlignUpdate = false
+  noticeTotal = "";
+  needAlignUpdate = false;
 
   @Mutation
   UPDATE_CHART_STATUS(status: string) {
-    this.chartStatus = status
+    this.chartStatus = status;
   }
 
   @Mutation
@@ -55,7 +55,6 @@ class Home extends VuexModule implements IHomeState {
   UPDATE_CUSTOM_TREE_DATA(data: Array<any>) {
     this.customTreeData = data;
   }
-
 
   @Mutation
   UPDATE_CARD_DATA(data: Array<any>) {
@@ -81,7 +80,6 @@ class Home extends VuexModule implements IHomeState {
   UPDATE_NEED_ALIGN_UPDATE(bool: boolean) {
     this.needAlignUpdate = bool;
   }
-
 }
 
-export const HomeModule = getModule(Home)
+export const HomeModule = getModule(Home);

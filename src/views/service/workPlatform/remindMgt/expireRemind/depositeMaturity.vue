@@ -25,12 +25,12 @@
               <template slot-scope="scope">
                 <div class="yu-table__company" @click.prevent="customerViewFn(scope.row)">
                   <i class="iconfont icon-qiyelogo"></i>
-                  {{scope.row.custName}}
+                  {{ scope.row.custName }}
                 </div>
               </template>
             </yu-xtable-column>
             <yu-xtable-column label="核心客户号" prop="custId" :show-overflow-tooltip="true" is-num sortable="custom"></yu-xtable-column>
-            <yu-xtable-column label="账户名称"  width="200" prop="acctName" :show-overflow-tooltip="true" sortable="custom"></yu-xtable-column>
+            <yu-xtable-column label="账户名称" width="200" prop="acctName" :show-overflow-tooltip="true" sortable="custom"></yu-xtable-column>
             <yu-xtable-column label="账号" prop="acctNo" :show-overflow-tooltip="true" is-num sortable="custom"></yu-xtable-column>
             <yu-xtable-column label="款项号" prop="accSubNo" :show-overflow-tooltip="true" is-num sortable="custom"></yu-xtable-column>
             <yu-xtable-column label="产品名称" prop="prodName" :show-overflow-tooltip="true" is-num sortable="custom"></yu-xtable-column>
@@ -50,92 +50,96 @@
 
 <script lang="ts">
 import { Component, Ref, Vue, Watch } from "vue-property-decorator";
-import { backend } from '@/config'
+import { backend } from "@/config";
 import moment from "moment";
 import { ServiceModule } from "@/store/modules/service";
-import ParamsSet from '../paramsSet/index.vue'
+import ParamsSet from "../paramsSet/index.vue";
 
 @Component({
   name: "DepositeMaturity",
   components: {
-    ParamsSet
-  }
+    ParamsSet,
+  },
 })
 export default class extends Vue {
-  @Ref('searchForm') searchForm: any;
-  @Ref('refTable') refTable: any;
+  @Ref("searchForm") searchForm: any;
+  @Ref("refTable") refTable: any;
   private dataUrl = backend.workService + "/api/warntype/querytimedps";
   private contentVisible = false;
 
-  private queryFormData:any = {
-    remindType: '02',
-    remindSType: '0201'
-  }
+  private queryFormData: any = {
+    remindType: "02",
+    remindSType: "0201",
+  };
 
   private baseParams = {
     condition: JSON.stringify({
-      remindType: '02',
-      remindSType: '0201',
-      isMark: '1'
-    })
-  }
+      remindType: "02",
+      remindSType: "0201",
+      isMark: "1",
+    }),
+  };
 
   private startPickerOptions = {
     disabledDate: (time: Date) => {
       if (this.queryFormData.dateEnd) {
         return time.getTime() >= new Date(this.queryFormData.dateEnd).getTime();
       }
-    }
-  }
+    },
+  };
 
   private endPickerOptions = {
     disabledDate: (time: Date) => {
       if (this.queryFormData.dateStart) {
         return time.getTime() <= new Date(this.queryFormData.dateStart).getTime() - 86400000;
       }
-    }
-  }
+    },
+  };
 
   get remindTypeOptions() {
     return ServiceModule.remindOptions.map((item: any) => {
       return {
         key: item.remindCategoryId,
-        value: item.remindCategoryNm
-      }
-    })
+        value: item.remindCategoryNm,
+      };
+    });
   }
 
   get remindSTypeOptions() {
-    return (ServiceModule.remindOptions.find((item:any) => item.remindCategoryId==='02') as any)?.childList.map((item: any) => {
+    return (ServiceModule.remindOptions.find((item: any) => item.remindCategoryId === "02") as any)?.childList.map((item: any) => {
       return {
         key: item.remindSubclassId,
-        value: item.remindSubclassNm
-      }
-    })
+        value: item.remindSubclassNm,
+      };
+    });
   }
 
   get isMark() {
     return ServiceModule.isMark;
   }
 
-  @Watch('isMark')
+  @Watch("isMark")
   onIsMarkChange() {
-    this.isMark === '2' && this.searchFn()
+    this.isMark === "2" && this.searchFn();
   }
 
   mounted() {
-    this.searchFn()
-    this.$checkCtr('export') && this.$exportQueue.addQueue(this.$route.path, this.exportFn)
+    this.searchFn();
+    this.$checkCtr("export") && this.$exportQueue.addQueue(this.$route.path, this.exportFn);
   }
 
   searchFn() {
-    this.refTable.remoteData({
-      condition:JSON.stringify({
-        isMark: this.isMark
-      })
-    }, true, () => {
-      ServiceModule.SET_IS_MARK('1')
-    })
+    this.refTable.remoteData(
+      {
+        condition: JSON.stringify({
+          isMark: this.isMark,
+        }),
+      },
+      true,
+      () => {
+        ServiceModule.SET_IS_MARK("1");
+      }
+    );
   }
 
   // 参数设置
@@ -156,33 +160,32 @@ export default class extends Vue {
 
   // 大类变化
   remindTypeChange(value: string) {
-    ServiceModule.SET_REMIND_TYPE(value)
-    let remindSType = (ServiceModule.remindOptions.find((item:any) => item.remindCategoryId===value) as any)?.childList[0].remindSubclassId
-    ServiceModule.SET_REMIND_S_TYPE(remindSType)
+    ServiceModule.SET_REMIND_TYPE(value);
+    let remindSType = (ServiceModule.remindOptions.find((item: any) => item.remindCategoryId === value) as any)?.childList[0].remindSubclassId;
+    ServiceModule.SET_REMIND_S_TYPE(remindSType);
   }
 
   // 小类变化
   remindSTypeChange(value: string) {
-    ServiceModule.SET_REMIND_S_TYPE(value)
+    ServiceModule.SET_REMIND_S_TYPE(value);
   }
 
-  exportFn (showTipModal?:boolean) {
+  exportFn(showTipModal?: boolean) {
     var searchQuery: any = (this as any)._.assign({}, this.searchForm.searchModel, {
-      fileName: '存款到期提醒',
+      fileName: "存款到期提醒",
       queryField: this.searchForm.searchQueryField,
-      isMark: this.isMark
+      isMark: this.isMark,
     });
     var apiParams = {
-      url: backend.workService + '/api/warntype/exportquerytimedps',
+      url: backend.workService + "/api/warntype/exportquerytimedps",
       params: searchQuery,
-      sort: this.refTable.sort
+      sort: this.refTable.sort,
     };
     (this as any).$util.exportTable({
       _this: this,
       apiParams,
-      showTipModal
+      showTipModal,
     });
   }
-
 }
 </script>

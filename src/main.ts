@@ -5,7 +5,7 @@ import "es6-promise/auto";
 
 import "normalize.css";
 import ElementUI from "element-ui";
-import animated from 'animate.css';
+import animated from "animate.css";
 
 // 主题
 import "@/styles/theme/customTheme/main.scss";
@@ -28,28 +28,22 @@ import * as directives from "@/directives";
 import "@/components/index.js";
 
 import lookup from "@/utils/lookup";
-import validator from '@/utils/validator'
-import checkCtr from '@/utils/permission'
-import exportQueue from '@/utils/exportQueue'
+import validator from "@/utils/validator";
+import checkCtr from "@/utils/permission";
+import exportQueue from "@/utils/exportQueue";
 
 import * as utils from "@/utils";
 
 import _ from "lodash";
 
-import mixin from '@/mixin'
+import mixin from "@/mixin";
 
-import Component from 'vue-class-component'
+import Component from "vue-class-component";
 
 //import VueClipboard from 'vue-clipboard2'
 
-
 // ts注册vue-router钩子函数
-Component.registerHooks([
- 'beforeRouteEnter',
- 'beforeRouteLeave',
- 'beforeRouteUpdate'     
-])
-
+Component.registerHooks(["beforeRouteEnter", "beforeRouteLeave", "beforeRouteUpdate"]);
 
 Vue.mixin(mixin);
 

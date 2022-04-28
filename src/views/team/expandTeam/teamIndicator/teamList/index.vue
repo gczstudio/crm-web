@@ -6,10 +6,10 @@
       </template>
       <template v-slot:form>
         <yu-xform ref="searchForm" :model="queryFormData" related-table-name="refTable" form-type="search">
-            <yu-xform-group :column="4">
-              <yu-xform-item label="数据日期" name="etlDate" ctype="date-picker" placeholder="数据日期"></yu-xform-item>
-            </yu-xform-group>
-          </yu-xform>
+          <yu-xform-group :column="4">
+            <yu-xform-item label="数据日期" name="etlDate" ctype="date-picker" placeholder="数据日期"></yu-xform-item>
+          </yu-xform-group>
+        </yu-xform>
       </template>
       <template v-slot:table>
         <yu-xtable ref="refTable" :data-url="dataUrl" row-number :base-params="baseParams" selection-type="checkbox" :dynamic-height="true" border>
@@ -46,66 +46,63 @@
 
 <script lang="ts">
 import { Component, Prop, Ref, Vue, Watch } from "vue-property-decorator";
-import { backend } from '@/config';
+import { backend } from "@/config";
 import moment from "moment";
-import TeamCustList from '../teamCustList/index.vue'
+import TeamCustList from "../teamCustList/index.vue";
 @Component({
   name: "TeamList",
   components: {
-    TeamCustList
-  }
+    TeamCustList,
+  },
 })
 export default class extends Vue {
-  @Ref('searchForm') searchForm: any;
-  @Ref('refTable') refTable: any;
-  private dataDt = sessionStorage.getItem('dataDt');
-  private dataUrl = backend.teamCenter + '/api/custteam/querytminfo';
+  @Ref("searchForm") searchForm: any;
+  @Ref("refTable") refTable: any;
+  private dataDt = sessionStorage.getItem("dataDt");
+  private dataUrl = backend.teamCenter + "/api/custteam/querytminfo";
   private queryFormData = {
-    etlDate: moment(this.dataDt).format('YYYY-MM-DD')
-  }
+    etlDate: moment(this.dataDt).format("YYYY-MM-DD"),
+  };
   private baseParams = {
     condition: JSON.stringify({
-      etlDate: moment(this.dataDt).format('YYYY-MM-DD')
-    })
-  }
-  private contentVisible = false
-  private currentRow = {}
+      etlDate: moment(this.dataDt).format("YYYY-MM-DD"),
+    }),
+  };
+  private contentVisible = false;
+  private currentRow = {};
 
-  mounted () {
-    this.$checkCtr('exportTeam') && this.$exportQueue.addQueue(this.$route.path, this.exportFn, true);
+  mounted() {
+    this.$checkCtr("exportTeam") && this.$exportQueue.addQueue(this.$route.path, this.exportFn, true);
   }
 
   viewCustomer(row: any) {
     this.currentRow = {
       ...row,
-      etlDate: this.queryFormData.etlDate
+      etlDate: this.queryFormData.etlDate,
     };
     this.contentVisible = true;
   }
 
-  exportFn (showTipModal?:boolean) {
+  exportFn(showTipModal?: boolean) {
     var searchQuery: any = (this as any)._.assign({}, this.searchForm.searchModel, {
-      etlDate: moment(this.dataDt).format('YYYY-MM-DD'),
-      fileName: '团队列表',
+      etlDate: moment(this.dataDt).format("YYYY-MM-DD"),
+      fileName: "团队列表",
       queryField: this.searchForm.searchQueryField,
     });
     var apiParams = {
-      url: backend.teamCenter + '/api/custteam/exportquerytminfo',
+      url: backend.teamCenter + "/api/custteam/exportquerytminfo",
       params: searchQuery,
-      sort: this.refTable.sort
+      sort: this.refTable.sort,
     };
     (this as any).$util.exportTable({
       _this: this,
       apiParams,
-      showTipModal
+      showTipModal,
     });
   }
 
-  destroyed () {
+  destroyed() {
     this.$exportQueue.removeQueue(this.$route.path, true);
   }
-
-
 }
 </script>
-

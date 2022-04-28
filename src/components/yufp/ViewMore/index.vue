@@ -13,7 +13,7 @@
     <div class="view-more-wrapper">
       <img class="view-more-close" src="../../../assets/images/common/close-more.png" @click="closeHandler" />
       <div class="view-more-content">
-        <div class="unit" v-if="viewOptions.unit">单位：{{viewOptions.unit}}</div>
+        <div class="unit" v-if="viewOptions.unit">单位：{{ viewOptions.unit }}</div>
         <top-table
           v-if="height && drawerVisible"
           :height="height"
@@ -37,34 +37,34 @@
 
 <script>
 export default {
-  name: 'ViewMore',
+  name: "ViewMore",
   props: {
     visible: Boolean,
     options: {
       type: Object,
       default: function () {
         return {};
-      }
+      },
     },
     width: {
       type: Number,
-      default: 1000
-    }
+      default: 1000,
+    },
   },
   data: function () {
     return {
       height: 0,
       viewOptions: {},
-      drawerVisible: false
+      drawerVisible: false,
     };
   },
   watch: {
     visible: function () {
-      this.drawerVisible = this.visible
+      this.drawerVisible = this.visible;
     },
     options: function (options) {
       this.viewOptions = options;
-    }
+    },
   },
   mounted: function () {
     this.height = document.body.clientHeight - 100;
@@ -81,16 +81,16 @@ export default {
       this.viewOptions = copyOpitons;
     },
     closeHandler: function () {
-      this.$emit('update:visible', false);
-    }
-  }
-}
+      this.$emit("update:visible", false);
+    },
+  },
+};
 </script>
 <style lang="scss">
 .view-more-drawer {
   padding: 20px;
   position: relative;
-  overflow: visible!important;
+  overflow: visible !important;
   .unit {
     position: absolute;
     top: 22px;
@@ -98,7 +98,11 @@ export default {
   }
   .view-more-wrapper {
     .view-more-close {
-      position: absolute; top: 50%; left: -24px; transform: translateY(-50%); cursor: pointer;
+      position: absolute;
+      top: 50%;
+      left: -24px;
+      transform: translateY(-50%);
+      cursor: pointer;
     }
   }
 }

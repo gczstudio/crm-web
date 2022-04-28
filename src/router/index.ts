@@ -1,14 +1,14 @@
-import Vue from 'vue'
-import VueRouter, { RouteConfig } from 'vue-router'
+import Vue from "vue";
+import VueRouter, { RouteConfig } from "vue-router";
 
 /* Layout */
-import Layout from '@/layout/index.vue'
-import customerRoutes from './modules/customer'
-import commonRoutes from './modules/common'
+import Layout from "@/layout/index.vue";
+import customerRoutes from "./modules/customer";
+import commonRoutes from "./modules/common";
 
 /* Router modules */
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
 /*
   Note: sub-menu only appear when children.length>=1
@@ -42,49 +42,49 @@ Vue.use(VueRouter)
 
 export const constantRoutes: RouteConfig[] = [
   {
-    path: '/redirect',
+    path: "/redirect",
     component: Layout,
     meta: { hidden: true },
     children: [
       {
-        path: '/redirect/:path(.*)',
-        component: () => import('@/views/redirect/index.vue')
-      }
-    ]
+        path: "/redirect/:path(.*)",
+        component: () => import("@/views/redirect/index.vue"),
+      },
+    ],
   },
   {
-    path: '/login',
-    component: () => import('@/views/login/index.vue'),
-    meta: { hidden: true }
+    path: "/login",
+    component: () => import("@/views/login/index.vue"),
+    meta: { hidden: true },
   },
   // {
   //   path: '/system',
   //   component: () => import('@/views/system/authMgt/funcAuthMgt/index.vue'),
   // },
   customerRoutes,
-  commonRoutes
-]
+  commonRoutes,
+];
 
+const createRouter = () =>
+  new VueRouter({
+    // mode: 'history',  // Disabled due to Github Pages doesn't support this, enable this if you need.
+    scrollBehavior: (to, from, savedPosition) => {
+      if (savedPosition) {
+        return savedPosition;
+      } else {
+        return { x: 0, y: 0 };
+      }
+    },
+    base: process.env.BASE_URL,
+    routes: constantRoutes,
+  });
 
-const createRouter = () => new VueRouter({
-  // mode: 'history',  // Disabled due to Github Pages doesn't support this, enable this if you need.
-  scrollBehavior: (to, from, savedPosition) => {
-    if (savedPosition) {
-      return savedPosition
-    } else {
-      return { x: 0, y: 0 }
-    }
-  },
-  base: process.env.BASE_URL,
-  routes: constantRoutes
-})
-
-const router = createRouter()
+const router = createRouter();
 
 // Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter() {
   const newRouter = createRouter();
-  (router as any).matcher = (newRouter as any).matcher // reset router
+  (router as any).matcher = (newRouter as any).matcher; // reset router
 }
 
-export default router
+export default router;

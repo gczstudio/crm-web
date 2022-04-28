@@ -14,37 +14,19 @@
       />
     </div> -->
     <el-scrollbar wrap-class="scrollbar-wrapper scrollbar-wrapper-custom">
-      <div
-        :class="{ 'nav-item': true, active: route.path === selectNav.path }"
-        v-for="route in routes"
-        :key="route.path"
-        @click="navClickFn(route, $event)"
-      >
-        <img class="icon-img" :src="require(`@/assets/images/common/menu/${getIcon(route) || 'home'}.png`)">
+      <div :class="{ 'nav-item': true, active: route.path === selectNav.path }" v-for="route in routes" :key="route.path" @click="navClickFn(route, $event)">
+        <img class="icon-img" :src="require(`@/assets/images/common/menu/${getIcon(route) || 'home'}.png`)" />
         <!-- <i :class="['iconfont', getIcon(route)]"></i> -->
         <p>{{ getTitle(route) }}</p>
       </div>
     </el-scrollbar>
-    <div id="mask" class="mask" v-show="selectNav.children &&selectNav.children.length &&selectNav.path !== '/'"></div>
-    <div
-      ref="childRef"
-      class="nav-item__children"
-      v-if="selectNav.children && selectNav.children.length && selectNav.path !== '/'"
-    >
+    <div id="mask" class="mask" v-show="selectNav.children && selectNav.children.length && selectNav.path !== '/'"></div>
+    <div ref="childRef" class="nav-item__children" v-if="selectNav.children && selectNav.children.length && selectNav.path !== '/'">
       <el-scrollbar wrap-class="scrollbar-wrapper">
-        <div
-          class="nav-item__children-item"
-          v-for="child in selectNav.children"
-          :key="child.path"
-        >
+        <div class="nav-item__children-item" v-for="child in selectNav.children" :key="child.path">
           <div class="nav-item__title">{{ child.meta.title }}</div>
           <ul class="clearfix">
-            <li
-              v-for="ele in child.children.filter((item) => !(item.meta && item.meta.hidden === true))"
-              :key="ele.path"
-              @click="goPageFn(ele)"
-              :class="{'menu-readonly': ele.menuTip === '建设中'}"
-            >
+            <li v-for="ele in child.children.filter((item) => !(item.meta && item.meta.hidden === true))" :key="ele.path" @click="goPageFn(ele)" :class="{ 'menu-readonly': ele.menuTip === '建设中' }">
               <el-tooltip v-if="ele.menuTip === '建设中'" popper-class="menu_tool-tip" content="建设中..." placement="top">
                 <div>{{ ele.meta.title }}</div>
               </el-tooltip>
@@ -100,11 +82,7 @@ export default class extends Vue {
   }
 
   mounted() {
-   
-  
-    document
-      .querySelector("#mask")
-      ?.addEventListener("click", this.resetSelectNav);
+    document.querySelector("#mask")?.addEventListener("click", this.resetSelectNav);
   }
 
   resetSelectNav() {
@@ -140,34 +118,34 @@ export default class extends Vue {
   }
 
   goPageFn(ele: any) {
-    if(ele.menuTip === '建设中') return;
+    if (ele.menuTip === "建设中") return;
     let path = ele.path;
-    if(path.includes('http')) {
+    if (path.includes("http")) {
       // 学习首页跳转到wiki
-      if(path.includes('xwiki')) {
-        let loginInfo = JSON.parse((sessionStorage.getItem('loginInfo') as any));
+      if (path.includes("xwiki")) {
+        let loginInfo = JSON.parse(sessionStorage.getItem("loginInfo") as any);
         this.$util.formPost({
           path,
           loginInfo: {
-            xredirect: '/xwiki/bin/view/Main/',
-            form_token: 'qYu88x5YVkQAm2KLxrlNSw',
+            xredirect: "/xwiki/bin/view/Main/",
+            form_token: "qYu88x5YVkQAm2KLxrlNSw",
             j_username: loginInfo.username,
-            j_password: 'admin@123'
-          }
-        })
+            j_password: "admin@123",
+          },
+        });
         return;
       }
-      let loginInfo = JSON.parse((sessionStorage.getItem('loginInfo') as any));
+      let loginInfo = JSON.parse(sessionStorage.getItem("loginInfo") as any);
       // 需要用户名和密码的连接
-      if(path.includes("{{userName}}")){
-        path = path.replace('{{userName}}', loginInfo.username).replace('{{password}}', loginInfo.password)
+      if (path.includes("{{userName}}")) {
+        path = path.replace("{{userName}}", loginInfo.username).replace("{{password}}", loginInfo.password);
       }
-      window.open(path)
+      window.open(path);
       return;
     }
     // 点击大屏驾驶舱时，新开窗口
-    if(path.includes('cockpit') && path.split('/').length > 3) {
-      window.open(window.location.origin + window.location.pathname + '#'+path);
+    if (path.includes("cockpit") && path.split("/").length > 3) {
+      window.open(window.location.origin + window.location.pathname + "#" + path);
       return;
     }
     // let path = Array.from(arguments).join("/");
@@ -183,14 +161,13 @@ export default class extends Vue {
 
 <style lang="scss">
 .menu_tool-tip {
-  z-index: 100002!important;
+  z-index: 100002 !important;
 }
 .scrollbar-wrapper-custom {
   position: relative;
   // reset element-ui css
   .horizontal-collapse-transition {
-    transition: 0s width ease-in-out, 0s padding-left ease-in-out,
-      0s padding-right ease-in-out;
+    transition: 0s width ease-in-out, 0s padding-left ease-in-out, 0s padding-right ease-in-out;
   }
 
   .scrollbar-wrapper {
@@ -276,17 +253,17 @@ export default class extends Vue {
   z-index: 10001;
   color: #333;
   box-shadow: 0px 3px 7px rgba(0, 0, 0, 0.2);
-  transition: all .3s;
+  transition: all 0.3s;
   .nav-item__children-item {
     padding: 0 16px;
     margin-top: 30px;
     font-size: 16px;
-    
-    &+.nav-item__children-item {
+
+    & + .nav-item__children-item {
       margin-top: 20px;
     }
     .nav-item__title {
-      border-left: 4px solid  $blue;
+      border-left: 4px solid $blue;
       font-weight: bold;
       padding-left: 10px;
       margin-bottom: 20px;
@@ -297,11 +274,11 @@ export default class extends Vue {
     ul {
       padding-bottom: 4px;
       padding-left: 13px;
-      border-bottom: 1px solid #E1E1E1;
+      border-bottom: 1px solid #e1e1e1;
       li {
         float: left;
         line-height: 1;
-        margin:0 16px 16px 0;
+        margin: 0 16px 16px 0;
         padding-right: 16px;
         border-right: 1px solid #333;
         font-size: 16px;
@@ -319,14 +296,14 @@ export default class extends Vue {
         cursor: default;
         color: #999;
         &:hover {
-          color: #999!important;
+          color: #999 !important;
         }
       }
     }
   }
 }
 
-@media screen and (max-width: 1680px) { 
+@media screen and (max-width: 1680px) {
   .menu-logo {
     left: 17px;
   }
@@ -343,7 +320,7 @@ export default class extends Vue {
     left: 56px;
     height: calc(100% - 50px);
     .nav-item__children-item {
-      &+.nav-item__children-item {
+      & + .nav-item__children-item {
         margin-top: 16px;
       }
       padding: 0 8px;
@@ -355,12 +332,12 @@ export default class extends Vue {
       ul {
         padding-bottom: 2px;
         padding-left: 13px;
-      li {
-        margin:0 14px 14px 0;
-        padding-right: 14px;
-        font-size: 15px;
+        li {
+          margin: 0 14px 14px 0;
+          padding-right: 14px;
+          font-size: 15px;
+        }
       }
-    }
     }
   }
 }

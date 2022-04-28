@@ -4,14 +4,14 @@
       <i class="icon iconfont icon-laba"></i>
       <span>
         公告(
-        <i class="num">{{noticeTotal > 10 ? "10+" : noticeTotal }}</i> ) :
+        <i class="num">{{ noticeTotal > 10 ? "10+" : noticeTotal }}</i> ) :
       </span>
     </div>
     <div class="notice-content" ref="listRef">
       <ul class="rowleft" ref="rowRef" @mouseenter="mouseenterFn" @mouseleave="mouseleaveFn">
-        <li v-for="(item , index) in remindData" :key="index" @click="details(item)">
-          <span class="notice-top">{{item.isTop == 'Y' ? "【置顶】" : "" }}</span>
-          {{item.noticeTitle}}
+        <li v-for="(item, index) in remindData" :key="index" @click="details(item)">
+          <span class="notice-top">{{ item.isTop == "Y" ? "【置顶】" : "" }}</span>
+          {{ item.noticeTitle }}
         </li>
       </ul>
     </div>
@@ -43,18 +43,18 @@ import Details from "./details.vue";
   },
 })
 export default class extends Vue {
-  @Ref('rowRef') rowRef: any;
-  @Ref('listRef') listRef: any;
+  @Ref("rowRef") rowRef: any;
+  @Ref("listRef") listRef: any;
   private roleInfo: any; // 定义登录后seesion中当前选中的数据
   private userInfo: any; // 定义登录后seesion中的数据
-  private remindData:any = []; // 定义未读的总数据
-  private noticeTotal: string = ""; // 定义未读的总数据条数
+  private remindData: any = []; // 定义未读的总数据
+  private noticeTotal = ""; // 定义未读的总数据条数
   private noticeDetail: object = {}; // 定义当前未读数据详情
-  private dialogVisible: boolean = false;
-  private timer: any = null
-  private disArr: any = null
-  private curPos: any = 0
-  private ulWidth: any = 0
+  private dialogVisible = false;
+  private timer: any = null;
+  private disArr: any = null;
+  private curPos: any = 0;
+  private ulWidth: any = 0;
   beforeCreate() {
     this.userInfo = getUserInfo(); // 获取登录后seesion中的数据
     this.roleInfo = getCheckedRole();
@@ -67,36 +67,36 @@ export default class extends Vue {
     this.clearTimer();
   }
 
-  mouseleaveFn () {
+  mouseleaveFn() {
     this.moveLeft();
   }
 
-  moveLeft () {
+  moveLeft() {
     this.ulWidth = this.ulWidth || this.rowRef.clientWidth;
     var startDis = 0;
-    if(this.curPos) {
+    if (this.curPos) {
       startDis = this.curPos;
       this.curPos = 0;
     }
-    
+
     var boxWidth = this.listRef.clientWidth;
     this.timer = setInterval(() => {
-      if(!this.rowRef) return;
+      if (!this.rowRef) return;
       startDis -= 1;
-      if(startDis === 0) {
+      if (startDis === 0) {
         this.ulWidth = this.rowRef.clientWidth;
       }
 
-      if(Math.abs(startDis) > this.ulWidth) {
-        startDis = boxWidth
-        this.ulWidth = boxWidth
+      if (Math.abs(startDis) > this.ulWidth) {
+        startDis = boxWidth;
+        this.ulWidth = boxWidth;
       }
       this.curPos = startDis;
-      this.rowRef.style = `transform: translateX(${startDis}px)`
-    }, 10)
+      this.rowRef.style = `transform: translateX(${startDis}px)`;
+    }, 10);
   }
 
-  clearTimer () {
+  clearTimer() {
     clearInterval(this.timer);
     this.timer = null;
   }
@@ -106,10 +106,7 @@ export default class extends Vue {
     let initTableParams = {
       // 定义查询未读数据的请求参数
       condition: JSON.stringify({
-        reciveOrg: [
-          { id: this.userInfo.org.code },
-          { id: this.roleInfo.orgCode },
-        ],
+        reciveOrg: [{ id: this.userInfo.org.code }, { id: this.roleInfo.orgCode }],
         userId: this.userInfo.userId,
         roles: [{ id: this.roleInfo.roleCode }],
         readSts: "未阅",
@@ -158,7 +155,6 @@ export default class extends Vue {
   destroyed() {
     this.clearTimer();
   }
-
 }
 </script>
 

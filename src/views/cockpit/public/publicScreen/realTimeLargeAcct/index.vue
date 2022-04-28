@@ -2,11 +2,14 @@
   <div class="realTimeLargeAcct-component">
     <ul>
       <li v-for="item in data" :key="item.id">
-        <img src="~@/assets/images/screen/arrow.png" alt="">
+        <img src="~@/assets/images/screen/arrow.png" alt="" />
         <scroll-line class="scroll">
-          <p>{{`${item.custName}${item.dcFlag === 'C' ? '来款':'走款'}`}}<span>{{$util.formatMoney(item.tranAmt / 10000)}}</span>万元</p>
+          <p>
+            {{ `${item.custName}${item.dcFlag === "C" ? "来款" : "走款"}` }}<span>{{ $util.formatMoney(item.tranAmt / 10000) }}</span
+            >万元
+          </p>
         </scroll-line>
-        <span class="time">{{item.tranTime.slice(11, 16)}}</span>
+        <span class="time">{{ item.tranTime.slice(11, 16) }}</span>
       </li>
     </ul>
   </div>
@@ -14,33 +17,31 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import ScrollLine from './scrollLine/index.vue'
-import * as homeApi  from '@/api/home'
+import ScrollLine from "./scrollLine/index.vue";
+import * as homeApi from "@/api/home";
 @Component({
   name: "RealTimeLargeAcct",
   components: {
-    ScrollLine
-  }
+    ScrollLine,
+  },
 })
 export default class extends Vue {
- 
- private data = []
+  private data = [];
 
- mounted() {
-  this.queryLargerAccountFlow()
- }
+  mounted() {
+    this.queryLargerAccountFlow();
+  }
 
- queryLargerAccountFlow() {
-   let params = {
+  queryLargerAccountFlow() {
+    let params = {
       page: 1,
       size: 10,
-      condition: JSON.stringify({"amt":10000000})
-   }
-   homeApi.queryLargerAccountFlow(params).then(res => {
-     this.data = res.data.slice(0, 4)
-   })
- }
-
+      condition: JSON.stringify({ amt: 10000000 }),
+    };
+    homeApi.queryLargerAccountFlow(params).then((res) => {
+      this.data = res.data.slice(0, 4);
+    });
+  }
 }
 </script>
 
@@ -50,7 +51,7 @@ export default class extends Vue {
   li {
     font-size: 14px;
     position: relative;
-    background: rgba(0, 183, 238, .1);
+    background: rgba(0, 183, 238, 0.1);
     height: 32px;
     line-height: 32px;
     padding: 0 5px 0 3px;
@@ -65,7 +66,7 @@ export default class extends Vue {
       vertical-align: middle;
       width: calc(100% - 55px);
       overflow: hidden;
-      p{
+      p {
         white-space: nowrap;
       }
     }
@@ -73,7 +74,7 @@ export default class extends Vue {
       position: absolute;
       top: 4px;
       right: 5px;
-      color:#44F0FF;
+      color: #44f0ff;
       font-size: 12px;
     }
   }

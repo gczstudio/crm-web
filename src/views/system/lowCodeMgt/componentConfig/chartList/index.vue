@@ -12,7 +12,9 @@
               <el-col :span="8" v-for="item in scope.tableData" :key="item.rowId">
                 <div class="card-item">
                   <div class="card-item-top">
-                    <div class="card-item__img"><img src="https://t7.baidu.com/it/u=3180010982,1201664165&fm=74&app=80&size=f256,256&n=0&f=JPEG&fmt=auto?sec=1650560400&t=bd9ca514e4a0343cb1ab8d1dd62d594c" alt=""></div>
+                    <div class="card-item__img">
+                      <img src="https://t7.baidu.com/it/u=3180010982,1201664165&fm=74&app=80&size=f256,256&n=0&f=JPEG&fmt=auto?sec=1650560400&t=bd9ca514e4a0343cb1ab8d1dd62d594c" alt="" />
+                    </div>
                     <div class="card-item__info">
                       <p class="card-item__title">测试11</p>
                       <p class="c2"><i class="el-icon-user"></i>创建人：1</p>
@@ -40,29 +42,29 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop, Ref } from 'vue-property-decorator'
-import { backend } from '@/config'
-import AddComp from '../addComp/index.vue'
+import { Component, Vue, Prop, Ref } from "vue-property-decorator";
+import { backend } from "@/config";
+import AddComp from "../addComp/index.vue";
 @Component({
-  name: 'ChartList',
+  name: "ChartList",
   components: {
-    AddComp
-  }
+    AddComp,
+  },
 })
-export default class extends Vue { 
-  @Ref('compFormRef') compFormRef: any;
-  @Ref('propFormRef') propFormRef: any;
+export default class extends Vue {
+  @Ref("compFormRef") compFormRef: any;
+  @Ref("propFormRef") propFormRef: any;
 
-  private dataUrl = backend.mockService + '/lowcode/comp/list'
-  private compForm = {}
-  private addCompVisible = false
-  private compStatus = 'add'
+  private dataUrl = backend.mockService + "/lowcode/comp/list";
+  private compForm = {};
+  private addCompVisible = false;
+  private compStatus = "add";
 
-  private propForm = {}
-  private addPropVisible = false
-  private propStatus = 'add'
+  private propForm = {};
+  private addPropVisible = false;
+  private propStatus = "add";
 
-  private contentVisible = false
+  private contentVisible = false;
 
   addCompFn() {
     // this.$message.warning('请先选择左侧目录');
@@ -70,18 +72,17 @@ export default class extends Vue {
   }
 
   saveCompFn() {
-    console.log(1)
+    console.log(1);
   }
 
   addPropFn() {
     this.addPropVisible = true;
-    this.propFormRef && this.propFormRef.resetFields()
+    this.propFormRef && this.propFormRef.resetFields();
   }
 
   savePropFn() {
-    console.log(1)
+    console.log(1);
   }
-
 }
 </script>
 
@@ -96,7 +97,7 @@ export default class extends Vue {
     // z-index: 9999;
   }
 }
-.custom-container{
+.custom-container {
   padding: 0 16px;
   .card-item {
     margin-bottom: 16px;
@@ -105,7 +106,7 @@ export default class extends Vue {
     border-radius: 5px;
     .card-item-top {
       display: flex;
-      .card-item__img{
+      .card-item__img {
         flex: 12;
       }
       .card-item__info {
@@ -124,7 +125,7 @@ export default class extends Vue {
           white-space: nowrap;
         }
       }
-    } 
+    }
     .card-bts {
       margin-top: 12px;
       text-align: right;
@@ -132,7 +133,7 @@ export default class extends Vue {
         font-size: 12px;
         border-radius: 14px;
         border-color: #b3d8ff;
-        color: #007EFF;
+        color: #007eff;
         font-weight: normal;
       }
     }

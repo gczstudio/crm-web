@@ -1,41 +1,36 @@
 <template>
   <component v-model="conponentValue" v-bind="$attrs" v-on="$listeners" :is="getRealCtype()">
-     <template v-if="ctype==='select'">
-        <el-option
-          v-for="item in optionData"
-          :key="item.key"
-          :label="item.value"
-          :value="item.key">
-        </el-option>
-      </template>
-      <template v-if="ctype==='radio'">
-        <el-radio v-for="item in optionData" :key="item.key" :label="item.key">{{item.value}}</el-radio>
-      </template>
-    </component>
+    <template v-if="ctype === 'select'">
+      <el-option v-for="item in optionData" :key="item.key" :label="item.value" :value="item.key"> </el-option>
+    </template>
+    <template v-if="ctype === 'radio'">
+      <el-radio v-for="item in optionData" :key="item.key" :label="item.key">{{ item.value }}</el-radio>
+    </template>
+  </component>
 </template>
 
 <script>
 export default {
-  name: 'YuXformItemPart',
+  name: "YuXformItemPart",
   props: {
     value: [String, Number],
     options: [Array, String],
     dataCode: String,
-    ctype: String
+    ctype: String,
   },
   data: function () {
     return {
       optionData: [],
-      conponentValue: ''
+      conponentValue: "",
     };
   },
   watch: {
     conponentValue: function (val) {
-      this.$emit('input', val);
+      this.$emit("input", val);
     },
     options: function (val) {
       this.optionData = val;
-    }
+    },
   },
   created: function () {
     var _this = this;
@@ -51,19 +46,19 @@ export default {
     getRealCtype: function () {
       var ctype = this.ctype;
       if (!ctype) {
-        return 'el-input';
+        return "el-input";
       }
-      if (ctype.indexOf('el-') !== -1) {
+      if (ctype.indexOf("el-") !== -1) {
         return ctype;
       }
-      if (ctype.indexOf('yu') !== -1) {
+      if (ctype.indexOf("yu") !== -1) {
         return ctype;
       }
-      if (ctype === 'radio' || ctype === 'el-radio') {
-        return 'el-radio-group';
+      if (ctype === "radio" || ctype === "el-radio") {
+        return "el-radio-group";
       }
-      return 'el-' + ctype;
-    }
-  }
-}
+      return "el-" + ctype;
+    },
+  },
+};
 </script>

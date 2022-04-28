@@ -8,58 +8,14 @@
           <el-button icon="el-icon-video-play" @click="runBatch">执行跑批</el-button>
         </template>
         <template v-slot:form>
-          <yu-xform
-            ref="searchForm"
-            :model="queryFormData"
-            form-type="search"
-            :need-export="true"
-            class="search"
-          >
+          <yu-xform ref="searchForm" :model="queryFormData" form-type="search" :need-export="true" class="search">
             <yu-xform-group :column="4">
-              <yu-xform-item
-                label="数据日期"
-                placeholder="数据日期"
-                ctype="date-picker"
-                name="etlDate"
-                :rules="globalRules.input"
-              ></yu-xform-item>
-              <yu-xform-item
-                label="调整类型"
-                placeholder="调整类型"
-                ctype="select"
-                data-code="ADJ_TYPE"
-                name="adjType"
-                :rules="globalRules.input"
-              ></yu-xform-item>
-              <yu-xform-item
-                label="账户名称"
-                placeholder="账户名称"
-                ctype="input"
-                name="acctNm"
-                :rules="globalRules.input"
-              ></yu-xform-item>
-              <yu-xform-item
-                label="账号/款项/借据"
-                placeholder="账号/款项/借据"
-                ctype="input"
-                name="acctSubDebtNo"
-                :rules="globalRules.input"
-              ></yu-xform-item>
-              <yu-xform-item
-                label="考核归属条线"
-                placeholder="考核归属条线"
-                ctype="select"
-                name="settBlgBusi"
-                data-code="SETT_BLG_BUSI"
-                :rules="globalRules.input"
-              ></yu-xform-item>
-              <yu-xform-item
-                label="考核归属机构"
-                placeholder="考核归属机构"
-                ctype="yufp-org-tree"
-                name="settBlgOrgCode"
-                :tree-options="treeOptions"
-              ></yu-xform-item>
+              <yu-xform-item label="数据日期" placeholder="数据日期" ctype="date-picker" name="etlDate" :rules="globalRules.input"></yu-xform-item>
+              <yu-xform-item label="调整类型" placeholder="调整类型" ctype="select" data-code="ADJ_TYPE" name="adjType" :rules="globalRules.input"></yu-xform-item>
+              <yu-xform-item label="账户名称" placeholder="账户名称" ctype="input" name="acctNm" :rules="globalRules.input"></yu-xform-item>
+              <yu-xform-item label="账号/款项/借据" placeholder="账号/款项/借据" ctype="input" name="acctSubDebtNo" :rules="globalRules.input"></yu-xform-item>
+              <yu-xform-item label="考核归属条线" placeholder="考核归属条线" ctype="select" name="settBlgBusi" data-code="SETT_BLG_BUSI" :rules="globalRules.input"></yu-xform-item>
+              <yu-xform-item label="考核归属机构" placeholder="考核归属机构" ctype="yufp-org-tree" name="settBlgOrgCode" :tree-options="treeOptions"></yu-xform-item>
               <!-- <yu-xform-item
                 label="考核归属机构"
                 placeholder="考核归属机构"
@@ -67,287 +23,68 @@
                 name="settBlgOrgCode"
                 :rules="globalRules.input"
               ></yu-xform-item>-->
-              <yu-xform-item
-                label="调整方向"
-                placeholder="调整方向"
-                ctype="select"
-                data-code="ADJ_DIR_TYPE"
-                name="adjDirType"
-              ></yu-xform-item>
-              <yu-xform-item
-                label="导入人"
-                placeholder="导入人工号"
-                ctype="input"
-                name="impUserId"
-                :rules="globalRules.input"
-              ></yu-xform-item>
+              <yu-xform-item label="调整方向" placeholder="调整方向" ctype="select" data-code="ADJ_DIR_TYPE" name="adjDirType"></yu-xform-item>
+              <yu-xform-item label="导入人" placeholder="导入人工号" ctype="input" name="impUserId" :rules="globalRules.input"></yu-xform-item>
             </yu-xform-group>
           </yu-xform>
         </template>
         <template v-slot:table>
-          <yu-xtable
-            ref="refTable"
-            :data-url="dataUrl"
-            row-number
-            :dynamic-height="true"
-            border
-            max-height="700px"
-          >
-            <yu-xtable-column
-              label="调整类型"
-              prop="adjType"
-              width="120"
-              :show-overflow-tooltip="true"
-              data-code="ADJ_TYPE"
-              fixed="left"
-              sortable="custom"
-            ></yu-xtable-column>
-            <yu-xtable-column
-              label="账户名称"
-              prop="acctNm"
-              width="250"
-              fixed="left"
-              :show-overflow-tooltip="true"
-              is-num
-              sortable="custom"
-            ></yu-xtable-column>
-            <yu-xtable-column
-              label="账户/款项/借据"
-              prop="acctSubDebtNo"
-              min-width="180"
-              :show-overflow-tooltip="true"
-              fixed="left"
-              is-num
-              sortable="custom"
-            ></yu-xtable-column>
-            <yu-xtable-column
-              label="考核归属条线"
-              prop="settBlgBusi"
-              width="150"
-              data-code="SETT_BLG_BUSI"
-              :show-overflow-tooltip="true"
-              sortable="custom"
-            ></yu-xtable-column>
-            <yu-xtable-column
-              label="考核归属机构号"
-              prop="settBlgOrgCode"
-              width="140"
-              :show-overflow-tooltip="true"
-              is-num
-              sortable="custom"
-            ></yu-xtable-column>
-            <yu-xtable-column
-              label="考核归属机构名称"
-              prop="orgName"
-              width="160"
-              :show-overflow-tooltip="true"
-              sortable="custom"
-            ></yu-xtable-column>
-            <yu-xtable-column
-              label="涉及金额(元)"
-              prop="invoAmt"
-              width="130"
-              align="right"
-              format-money
-              :show-overflow-tooltip="true"
-              sortable="custom"
-            ></yu-xtable-column>
-            <yu-xtable-column
-              label="计算起始日"
-              prop="calBeginDate"
-              width="120"
-              :show-overflow-tooltip="true"
-              is-num
-              sortable="custom"
-            ></yu-xtable-column>
-            <yu-xtable-column
-              label="计算到期日"
-              prop="calEndDate"
-              width="120"
-              :show-overflow-tooltip="true"
-              is-num
-              sortable="custom"
-            ></yu-xtable-column>
-            <yu-xtable-column
-              label="调整方向"
-              prop="adjDirDesc"
-              width="120"
-              :show-overflow-tooltip="true"
-              data-code="ADJ_DIR_TYPE"
-              sortable="custom"
-            ></yu-xtable-column>
-            <yu-xtable-column
-              label="调整方向值"
-              prop="adjDirType"
-              width="120"
-              :show-overflow-tooltip="true"
-              is-num
-              sortable="custom"
-            ></yu-xtable-column>
-            <yu-xtable-column
-              label="余额调整方式"
-              prop="balAdjMode"
-              width="130"
-              :show-overflow-tooltip="true"
-              is-num
-              sortable="custom"
-            ></yu-xtable-column>
-            <yu-xtable-column
-              label="余额调整比例"
-              prop="balAdjPct"
-              width="150"
-              :show-overflow-tooltip="true"
-              sortable="custom"
-            >
+          <yu-xtable ref="refTable" :data-url="dataUrl" row-number :dynamic-height="true" border max-height="700px">
+            <yu-xtable-column label="调整类型" prop="adjType" width="120" :show-overflow-tooltip="true" data-code="ADJ_TYPE" fixed="left" sortable="custom"></yu-xtable-column>
+            <yu-xtable-column label="账户名称" prop="acctNm" width="250" fixed="left" :show-overflow-tooltip="true" is-num sortable="custom"></yu-xtable-column>
+            <yu-xtable-column label="账户/款项/借据" prop="acctSubDebtNo" min-width="180" :show-overflow-tooltip="true" fixed="left" is-num sortable="custom"></yu-xtable-column>
+            <yu-xtable-column label="考核归属条线" prop="settBlgBusi" width="150" data-code="SETT_BLG_BUSI" :show-overflow-tooltip="true" sortable="custom"></yu-xtable-column>
+            <yu-xtable-column label="考核归属机构号" prop="settBlgOrgCode" width="140" :show-overflow-tooltip="true" is-num sortable="custom"></yu-xtable-column>
+            <yu-xtable-column label="考核归属机构名称" prop="orgName" width="160" :show-overflow-tooltip="true" sortable="custom"></yu-xtable-column>
+            <yu-xtable-column label="涉及金额(元)" prop="invoAmt" width="130" align="right" format-money :show-overflow-tooltip="true" sortable="custom"></yu-xtable-column>
+            <yu-xtable-column label="计算起始日" prop="calBeginDate" width="120" :show-overflow-tooltip="true" is-num sortable="custom"></yu-xtable-column>
+            <yu-xtable-column label="计算到期日" prop="calEndDate" width="120" :show-overflow-tooltip="true" is-num sortable="custom"></yu-xtable-column>
+            <yu-xtable-column label="调整方向" prop="adjDirDesc" width="120" :show-overflow-tooltip="true" data-code="ADJ_DIR_TYPE" sortable="custom"></yu-xtable-column>
+            <yu-xtable-column label="调整方向值" prop="adjDirType" width="120" :show-overflow-tooltip="true" is-num sortable="custom"></yu-xtable-column>
+            <yu-xtable-column label="余额调整方式" prop="balAdjMode" width="130" :show-overflow-tooltip="true" is-num sortable="custom"></yu-xtable-column>
+            <yu-xtable-column label="余额调整比例" prop="balAdjPct" width="150" :show-overflow-tooltip="true" sortable="custom">
               <template slot-scope="scope">
-                <span class="num" v-if="scope.row.balAdjPct || scope.row.balAdjPct === 0">{{scope.row.balAdjPct}}%</span>
+                <span class="num" v-if="scope.row.balAdjPct || scope.row.balAdjPct === 0">{{ scope.row.balAdjPct }}%</span>
               </template>
             </yu-xtable-column>
-            <yu-xtable-column
-              label="余额调整固定金额（元）"
-              prop="balAdjFixedAmt"
-              min-width="210"
-              :show-overflow-tooltip="true"
-              align="right"
-              format-money
-              sortable="custom"
-            ></yu-xtable-column>
-            <yu-xtable-column
-              label="应调整存款/贷款余额（万元）"
-              prop="adjDepLoanAmt"
-              min-width="230"
-              align="right"
-              format-money
-              :show-overflow-tooltip="true"
-              sortable="custom"
-            >
+            <yu-xtable-column label="余额调整固定金额（元）" prop="balAdjFixedAmt" min-width="210" :show-overflow-tooltip="true" align="right" format-money sortable="custom"></yu-xtable-column>
+            <yu-xtable-column label="应调整存款/贷款余额（万元）" prop="adjDepLoanAmt" min-width="230" align="right" format-money :show-overflow-tooltip="true" sortable="custom">
               <template slot-scope="scope">
-                <span class="num">{{$util.formatMoney(scope.row.adjDepLoanAmt / 10000)}}</span>
+                <span class="num">{{ $util.formatMoney(scope.row.adjDepLoanAmt / 10000) }}</span>
               </template>
             </yu-xtable-column>
-            <yu-xtable-column
-              label="日均调整方式"
-              prop="avgAdjDesc"
-              width="180"
-              :show-overflow-tooltip="true"
-              is-num
-              sortable="custom"
-            ></yu-xtable-column>
-            <yu-xtable-column
-              label="日均调整比例"
-              prop="avgAdjPct"
-              width="180"
-              :show-overflow-tooltip="true"
-              sortable="custom"
-            >
+            <yu-xtable-column label="日均调整方式" prop="avgAdjDesc" width="180" :show-overflow-tooltip="true" is-num sortable="custom"></yu-xtable-column>
+            <yu-xtable-column label="日均调整比例" prop="avgAdjPct" width="180" :show-overflow-tooltip="true" sortable="custom">
               <template slot-scope="scope">
-                <span class="num" v-if="scope.row.avgAdjPct || scope.row.avgAdjPct === 0">{{scope.row.avgAdjPct}}%</span>
+                <span class="num" v-if="scope.row.avgAdjPct || scope.row.avgAdjPct === 0">{{ scope.row.avgAdjPct }}%</span>
               </template>
             </yu-xtable-column>
-            <yu-xtable-column
-              label="日均调整固定金额(元)"
-              prop="avgAdjFixedAmt"
-              width="180"
-              :show-overflow-tooltip="true"
-              align="right"
-              format-money
-              sortable="custom"
-            ></yu-xtable-column>
-            <yu-xtable-column
-              label="应调整存款日均（万元）"
-              prop="avgDepAmt"
-              width="200"
-              :show-overflow-tooltip="true"
-              align="right"
-              format-money
-              sortable="custom"
-            >
+            <yu-xtable-column label="日均调整固定金额(元)" prop="avgAdjFixedAmt" width="180" :show-overflow-tooltip="true" align="right" format-money sortable="custom"></yu-xtable-column>
+            <yu-xtable-column label="应调整存款日均（万元）" prop="avgDepAmt" width="200" :show-overflow-tooltip="true" align="right" format-money sortable="custom">
               <template slot-scope="scope">
-                <span class="num">{{$util.formatMoney(scope.row.avgDepAmt / 10000)}}</span>
+                <span class="num">{{ $util.formatMoney(scope.row.avgDepAmt / 10000) }}</span>
               </template>
             </yu-xtable-column>
-            <yu-xtable-column
-              label="数据日期"
-              prop="etlDate"
-              width="150"
-              :show-overflow-tooltip="true"
-              is-num
-              sortable="custom"
-            ></yu-xtable-column>
-            <yu-xtable-column
-              label="系统账户/款项/借据余额(元)"
-              prop="acctSubDebtBal"
-              min-width="220"
-              :show-overflow-tooltip="true"
-              align="right"
-              format-money
-              sortable="custom"
-            ></yu-xtable-column>
-            <yu-xtable-column
-              label="系统账户/款项日均（元）"
-              prop="acctSubAvg"
-              width="210"
-              align="right"
-              format-money
-              :show-overflow-tooltip="true"
-              sortable="custom"
-            ></yu-xtable-column>
-            <yu-xtable-column
-              label="导入时间"
-              prop="impTime"
-              width="150"
-              align="right"
-              format-money
-              :show-overflow-tooltip="true"
-              is-num
-              sortable="custom"
-            ></yu-xtable-column>
-            <yu-xtable-column
-              label="导入人用户ID"
-              prop="impUserId"
-              width="150"
-              align="right"
-              format-money
-              :show-overflow-tooltip="true"
-              is-num
-              sortable="custom"
-            ></yu-xtable-column>
-            <yu-xtable-column
-              label="导入人姓名"
-              prop="impUserName"
-              width="150"
-              align="right"
-              format-money
-              :show-overflow-tooltip="true"
-              is-num
-              sortable="custom"
-            ></yu-xtable-column>
+            <yu-xtable-column label="数据日期" prop="etlDate" width="150" :show-overflow-tooltip="true" is-num sortable="custom"></yu-xtable-column>
+            <yu-xtable-column label="系统账户/款项/借据余额(元)" prop="acctSubDebtBal" min-width="220" :show-overflow-tooltip="true" align="right" format-money sortable="custom"></yu-xtable-column>
+            <yu-xtable-column label="系统账户/款项日均（元）" prop="acctSubAvg" width="210" align="right" format-money :show-overflow-tooltip="true" sortable="custom"></yu-xtable-column>
+            <yu-xtable-column label="导入时间" prop="impTime" width="150" align="right" format-money :show-overflow-tooltip="true" is-num sortable="custom"></yu-xtable-column>
+            <yu-xtable-column label="导入人用户ID" prop="impUserId" width="150" align="right" format-money :show-overflow-tooltip="true" is-num sortable="custom"></yu-xtable-column>
+            <yu-xtable-column label="导入人姓名" prop="impUserName" width="150" align="right" format-money :show-overflow-tooltip="true" is-num sortable="custom"></yu-xtable-column>
           </yu-xtable>
         </template>
       </MainLayout>
     </div>
     <upload-excel :visible.sync="uploadVisible" @success="successFn" :options="uploadOptions"></upload-excel>
-    <yu-dialog
-      class="dialog1"
-      :visible.sync="dialogVisibles"
-      width="600px"
-      title="执行跑批"
-      @close="runClose"
-    >
+    <yu-dialog class="dialog1" :visible.sync="dialogVisibles" width="600px" title="执行跑批" @close="runClose">
       <!-- <el-date-picker v-model="runData" type="date" placeholder="请选择跑批日期"></el-date-picker> -->
       <yu-xform :model="queryFormData1" ref="runRefForm">
         <yu-xform-group :column="4">
-          <yu-xform-item
-            label="选择跑批日期"
-            placeholder="选择跑批日期"
-            ctype="date-picker"
-            name="etlDate"
-            :rules="globalRules.required"
-          ></yu-xform-item>
+          <yu-xform-item label="选择跑批日期" placeholder="选择跑批日期" ctype="date-picker" name="etlDate" :rules="globalRules.required"></yu-xform-item>
         </yu-xform-group>
       </yu-xform>
       <div class="button">
-        <el-button style="margin-left: 10px;" type="success" @click.stop="startRunBatch">开始跑批</el-button>
+        <el-button style="margin-left: 10px" type="success" @click.stop="startRunBatch">开始跑批</el-button>
         <el-button type="gary" class="cannel" @click.stop="cannel">取消</el-button>
       </div>
     </yu-dialog>
@@ -363,7 +100,7 @@ import { getUserInfo } from "@/utils";
 import * as commonApi from "@/api/common";
 
 @Component({
-  name: "DataList"
+  name: "DataList",
 })
 export default class extends Vue {
   @Ref("searchForm") searchForm: any;
@@ -384,9 +121,8 @@ export default class extends Vue {
   private userInfo = getUserInfo();
   private uploadOptions = {
     url: backend.dataSupplement + "/api/adjdeploanrec/import",
-    tip: '上传文件（最多只能导入5天的数据）'
-  }
-
+    tip: "上传文件（最多只能导入5天的数据）",
+  };
 
   created() {
     this.getSysDataDt();
@@ -403,13 +139,12 @@ export default class extends Vue {
   }
 
   //开始导入
-  exportFn () {
+  exportFn() {
     this.uploadVisible = true;
   }
-  successFn () {
+  successFn() {
     this.refTable.remoteData();
-  } 
-
+  }
 
   cannel() {
     //取消
@@ -418,7 +153,7 @@ export default class extends Vue {
     _this.queryFormData1.etlDate = "";
   }
 
-  downTempFn () {
+  downTempFn() {
     this.$util.downFile({
       url: backend.dataSupplement + "/api/adjdeploanrec/download",
       method: "get",

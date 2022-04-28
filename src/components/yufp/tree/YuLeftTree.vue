@@ -2,21 +2,11 @@
   <div class="yu-tree__left">
     <div class="yufp__title--icon" v-if="title || showCreate">
       {{ title }}
-      <img
-        class="yu__title__icon--left"
-        src="../../../assets/images/common/plus.png"
-        v-if="showCreate"
-        @click="createFn"
-      />
+      <img class="yu__title__icon--left" src="../../../assets/images/common/plus.png" v-if="showCreate" @click="createFn" />
     </div>
     <div class="tree-box">
       <div class="yu-tree__left--serach" v-if="search">
-        <el-input
-          :placeholder="placeholder"
-          suffix-icon="el-icon-search"
-          v-model="filterText"
-          clearable
-        ></el-input>
+        <el-input :placeholder="placeholder" suffix-icon="el-icon-search" v-model="filterText" clearable></el-input>
       </div>
       <yu-ext-tree
         ref="extTreeRef"
@@ -53,7 +43,7 @@ export default {
       type: Array,
       default: function () {
         return [];
-      }
+      },
     },
     renderContent: Function,
     search: {
@@ -75,9 +65,7 @@ export default {
     },
     operates: function (val) {
       if (this.operates && this.operates.length) {
-        this.selectNode = this.curNode.id
-          ? this.curNode
-          : { id: this.$attrs["current-node-key"] };
+        this.selectNode = this.curNode.id ? this.curNode : { id: this.$attrs["current-node-key"] };
       } else {
         this.selectNode = {};
       }
@@ -98,7 +86,7 @@ export default {
             node: node,
             selectNode: _this.selectNode,
             operates: _this.operates,
-            filterOperateNodes: _this.filterOperateNodes
+            filterOperateNodes: _this.filterOperateNodes,
           },
         },
         ""
@@ -121,9 +109,9 @@ export default {
 <style lang="scss">
 .yu-tree__left {
   color: #333;
-  background: #FFFFFF;
+  background: #ffffff;
   &.box-shadow {
-    box-shadow: 0px 3px 6px  rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2);
   }
   .yufp__title--icon {
     padding: 12px;
@@ -138,8 +126,8 @@ export default {
     height: 14px;
   }
 
-  
-  .el-tree-node__expand-icon.expanded, .el-tree-node__expand-icon {
+  .el-tree-node__expand-icon.expanded,
+  .el-tree-node__expand-icon {
     font-size: 18px;
     color: #333;
   }
@@ -160,7 +148,7 @@ export default {
 }
 
 .yu-tree__left.no-border .tree-box {
-  border: 0
+  border: 0;
 }
 
 .el-tree-node__expand-icon:before {
@@ -173,25 +161,14 @@ export default {
   color: #000;
   font-weight: bold;
 }
-.yu-tree__left
-  .el-tree--highlight-current
-  .el-tree-node.is-current
-  > .el-tree-node__content {
+.yu-tree__left .el-tree--highlight-current .el-tree-node.is-current > .el-tree-node__content {
   position: relative;
   // background: #e7f7ff;
 }
-.yu-tree__left
-  .el-tree--highlight-current
-  .el-tree-node.is-current
-  > .el-tree-node__content
-  .yu-tree-node
-  > span {
+.yu-tree__left .el-tree--highlight-current .el-tree-node.is-current > .el-tree-node__content .yu-tree-node > span {
   // color: $blue;
 }
-.yu-tree__left
-  .el-tree--highlight-current
-  .el-tree-node.is-current
-  > .el-tree-node__content::after {
+.yu-tree__left .el-tree--highlight-current .el-tree-node.is-current > .el-tree-node__content::after {
   position: absolute;
   top: 0;
   right: 0;
@@ -227,8 +204,7 @@ export default {
   top: 15px;
   left: 0;
   z-index: 999;
-  box-shadow: 0px 9px 28px 8px rgba(0, 0, 0, 0.05),
-    0px 6px 16px 0px rgba(0, 0, 0, 0.08), 0px 3px 6px -4px rgba(0, 0, 0, 0.12);
+  box-shadow: 0px 9px 28px 8px rgba(0, 0, 0, 0.05), 0px 6px 16px 0px rgba(0, 0, 0, 0.08), 0px 3px 6px -4px rgba(0, 0, 0, 0.12);
   border-radius: 2px;
 }
 .yu-tree__operates li {
@@ -247,8 +223,7 @@ export default {
   display: inline-block;
   width: 16px;
   height: 16px;
-  background: url("../../../assets/images/common/icon-flex.png") no-repeat
-    center;
+  background: url("../../../assets/images/common/icon-flex.png") no-repeat center;
 }
 .yu-tree__icon-tag {
   position: absolute;
@@ -264,5 +239,4 @@ export default {
     }
   }
 }
-
 </style>

@@ -10,7 +10,9 @@
   >
     <slot></slot>
     <div slot="title">
-      <slot name="title"><span class="el-dialog__title">{{title}}</span></slot>
+      <slot name="title"
+        ><span class="el-dialog__title">{{ title }}</span></slot
+      >
     </div>
     <div slot="footer" v-if="$scopedSlots.footer">
       <slot name="footer"></slot>
@@ -19,35 +21,34 @@
 </template>
 <script>
 export default {
-  name: 'YuDialog',
+  name: "YuDialog",
   props: {
     title: String,
     visible: Boolean,
     handleClose: Function,
     closeOnClickModal: {
       type: Boolean,
-      default: false
+      default: false,
     },
     closeOnPressEscape: {
       type: Boolean,
-      default: false
+      default: false,
     },
     appendToBody: {
       type: Boolean,
-      default: true
-    }
+      default: true,
+    },
   },
   data: function () {
-    return {
-    };
+    return {};
   },
   methods: {
     handleCloseFn: function () {
       this.handleClose && this.handleClose();
-      this.$emit('update:visible', false);
-    }
-  }
-}
+      this.$emit("update:visible", false);
+    },
+  },
+};
 </script>
 <style lang="scss">
 .main-theme {
@@ -74,12 +75,10 @@ export default {
   .el-dialog__body {
     padding: 20px 20px 10px;
   }
-  
+
   .el-dialog__footer {
     padding: 15px;
-    border-top: 1px solid #D8D8D8;
+    border-top: 1px solid #d8d8d8;
   }
-
 }
-  
 </style>

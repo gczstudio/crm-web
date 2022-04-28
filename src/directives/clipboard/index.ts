@@ -1,42 +1,39 @@
-import { DirectiveOptions } from 'vue'
+import { DirectiveOptions } from "vue";
 
 export const clipboard: DirectiveOptions = {
-  inserted: function (el:any, binding:any) {
+  inserted: function (el: any, binding: any) {
     binding.dbclickFn = () => {
-      var text = document.createElement('textarea')
+      const text = document.createElement("textarea");
       text.value = el.innerText;
       document.body.appendChild(text);
       try {
         text.select();
-        document.execCommand('copy');
+        document.execCommand("copy");
         // 设置文字选中
-        var range = document.createRange()
+        const range = document.createRange();
         range.selectNodeContents(el);
-        var selection = window.getSelection();
+        const selection = window.getSelection();
         selection?.removeAllRanges();
         selection?.addRange(range);
         // 提示复制成功
-        el.style.position = 'ralative';
-        var html = document.createElement('div')
+        el.style.position = "ralative";
+        const html = document.createElement("div");
         html.className = "copy-success";
-        html.innerText = '复制成功';
+        html.innerText = "复制成功";
         el.appendChild(html);
         setTimeout(() => {
           el.removeChild(html);
-        }, 1000)
+        }, 1000);
       } catch (e) {
-        console.log('复制失败')
+        console.log("复制失败");
       }
       document.body.removeChild(text);
-    }
-    el.addEventListener('dblclick', binding.dbclickFn)
+    };
+    el.addEventListener("dblclick", binding.dbclickFn);
   },
-  unbind (el:any, binding:any) {
+  unbind(el: any, binding: any) {
     if (binding.dbclickFn) {
-      el.removeEventListener('mousewheel', binding.dbclickFn);
+      el.removeEventListener("mousewheel", binding.dbclickFn);
     }
-  }
-
-}
-
-
+  },
+};

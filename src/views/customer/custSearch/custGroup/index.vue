@@ -33,7 +33,7 @@
             <yu-xtable-column label="已使用授信额度（元）" prop="usedCreditAmt" width="190" align="right" format-money :show-overflow-tooltip="true" sortable="custom"></yu-xtable-column>
             <yu-xtable-column label="授信敞口额度（元）" prop="creditExposureAmt" width="170" align="right" format-money :show-overflow-tooltip="true" sortable="custom"></yu-xtable-column>
             <yu-xtable-column label="已使用敞口额度（元）" prop="userdCreditExposureAmt" width="190" align="right" format-money :show-overflow-tooltip="true" sortable="custom"></yu-xtable-column>
-            <yu-xtable-column label="集团客户综合授信到期日" prop="dueDate"  width="220" is-num :show-overflow-tooltip="true" sortable="custom"></yu-xtable-column>
+            <yu-xtable-column label="集团客户综合授信到期日" prop="dueDate" width="220" is-num :show-overflow-tooltip="true" sortable="custom"></yu-xtable-column>
             <yu-xtable-column label="集团类别" prop="groupType" width="120" data-code="GROUP_TYPE" :show-overflow-tooltip="true" sortable="custom"></yu-xtable-column>
             <yu-xtable-column label="管户人名称" prop="userName" width="120" :show-overflow-tooltip="true" sortable="custom"></yu-xtable-column>
             <yu-xtable-column label="管户人机构" prop="orgName" width="140" :show-overflow-tooltip="true" sortable="custom"></yu-xtable-column>
@@ -48,7 +48,7 @@
     </div>
     <content-modal :visible.sync="visible">
       <template slot-scope="scope">
-         <member-list :instance="scope" :visible="visible" :row="currentRow" />
+        <member-list :instance="scope" :visible="visible" :row="currentRow" />
       </template>
     </content-modal>
   </div>
@@ -56,61 +56,60 @@
 
 <script lang="ts">
 import { Component, Ref, Vue } from "vue-property-decorator";
-import { backend } from '@/config';
-import moment from 'moment';
-import MemberList from './memberList.vue'
+import { backend } from "@/config";
+import moment from "moment";
+import MemberList from "./memberList.vue";
 @Component({
   name: "CustGroup",
   components: {
-    MemberList
-  }
+    MemberList,
+  },
 })
 export default class extends Vue {
-  @Ref('searchForm') searchForm: any;
-  @Ref('refTable') refTable: any;
-  private dataUrl = backend.custService + '/api/groupcust/groupquery'
-  private dataDt = sessionStorage.getItem('dataDt');
+  @Ref("searchForm") searchForm: any;
+  @Ref("refTable") refTable: any;
+  private dataUrl = backend.custService + "/api/groupcust/groupquery";
+  private dataDt = sessionStorage.getItem("dataDt");
   private queryFormData = {
-    etlDate: moment(this.dataDt).format('YYYY-MM-DD')
-  }
+    etlDate: moment(this.dataDt).format("YYYY-MM-DD"),
+  };
   private baseParams = {
     condition: JSON.stringify({
-      etlDate: moment(this.dataDt).format('YYYY-MM-DD')
-    })
-  }
+      etlDate: moment(this.dataDt).format("YYYY-MM-DD"),
+    }),
+  };
   private visible = false;
-  private currentRow = {}
+  private currentRow = {};
 
-  mounted () {
-    this.$checkCtr('export') && this.$exportQueue.addQueue(this.$route.path, this.exportFn, true)
+  mounted() {
+    this.$checkCtr("export") && this.$exportQueue.addQueue(this.$route.path, this.exportFn, true);
   }
 
   customerViewFn(row: any) {
-    this.$router.push({ path: '/custInfo/custView/' + row.crmCustId, query: { crmCustId: row.crmCustId, custId: row.custId, title: '客户详情-' + row.custNm }})
+    this.$router.push({ path: "/custInfo/custView/" + row.crmCustId, query: { crmCustId: row.crmCustId, custId: row.custId, title: "客户详情-" + row.custNm } });
   }
 
-  memberListFn (row: any) {
+  memberListFn(row: any) {
     row.etlDate = this.searchForm.searchModel.etlDate;
     this.currentRow = row;
     this.visible = true;
   }
 
-  exportFn (showTipModal?:boolean) {
+  exportFn(showTipModal?: boolean) {
     var searchQuery: any = (this as any)._.assign({}, this.searchForm.searchModel, {
-      fileName: '集团客户查询',
-      queryField: this.searchForm.searchQueryField
+      fileName: "集团客户查询",
+      queryField: this.searchForm.searchQueryField,
     });
     var apiParams = {
-      url: backend.custService + '/api/groupcust/exportgroupquery',
+      url: backend.custService + "/api/groupcust/exportgroupquery",
       params: searchQuery,
-      sort: this.refTable.sort
+      sort: this.refTable.sort,
     };
     (this as any).$util.exportTable({
       _this: this,
       apiParams,
-      showTipModal
+      showTipModal,
     });
   }
-
 }
 </script>

@@ -5,31 +5,31 @@
         name="fade-transform"
         mode="out-in"
       > -->
-        <keep-alive :include="cachedViews">
-          <router-view :key="key" />
-        </keep-alive>
+      <keep-alive :include="cachedViews">
+        <router-view :key="key" />
+      </keep-alive>
       <!-- </transition> -->
     </div>
   </el-scrollbar>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
-import { TagsViewModule } from '@/store/modules/tags-view'
-import watermark from '@/utils/watermark'
+import { Component, Vue } from "vue-property-decorator";
+import { TagsViewModule } from "@/store/modules/tags-view";
+import watermark from "@/utils/watermark";
 @Component({
-  name: 'AppMain'
+  name: "AppMain",
 })
 export default class extends Vue {
   get cachedViews() {
-    return TagsViewModule.cachedViews
+    return TagsViewModule.cachedViews;
   }
 
   get key() {
-    return this.$route.path
+    return this.$route.path;
   }
 
-  mounted () {
+  mounted() {
     watermark.setWatermark();
   }
 }

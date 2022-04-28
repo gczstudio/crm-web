@@ -4,7 +4,8 @@
       <i class="iconfont icon-xinxitixing"></i>
       <span>
         信息提醒（
-        <i class="num">{{ total }}</i>）
+        <i class="num">{{ total }}</i
+        >）
       </span>
     </div>
     <div class="view-more" @click="moreFn">
@@ -16,28 +17,16 @@
         <li v-for="item in remindData" :key="item.id" @click.prevent="showDetailFn(item.id)">
           <span class="tag">【动账】</span>
           <span class="box">
-            <span
-              class="content roll"
-              :title="
-              item.custName +
-              `${item.dcFlag == 'C' ?'来款' : '走款'}` +
-              $util.formatMoney(item.tranAmt / 10000) +
-              '万元'
-            "
-            >
+            <span class="content roll" :title="item.custName + `${item.dcFlag == 'C' ? '来款' : '走款'}` + $util.formatMoney(item.tranAmt / 10000) + '万元'">
               <span v-for="(data, index) in 10" :key="index">
                 &emsp;&emsp;
-                {{ item.custName }}{{item.dcFlag=='C' ?"来款" : "走款"}}
-                <i
-                  :class="item.dcFlag=='C' ? 'red' : 'green'"
-                >
+                {{ item.custName }}{{ item.dcFlag == "C" ? "来款" : "走款" }}
+                <i :class="item.dcFlag == 'C' ? 'red' : 'green'">
                   <span class="num">
-                    {{
-                    $util.formatMoney(item.tranAmt / 10000)
-                    }}
+                    {{ $util.formatMoney(item.tranAmt / 10000) }}
                   </span>
-                </i> 万元
-                &emsp;&emsp;&emsp;
+                </i>
+                万元 &emsp;&emsp;&emsp;
               </span>
             </span>
           </span>
@@ -76,14 +65,12 @@ export default class extends Vue {
   }
 
   queryLargerAccountFlow() {
-    homeApi
-      .queryLargerAccountFlow({ page: 1, size: 10, condition: this.condition })
-      .then((res: any) => {
-        if (res.code === 0) {
-          this.remindData = res.data;
-          this.total = res.total;
-        }
-      });
+    homeApi.queryLargerAccountFlow({ page: 1, size: 10, condition: this.condition }).then((res: any) => {
+      if (res.code === 0) {
+        this.remindData = res.data;
+        this.total = res.total;
+      }
+    });
   }
 
   showDetailFn(id: string) {
@@ -106,10 +93,10 @@ export default class extends Vue {
   moreFn() {
     this.$router.push({
       name: "RemindMgt",
-      params: { 
-        remindcategoryid: '01',
-        remindsubclassid: '0101',
-        isflag: '2'
+      params: {
+        remindcategoryid: "01",
+        remindsubclassid: "0101",
+        isflag: "2",
       },
     });
   }

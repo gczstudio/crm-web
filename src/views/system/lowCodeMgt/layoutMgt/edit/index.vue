@@ -1,9 +1,9 @@
 <template>
   <div class="edit-container yu-main-wrapper">
     <div class="layout-box">
-      <div class="layout-header" v-if="type==='edit'">
-        <div class="layout-title" v-if="isEditName"><input type="text" v-model="row.name"><el-button type="text" icon="el-icon-mobile" @click="saveNameFn"></el-button></div>
-        <div class="layout-title" v-else>{{row.name}}<el-button type="text" icon="el-icon-edit" @click="editNameFn"></el-button></div>
+      <div class="layout-header" v-if="type === 'edit'">
+        <div class="layout-title" v-if="isEditName"><input type="text" v-model="row.name" /><el-button type="text" icon="el-icon-mobile" @click="saveNameFn"></el-button></div>
+        <div class="layout-title" v-else>{{ row.name }}<el-button type="text" icon="el-icon-edit" @click="editNameFn"></el-button></div>
         <div class="layout-btns fr">
           <el-button class="yu-button-text" icon="el-icon-edit" @click="closeFn">返回</el-button>
           <el-button class="yu-button-text" icon="el-icon-edit">清空</el-button>
@@ -13,42 +13,36 @@
       </div>
     </div>
     <el-row>
-      <el-col :span="5" v-if="type==='edit'">
-        <div class="basic-mode" :style="{height: cHeight - 25 + 'px'}">
-          <draggable
-            v-model="mode"
-            animation="300"
-            :options="{group:{name: 'mode',pull:'clone'}}"
-            @start="drag = true"
-            @end="drag = false"
-          >
+      <el-col :span="5" v-if="type === 'edit'">
+        <div class="basic-mode" :style="{ height: cHeight - 25 + 'px' }">
+          <draggable v-model="mode" animation="300" :options="{ group: { name: 'mode', pull: 'clone' } }" @start="drag = true" @end="drag = false">
             <div class="mode-item" v-for="item in mode" :key="item.type">
               <div class="mode-item__box">
                 <div class="mode-item__chunk" :style="getModeChunkStyle(item)"></div>
               </div>
-              <p class="mode-item__name">{{item.name}}</p>
+              <p class="mode-item__name">{{ item.name }}</p>
             </div>
           </draggable>
         </div>
       </el-col>
-      <el-col :span="type==='edit' ? 19 : 24">
-        <div ref="chunkRef" class="drag-section" :style="{height: cHeight - 25 + 'px'}">
-            <draggable
-              v-model="layoutArr"
-              pull="clone"
-              :disabled="type!=='edit'"
-              :options="{group:{name: 'mode',pull:'clone'}}"
-              animation="300"
-              @start="drag = true"
-              @end="drag = false"
-              v-if="chunkHeight"
-            >
-              <transition-group>
-              <div v-for="(item, index) in layoutArr" :key="index" :class="{'drag-section__chunk': true, 'is-hover': type==='edit'}" :style="getChunkStyle(item)">
-                <i v-if="type==='edit'" class="el-icon-close" @click="deleteFn(index)"></i>
+      <el-col :span="type === 'edit' ? 19 : 24">
+        <div ref="chunkRef" class="drag-section" :style="{ height: cHeight - 25 + 'px' }">
+          <draggable
+            v-model="layoutArr"
+            pull="clone"
+            :disabled="type !== 'edit'"
+            :options="{ group: { name: 'mode', pull: 'clone' } }"
+            animation="300"
+            @start="drag = true"
+            @end="drag = false"
+            v-if="chunkHeight"
+          >
+            <transition-group>
+              <div v-for="(item, index) in layoutArr" :key="index" :class="{ 'drag-section__chunk': true, 'is-hover': type === 'edit' }" :style="getChunkStyle(item)">
+                <i v-if="type === 'edit'" class="el-icon-close" @click="deleteFn(index)"></i>
               </div>
-              </transition-group>
-            </draggable>
+            </transition-group>
+          </draggable>
         </div>
       </el-col>
     </el-row>
@@ -56,69 +50,68 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Ref, Prop, Watch } from 'vue-property-decorator'
-import { addLayout } from '@/api/lowCode'
-import { backend } from '@/config'
+import { Component, Vue, Ref, Prop, Watch } from "vue-property-decorator";
+import { addLayout } from "@/api/lowCode";
+import { backend } from "@/config";
 import Draggable from "vuedraggable";
 
 export interface Mode {
-  type: string
-  name: string
-  row: number
-  col: number
+  type: string;
+  name: string;
+  row: number;
+  col: number;
 }
 
 export let mode: Mode[] = [
-  { type: '1', name: '1*1模式', col: 1, row: 1 },
-  { type: '2', name: '1*2模式', col: 1, row: 2 },
-  { type: '3', name: '2*1模式', col: 2, row: 1 },
-  { type: '4', name: '2*2模式', col: 2, row: 2 }
-]
+  { type: "1", name: "1*1模式", col: 1, row: 1 },
+  { type: "2", name: "1*2模式", col: 1, row: 2 },
+  { type: "3", name: "2*1模式", col: 2, row: 1 },
+  { type: "4", name: "2*2模式", col: 2, row: 2 },
+];
 
 @Component({
-  name: 'Edit',
+  name: "Edit",
   components: {
-    Draggable
-  }
+    Draggable,
+  },
 })
 export default class extends Vue {
-  @Prop({ default: 'edit' }) type!:string;    // edit  // render
+  @Prop({ default: "edit" }) type!: string; // edit  // render
   @Prop() private instance: any;
   @Prop() private row!: any;
-  @Ref('refTable') refTable: any;
-  @Ref('layoutFormRef') layoutFormRef: any;
-  @Ref('chunkRef') chunkRef: any;
+  @Ref("refTable") refTable: any;
+  @Ref("layoutFormRef") layoutFormRef: any;
+  @Ref("chunkRef") chunkRef: any;
 
-  private drag = false
-  private dragItem = {}
- 
-  private isEditName = false
-  private mode: Mode[] = mode
+  private drag = false;
+  private dragItem = {};
 
-  private layoutArr = []
+  private isEditName = false;
+  private mode: Mode[] = mode;
 
-  private chunkHeight:number = 0
+  private layoutArr = [];
 
-  @Watch('row', { immediate: true })
-  onRowChange(){
+  private chunkHeight = 0;
+
+  @Watch("row", { immediate: true })
+  onRowChange() {
     let layoutConfig = this.row.layoutConfig;
-    this.layoutArr = layoutConfig.split(',').map((item:string) => {
-      return this.mode.find((ele:Mode)=> ele.type == item)
-    })
+    this.layoutArr = layoutConfig.split(",").map((item: string) => {
+      return this.mode.find((ele: Mode) => ele.type == item);
+    });
   }
 
   mounted() {
-    this.changeSize()
-    window.addEventListener('resize', this.changeSize)
-  
+    this.changeSize();
+    window.addEventListener("resize", this.changeSize);
   }
 
   destroyed() {
-    window.removeEventListener('resize', this.changeSize)
+    window.removeEventListener("resize", this.changeSize);
   }
 
   changeSize() {
-    this.chunkHeight = ((this.chunkRef.clientWidth / 4 - 16) * 0.618);
+    this.chunkHeight = (this.chunkRef.clientWidth / 4 - 16) * 0.618;
   }
 
   onDragModeEnd() {
@@ -127,42 +120,38 @@ export default class extends Vue {
 
   getModeChunkStyle(item: Mode) {
     return {
-      width: 0.6 * item.col + 'rem',
-      height:  0.4 * item.row + 'rem'
-    }
-    
+      width: 0.6 * item.col + "rem",
+      height: 0.4 * item.row + "rem",
+    };
   }
 
   getChunkStyle(item: Mode) {
-    if(!this.chunkHeight) return;
+    if (!this.chunkHeight) return;
     return {
-      width: `calc(${25*item.col}% - 16px)`,
-      height: this.chunkHeight * item.row + (item.row - 1) * 16 + 'px'
-    }
-    
+      width: `calc(${25 * item.col}% - 16px)`,
+      height: this.chunkHeight * item.row + (item.row - 1) * 16 + "px",
+    };
   }
 
   deleteFn(index: number) {
     this.layoutArr.splice(index, 1);
   }
 
-  closeFn () {
+  closeFn() {
     this.instance.hide();
   }
 
   editNameFn() {
-    this.isEditName = true
+    this.isEditName = true;
   }
 
   saveNameFn() {
-    this.isEditName = false
+    this.isEditName = false;
   }
 
   saveFn() {
-    console.log(JSON.stringify(this.layoutArr), 888)
+    console.log(JSON.stringify(this.layoutArr), 888);
   }
-
-
 }
 </script>
 
@@ -172,12 +161,11 @@ export default class extends Vue {
     position: relative;
     background: #fff;
     padding: 10px;
-    box-shadow: 0px 3px 6px rgba($color: #000000, $alpha: .1);
+    box-shadow: 0px 3px 6px rgba($color: #000000, $alpha: 0.1);
   }
   .layout-title {
-
   }
-  .layout-btns{
+  .layout-btns {
     position: absolute;
     top: 50%;
     right: 10px;
@@ -190,19 +178,19 @@ export default class extends Vue {
     }
   }
 }
-.basic-mode{
+.basic-mode {
   overflow-y: auto;
   background: #fff;
   padding: 20px 40px;
-  .mode-item{
+  .mode-item {
     .mode-item__box {
       position: relative;
       width: 100%;
       height: 1.4rem;
       border: 1px solid #d9d9d9;
       border-radius: 3px;
-      .mode-item__chunk{
-        content: '';
+      .mode-item__chunk {
+        content: "";
         position: absolute;
         top: 50%;
         left: 50%;
@@ -219,13 +207,10 @@ export default class extends Vue {
 }
 
 .drag-section {
-
-  
-  
-  &>div{
+  & > div {
     width: 100%;
     height: 100%;
-    &>span{
+    & > span {
       display: inline-block;
       width: 100%;
       height: 100%;
@@ -234,7 +219,7 @@ export default class extends Vue {
       padding-bottom: 16px;
     }
   }
- 
+
   .drag-section__chunk {
     float: left;
     margin: 16px 0 0 16px;
@@ -246,7 +231,7 @@ export default class extends Vue {
     &.is-hover {
       &:hover {
         cursor: move;
-        border: 1px dashed #007EFF;
+        border: 1px dashed #007eff;
         .el-icon-close {
           display: block;
         }
@@ -261,11 +246,8 @@ export default class extends Vue {
       font-size: 16px;
     }
   }
-  .mode-item__name{
+  .mode-item__name {
     display: none;
   }
-  
-
 }
-  
 </style>

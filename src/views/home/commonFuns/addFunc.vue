@@ -3,7 +3,7 @@
     <div class="common-funcs__header">
       <div class="dashboard_section-title f3"><i class="iconfont icon-changyonggongneng"></i> 常用功能</div>
       <div class="common-funcs__search">
-        <el-input placeholder="请输入常用功能名称" v-model="funName" clearable class="yu-input" style="width: 400px;">
+        <el-input placeholder="请输入常用功能名称" v-model="funName" clearable class="yu-input" style="width: 400px">
           <template slot="append"><div class="yu-input-slot" @click="searchFunc">搜索</div></template>
         </el-input>
       </div>
@@ -14,20 +14,20 @@
         <div class="common-funcs__menus">
           <div class="common-funcs__tabs">
             <ul class="clearfix">
-              <li v-for="item in tabs" :key="item.id" :class="{'f3': true, active: curTab === item.id}" @click="tabChangeFn(item.id)">{{item.mText}}</li>
+              <li v-for="item in tabs" :key="item.id" :class="{ f3: true, active: curTab === item.id }" @click="tabChangeFn(item.id)">{{ item.mText }}</li>
             </ul>
           </div>
           <el-scrollbar :wrap-style="`height: calc(100vh - ${this.isMaxScreen ? 258 : 232}px);`">
             <div class="common-funcs-modules">
               <div class="common-funcs-module" v-for="item in menus" :key="item.id">
                 <div v-if="item.children && item.children.length">
-                  <div class="common-funcs-module__title f3">{{item.mText}}</div>
+                  <div class="common-funcs-module__title f3">{{ item.mText }}</div>
                   <div class="common-funcs-module__funcs">
                     <el-row :gutter="16">
                       <el-col :span="4" v-for="(child, index) in item.children" :key="child.id">
                         <div class="common-funcs-module__func">
-                          <img :src="require(`@/assets/images/theme/${themeType}/func/func${index%27}.png`)" />
-                          <div class="common-funcs-module__func-mtext f2" :title="child.mText">{{child.mText}}</div>
+                          <img :src="require(`@/assets/images/theme/${themeType}/func/func${index % 27}.png`)" />
+                          <div class="common-funcs-module__func-mtext f2" :title="child.mText">{{ child.mText }}</div>
                           <div class="mask">
                             <div class="add-btn" @click="addFuncFn(child)">添加</div>
                           </div>
@@ -43,7 +43,7 @@
       </el-col>
       <el-col :span="6">
         <div class="selected-funcs">
-          <div class="selected-funcs__title f3">已添加（{{selectedFuncs.length}}/7）</div>
+          <div class="selected-funcs__title f3">已添加（{{ selectedFuncs.length }}/7）</div>
           <el-scrollbar :wrap-style="`height: calc(100vh - ${this.isMaxScreen ? 258 : 232}px);`">
             <el-row :gutter="16">
               <draggable v-model="selectedFuncs" group="card" animation="300" @start="drag = true" @end="dragEndFn">
@@ -51,8 +51,8 @@
                   <el-col :span="12" v-for="(item, index) in selectedFuncs" :key="item.id">
                     <div class="common-funcs-module__func has-select-funcs">
                       <i class="el-icon-close f3" @click="deleteFuncs(index)"></i>
-                      <img :src="require(`@/assets/images/theme/${themeType}/func/func${index%6}.png`)" />
-                      <div class="f2" style="margin-top: 10px;">{{item.mText}}</div>
+                      <img :src="require(`@/assets/images/theme/${themeType}/func/func${index % 6}.png`)" />
+                      <div class="f2" style="margin-top: 10px">{{ item.mText }}</div>
                     </div>
                   </el-col>
                 </transition-group>
@@ -68,50 +68,54 @@
 import request from "@/utils/request";
 import draggable from "vuedraggable";
 import { backend } from "@/config";
-import { arrayToTree } from '@/utils'
-import { SettingsModule } from '@/store/modules/settings';
+import { arrayToTree } from "@/utils";
+import { SettingsModule } from "@/store/modules/settings";
 export default {
-  name: 'AddFunc',
+  name: "AddFunc",
   components: {
-    draggable
+    draggable,
   },
   props: {
-    instance: Object
+    instance: Object,
   },
-  data () {
+  data() {
     return {
-      curTab: '0',
-      tabs: [{
-        id: '0',
-        mText: '全部'
-      }],
+      curTab: "0",
+      tabs: [
+        {
+          id: "0",
+          mText: "全部",
+        },
+      ],
       menus: this.getMenuData(),
-      funName: '',
+      funName: "",
       drag: false,
       selectedFuncs: [],
-      groupName: ''
+      groupName: "",
     };
   },
   computed: {
     themeType() {
-      return SettingsModule.themeType
-    }
-  }, 
-  created () {
+      return SettingsModule.themeType;
+    },
+  },
+  created() {
     this.tabs = this.tabs.concat(this.getMenuData());
     this.getCommonFuncData();
   },
   methods: {
-    getMenuData () {
-      let menu = JSON.parse(sessionStorage.getItem('contrMgr')).menu;
-      menu = menu.filter(item => item.menuTip !== '建设中').map(item => {
-        return {
-          ...item,
-          id: item.menuId,
-          mText: item.menuName
-        }
-      })
-      let menuTree = arrayToTree(menu, 'menuId', 'upMenuId')
+    getMenuData() {
+      let menu = JSON.parse(sessionStorage.getItem("contrMgr")).menu;
+      menu = menu
+        .filter((item) => item.menuTip !== "建设中")
+        .map((item) => {
+          return {
+            ...item,
+            id: item.menuId,
+            mText: item.menuName,
+          };
+        });
+      let menuTree = arrayToTree(menu, "menuId", "upMenuId");
 
       let menuData = menuTree.filter(function (item) {
         return item.children?.length;
@@ -126,21 +130,21 @@ export default {
       });
       return menuData;
     },
-    goBack () {
-      this.instance.hide()
+    goBack() {
+      this.instance.hide();
     },
-    tabChangeFn (id) {
+    tabChangeFn(id) {
       var _this = this;
       this.curTab = id;
       this.$nextTick(function () {
         _this.setMuesFilterSelected();
       });
     },
-    getIcon () {
+    getIcon() {
       return Math.floor(Math.random() * 4);
     },
     // 搜索
-    searchFunc () {
+    searchFunc() {
       this.setMuesFilterSelected();
     },
     // 获取菜单下所有功能
@@ -152,40 +156,40 @@ export default {
       return result;
     },
     // 获取常用功能
-    getCommonFuncData () {
+    getCommonFuncData() {
       var _this = this;
       request({
-        method: 'GET',
-        url: backend.workService + '/api/homepageconfig/usercommfunclist'
-      }).then(res => {
+        method: "GET",
+        url: backend.workService + "/api/homepageconfig/usercommfunclist",
+      }).then((res) => {
         _this.selectedFuncs = res.data.map(function (item) {
           return {
             id: item.menuId,
-            mText: item.menuName
+            mText: item.menuName,
           };
         });
         _this.$nextTick(function () {
           _this.setMuesFilterSelected();
         });
-      })
+      });
     },
     // 修改常用功能
-    modifyCommFunc () {
+    modifyCommFunc() {
       var _this = this;
       var menuId = this.selectedFuncs.map(function (item) {
         return item.id;
       });
       request({
-        method: 'POST',
-        url: backend.workService + '/api/homepageconfig/modifycommfunc',
-        data: menuId
-      }).then(res => {
-        _this.$emit('success')
-      })
+        method: "POST",
+        url: backend.workService + "/api/homepageconfig/modifycommfunc",
+        data: menuId,
+      }).then((res) => {
+        _this.$emit("success");
+      });
     },
-    addFuncFn (item) {
+    addFuncFn(item) {
       var _this = this;
-      if(this.selectedFuncs.length >= 7) {
+      if (this.selectedFuncs.length >= 7) {
         this.$message.warning("选择的菜单不能大于7个");
         return;
       }
@@ -195,7 +199,7 @@ export default {
         _this.setMuesFilterSelected();
       });
     },
-    deleteFuncs (index) {
+    deleteFuncs(index) {
       var _this = this;
       this.selectedFuncs.splice(index, 1);
       this.$nextTick(function () {
@@ -203,11 +207,11 @@ export default {
         _this.setMuesFilterSelected();
       });
     },
-    dragEndFn () {
+    dragEndFn() {
       this.drag = false;
       this.modifyCommFunc();
     },
-    setMuesFilterSelected () {
+    setMuesFilterSelected() {
       var _this = this;
       var ids = this.selectedFuncs.map(function (item) {
         return item.id;
@@ -234,22 +238,21 @@ export default {
       }
       // 切换tab
       if (this.curTab) {
-        if (this.curTab === '0') {
+        if (this.curTab === "0") {
           this.menus = menuData;
         } else {
           menuData = menuData.filter(function (item) {
             return item.id === _this.curTab;
           });
         }
-      };
+      }
       this.menus = menuData;
       return menuData;
-    }
-  }
-}
+    },
+  },
+};
 </script>
 <style lang="scss" scoped>
-
 .common-funcs-add {
   .el-scrollbar__bar.is-horizontal {
     display: none;
@@ -259,24 +262,27 @@ export default {
     padding: 20px;
     height: 60px;
     background: #fff;
-    box-shadow: 0px 3px 7px rgba(0, 0, 0, .1);
+    box-shadow: 0px 3px 7px rgba(0, 0, 0, 0.1);
     .common-funcs__back {
       position: absolute;
       top: 14px;
       right: 20px;
-      padding: 8px 15px; 
-      border: 1px solid rgba(0, 0, 0, .15);
-      border-radius: 2px; 
-      color: rgba(0, 0, 0, .65); 
-      transition: all .3s;
-      .icon-fanhui{
+      padding: 8px 15px;
+      border: 1px solid rgba(0, 0, 0, 0.15);
+      border-radius: 2px;
+      color: rgba(0, 0, 0, 0.65);
+      transition: all 0.3s;
+      .icon-fanhui {
         color: #333;
       }
     }
     .dashboard_section-title {
       display: inline-block;
-      color: rgba(0, 0, 0, 0.85); font-weight: bold;
-      .iconfont{ margin-right: 8px;}
+      color: rgba(0, 0, 0, 0.85);
+      font-weight: bold;
+      .iconfont {
+        margin-right: 8px;
+      }
     }
     .common-funcs__search {
       position: absolute;
@@ -294,7 +300,7 @@ export default {
     margin-bottom: 30px;
     cursor: pointer;
     text-align: center;
-    box-shadow: 0px 3px 6px rgba(0, 0, 0, .2);
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2);
     border-radius: 2px;
     padding: 10px;
     .common-funcs-module__func-mtext {
@@ -311,7 +317,7 @@ export default {
       position: absolute;
       top: 0;
       left: 0;
-      background: rgba(0, 0, 0, .5);
+      background: rgba(0, 0, 0, 0.5);
       border-radius: 2px;
       .add-btn {
         position: absolute;
@@ -321,23 +327,25 @@ export default {
         width: 48px;
         height: 24px;
         line-height: 24px;
-        color: #007EFF;
+        color: #007eff;
         background: #fff;
-        box-shadow: 0 2px 3px rgba(0, 126, 255, .4);
+        box-shadow: 0 2px 3px rgba(0, 126, 255, 0.4);
         border-radius: 2px;
       }
     }
-    &:hover{
+    &:hover {
       .mask {
         display: block;
       }
-      .el-icon-close { display: block;}
+      .el-icon-close {
+        display: block;
+      }
     }
-    .el-icon-close { 
-      display: none; 
-      position: absolute; 
-      top: 10px; 
-      right: 10px; 
+    .el-icon-close {
+      display: none;
+      position: absolute;
+      top: 10px;
+      right: 10px;
       font-weight: bold;
     }
     &.has-select-funcs {
@@ -356,24 +364,24 @@ export default {
   margin-bottom: 20px;
   ul {
     padding: 16px 0;
-    border-bottom: 1px solid #DDD;
+    border-bottom: 1px solid #ddd;
   }
-  li { 
+  li {
     position: relative;
-    float: left; 
+    float: left;
     padding: 0 14px;
     height: 32px;
-    line-height: 32px; 
-    margin: 0 15px; 
-    border-radius: 5px; 
-    cursor: pointer; 
+    line-height: 32px;
+    margin: 0 15px;
+    border-radius: 5px;
+    cursor: pointer;
     &.active {
-      // background: $blue; 
+      // background: $blue;
       color: #fff;
     }
-    &+li {
+    & + li {
       &::before {
-        content: '';
+        content: "";
         position: absolute;
         top: 50%;
         left: -14px;
@@ -390,16 +398,21 @@ export default {
 .selected-funcs {
   background: #fff;
   padding: 0 20px;
-  .el-row { padding: 0 5px;}
-  .selected-funcs__title { 
+  .el-row {
+    padding: 0 5px;
+  }
+  .selected-funcs__title {
     padding: 24px 0;
     font-weight: bold;
-    border-bottom: 1px solid #DDD;
+    border-bottom: 1px solid #ddd;
     margin-bottom: 20px;
   }
 }
 
-.common-funcs__search{ width: 60%; margin: 0 auto; }
+.common-funcs__search {
+  width: 60%;
+  margin: 0 auto;
+}
 .common-funcs__search .yu-input ::v-deep.el-input-group__append {
   padding: 0;
   cursor: pointer;
@@ -407,38 +420,53 @@ export default {
   color: #fff;
   // border: 1px solid $blue;
 }
-.common-funcs__search .yu-input .el-input-group__append div {padding: 0 16px;}
-.dashboard_section-title { color: rgba(0, 0, 0, 0.85); font-weight: bold;}
-.common-funcs__search--input { width: 500px; margin: 0 auto; margin-top: 24px; }
-.common-funcs-content { margin-top: 24px; padding: 0 80px;}
+.common-funcs__search .yu-input .el-input-group__append div {
+  padding: 0 16px;
+}
+.dashboard_section-title {
+  color: rgba(0, 0, 0, 0.85);
+  font-weight: bold;
+}
+.common-funcs__search--input {
+  width: 500px;
+  margin: 0 auto;
+  margin-top: 24px;
+}
+.common-funcs-content {
+  margin-top: 24px;
+  padding: 0 80px;
+}
 @media screen and (max-width: 1680px) {
   .common-funcs-add {
-  .common-funcs__header {
-    height: 60px;
-    .common-funcs__back {
-      position: absolute;
-      top: 14px;
-      right: 20px;
-      padding: 8px 15px; 
-      border: 1px solid rgba(0, 0, 0, .15);
-      border-radius: 2px; 
-      color: rgba(0, 0, 0, .65); 
-      transition: all .3s;
-      .icon-fanhui{
-        color: #333;
+    .common-funcs__header {
+      height: 60px;
+      .common-funcs__back {
+        position: absolute;
+        top: 14px;
+        right: 20px;
+        padding: 8px 15px;
+        border: 1px solid rgba(0, 0, 0, 0.15);
+        border-radius: 2px;
+        color: rgba(0, 0, 0, 0.65);
+        transition: all 0.3s;
+        .icon-fanhui {
+          color: #333;
+        }
+      }
+      .dashboard_section-title {
+        display: inline-block;
+        color: rgba(0, 0, 0, 0.85);
+        font-weight: bold;
+        .iconfont {
+          margin-right: 8px;
+        }
+      }
+      .common-funcs__search {
+        position: absolute;
+        top: 14px;
+        left: 140px;
       }
     }
-    .dashboard_section-title {
-      display: inline-block;
-      color: rgba(0, 0, 0, 0.85); font-weight: bold;
-      .iconfont{ margin-right: 8px;}
-    }
-    .common-funcs__search {
-      position: absolute;
-      top: 14px;
-      left: 140px;
-    }
-  }
   }
 }
 </style>

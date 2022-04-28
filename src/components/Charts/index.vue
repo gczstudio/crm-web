@@ -5,28 +5,25 @@
 </template>
 
 <script>
-import BasicLineChart from './BasicLineChart'
-import MixedLineAndBar from './MixedLineAndBar'
+import BasicLineChart from "./BasicLineChart";
+import MixedLineAndBar from "./MixedLineAndBar";
 export default {
-  name: 'Charts',
+  name: "Charts",
   components: {
     BasicLineChart,
-    MixedLineAndBar
+    MixedLineAndBar,
   },
   props: {
     type: {
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
-    return {
-    };
+    return {};
   },
   mounted() {
-    console.log(this.$attrs,888)
-  }
-}
+    console.log(this.$attrs, 888);
+  },
+};
 </script>
-<style lang="scss">
-
-</style>
+<style lang="scss"></style>

@@ -1,20 +1,7 @@
 <template>
   <div class="TrendChart-container">
-    <i
-      v-if="chartStatus === 'opened'"
-      class="el-icon-close"
-      @click="deleteFn"
-    ></i>
-    <div class="chart-title">
-      {{ options.name
-      }}<small-tab
-        class="chart-tabs"
-        type="top"
-        v-model="curTab"
-        :data="['日', '月']"
-        @change="tabChange"
-      ></small-tab>
-    </div>
+    <i v-if="chartStatus === 'opened'" class="el-icon-close" @click="deleteFn"></i>
+    <div class="chart-title">{{ options.name }}<small-tab class="chart-tabs" type="top" v-model="curTab" :data="['日', '月']" @change="tabChange"></small-tab></div>
     <LineChart :chart-data="lineChartData" />
   </div>
 </template>
@@ -55,13 +42,13 @@ export default class extends Vue {
   }
 
   queryChartData() {
-    let { url, xKey, yKey, name, color, busiType, shadowColor  } = this.options as any;
+    let { url, xKey, yKey, name, color, busiType, shadowColor } = this.options as any;
     let params = {
       condition: JSON.stringify({
-        busiType
-      })
-    }
-    
+        busiType,
+      }),
+    };
+
     request({
       url: backend.workService + url[this.curTab],
       method: "get",
@@ -71,10 +58,10 @@ export default class extends Vue {
         this.lineChartData = {
           title: name,
           xData: res.data.map((item: any) => {
-             if(this.curTab) {
-              return item[xKey].slice(0, 6)
+            if (this.curTab) {
+              return item[xKey].slice(0, 6);
             }
-            return item[xKey]
+            return item[xKey];
           }),
           yData: res.data.map((item: any) => item[yKey] || 0),
         };
@@ -124,7 +111,7 @@ export default class extends Vue {
     height: 220px;
   }
 }
-@media screen and (max-width: 1680px) { 
+@media screen and (max-width: 1680px) {
   .TrendChart-container {
     padding: 12px 12px 0;
     .chart-title {

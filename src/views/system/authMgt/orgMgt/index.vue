@@ -1,5 +1,5 @@
 <template>
-<div  class="yu-main-wrapper">
+  <div class="yu-main-wrapper">
     <div class="yu-main__header">
       <div class="yu-main-toolbar">
         <div class="yu-main__header--title">机构列表</div>
@@ -7,16 +7,25 @@
     </div>
     <el-row :gutter="6">
       <el-col :span="5">
-        <yu-left-tree ref="mytree" class="no-border" :data-url="treeUrl" data-id="orgId" data-label="orgName"
-          data-pid="upOrgId" @node-xclick="nodeClickFn" :show-checkbox="false" :expand-level='2' :highlight-current="true"
-          :height="bHeight- (isMaxScreen?283:249)"></yu-left-tree>
-          <div class="blank-box"></div>
+        <yu-left-tree
+          ref="mytree"
+          class="no-border"
+          :data-url="treeUrl"
+          data-id="orgId"
+          data-label="orgName"
+          data-pid="upOrgId"
+          @node-xclick="nodeClickFn"
+          :show-checkbox="false"
+          :expand-level="2"
+          :highlight-current="true"
+          :height="bHeight - (isMaxScreen ? 283 : 249)"
+        ></yu-left-tree>
+        <div class="blank-box"></div>
       </el-col>
       <el-col :span="19">
         <div>
           <div class="yu-main-form">
-            <yu-xform class="search" :model="mainGrid.query" :search="queryMainGridFn" ref="custSearchForm" form-type="search"
-              label-width="120px">
+            <yu-xform class="search" :model="mainGrid.query" :search="queryMainGridFn" ref="custSearchForm" form-type="search" label-width="120px">
               <yu-xform-group :column="4">
                 <yu-xform-item label="机构代码" placeholder="机构代码" name="orgCode" ctype="input" :rules="globalRules.input"></yu-xform-item>
                 <yu-xform-item label="机构名称" placeholder="机构名称" name="orgName" ctype="input" :rules="globalRules.input"></yu-xform-item>
@@ -45,38 +54,38 @@
 <script>
 import request from "@/utils/request";
 import { backend } from "@/config";
-import { getCheckedRole } from '@/utils';
+import { getCheckedRole } from "@/utils";
 export default {
-  name: 'OrgMgt',
+  name: "OrgMgt",
   data: function () {
     var em = this;
-    let roleInfo = getCheckedRole()
+    let roleInfo = getCheckedRole();
     return {
       roleInfo: roleInfo,
-      treeUrl: backend.appOcaService + '/api/util/getorgtree?orgId=' + roleInfo.orgCode,
+      treeUrl: backend.appOcaService + "/api/util/getorgtree?orgId=" + roleInfo.orgCode,
       myformModel: {
         orgId: roleInfo.orgCode,
       },
       formDisabled: false,
       mainGrid: {
         query: {
-          orgCode: '',
-          orgName: '',
-          unitOrgId: '',
-          orgSts: ''
+          orgCode: "",
+          orgName: "",
+          unitOrgId: "",
+          orgSts: "",
         },
         checkbox: true,
-        dataUrl: backend.appOcaService + '/api/adminsmorg/querypage',
+        dataUrl: backend.appOcaService + "/api/adminsmorg/querypage",
         paging: {
           page: 1,
-          size: 20
+          size: 20,
         },
         currentRow: null,
         dataParams: {
           condition: JSON.stringify({
-            unitOrgId: roleInfo.orgCode
-          })
-        }
+            unitOrgId: roleInfo.orgCode,
+          }),
+        },
       },
       nowNode: null, // 当前选中节点数据
     };
@@ -91,17 +100,17 @@ export default {
           orgName: this.mainGrid.query.orgName || null,
           unitOrgId: this.mainGrid.query.unitOrgId || null,
           orgSts: this.mainGrid.query.orgSts || null,
-        })
+        }),
       };
       me.$refs.mytable.remoteData(param);
     },
     nodeClickFn: function (node, obj, nodeComp) {
-      if (node != '') {
+      if (node != "") {
         this.nowNode = node;
         this.mainGrid.query.unitOrgId = node.orgId;
         this.queryMainGridFn();
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>

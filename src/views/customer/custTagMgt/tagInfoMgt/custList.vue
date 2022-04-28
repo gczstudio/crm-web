@@ -21,7 +21,7 @@
           <yu-xtable ref="refTable" :data-url="dataUrl" row-number :base-params="baseParams" selection-type="checkbox" :dynamic-height="true" border>
             <yu-xtable-column label="客户名称" prop="custNm" min-width="200" :show-overflow-tooltip="true" sortable="custom">
               <template slot-scope="scope">
-               <div class="yu-table__company" @click.prevent="customerViewFn(scope.row)"><i class="iconfont icon-qiyelogo"></i>{{scope.row.custNm}}</div>
+                <div class="yu-table__company" @click.prevent="customerViewFn(scope.row)"><i class="iconfont icon-qiyelogo"></i>{{ scope.row.custNm }}</div>
               </template>
             </yu-xtable-column>
             <yu-xtable-column label="核心客户号" prop="custId" min-width="120" is-num :show-overflow-tooltip="true" sortable="custom"></yu-xtable-column>
@@ -40,148 +40,147 @@
 
 <script lang="ts">
 import { Component, Prop, Ref, Vue, Watch } from "vue-property-decorator";
-import { backend } from '@/config'
-import * as customerApi from '@/api/customer'
-import CreateTagCustomerModal from './components/CreateTagCustomerModal/index.vue'
+import { backend } from "@/config";
+import * as customerApi from "@/api/customer";
+import CreateTagCustomerModal from "./components/CreateTagCustomerModal/index.vue";
 @Component({
   name: "CustList",
   components: {
-    CreateTagCustomerModal
-  }
+    CreateTagCustomerModal,
+  },
 })
 export default class extends Vue {
   @Prop() private instance!: any;
   @Prop() private row!: any;
-  @Ref('searchForm') searchForm: any;
-  @Ref('refTable') refTable: any;
-  private dataUrl = backend.custService + '/api/ocrmftagcust/tagcustquery'
+  @Ref("searchForm") searchForm: any;
+  @Ref("refTable") refTable: any;
+  private dataUrl = backend.custService + "/api/ocrmftagcust/tagcustquery";
   private queryFormData = {
-    tagItemCode: []
-  }
+    tagItemCode: [],
+  };
   private baseParams = {
     condition: JSON.stringify({
-      tagNo: this.row.tagNo
-    })
-  }
+      tagNo: this.row.tagNo,
+    }),
+  };
   private visible = false;
   private uploadVisible = false;
-  private tagValues = []
+  private tagValues = [];
   private uploadOptions = {
     url: backend.custService + "/api/ocrmftagcust/importexcel",
-    exportUrl: backend.custService + '/api/ocrmftagcust/exporterrortagcust',
+    exportUrl: backend.custService + "/api/ocrmftagcust/exporterrortagcust",
     uploadType: true,
     params: {
-      tagNo: this.row.tagNo
-    }
-  }
+      tagNo: this.row.tagNo,
+    },
+  };
 
-  @Watch('row', { immediate: true})
+  @Watch("row", { immediate: true })
   onRowChange() {
     this.getTagValue();
   }
 
-  mounted () {
+  mounted() {
     // this.$exportQueue.addQueue(this.$route.path, this.exportFn)
   }
 
   customerViewFn(row: any) {
-    this.$router.push({ path: '/custInfo/custView/' + row.crmCustId, query: { crmCustId: row.crmCustId, custId: row.custId, title: '客户详情-' + row.custNm }})
+    this.$router.push({ path: "/custInfo/custView/" + row.crmCustId, query: { crmCustId: row.crmCustId, custId: row.custId, title: "客户详情-" + row.custNm } });
   }
 
-  searchFn () {
+  searchFn() {
     let params = {
       condition: JSON.stringify({
         ...this.queryFormData,
-        tagItemCode: this.queryFormData.tagItemCode.join(',')
-      })
-    }
+        tagItemCode: this.queryFormData.tagItemCode.join(","),
+      }),
+    };
     this.refTable.remoteData(params);
   }
 
   // 获取当前标签的标签值
-  getTagValue () {
-    customerApi.querytagvalue({
-      condition: JSON.stringify({
-        tagNo: this.row.tagNo,
-        isFlag: '1'
+  getTagValue() {
+    customerApi
+      .querytagvalue({
+        condition: JSON.stringify({
+          tagNo: this.row.tagNo,
+          isFlag: "1",
+        }),
       })
-    }).then(res => {
-      this.tagValues =  res.data.map((item: any) => {
-        return {
-          key: item.tagItemCode,
-          value: item.itemCodeNm
-        }
+      .then((res) => {
+        this.tagValues = res.data.map((item: any) => {
+          return {
+            key: item.tagItemCode,
+            value: item.itemCodeNm,
+          };
+        });
       });
-    })
   }
 
-  closeFn () {
+  closeFn() {
     this.instance.hide();
   }
 
-  addFn () {
+  addFn() {
     this.visible = true;
   }
 
   // 添加客户成功
-  successFn () {
-   this.refTable.remoteData();
+  successFn() {
+    this.refTable.remoteData();
   }
 
-  deleteFn () {
+  deleteFn() {
     let selections = this.refTable.selections;
-    if(!selections.length) {
-      this.$message.warning('请至少选择一条数据！');
+    if (!selections.length) {
+      this.$message.warning("请至少选择一条数据！");
       return;
     }
-    this.$confirm('此操作将删除所选客户, 是否继续?', '提示', {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'warning',
+    this.$confirm("此操作将删除所选客户, 是否继续?", "提示", {
+      confirmButtonText: "确定",
+      cancelButtonText: "取消",
+      type: "warning",
       callback: (action) => {
-        if (action === 'confirm') {
-          let ids = selections.map((item: any) => item.id).join(',');
-          customerApi.deltagcust({ids}).then(res => {
-            this.$message.success('删除成功！');
+        if (action === "confirm") {
+          let ids = selections.map((item: any) => item.id).join(",");
+          customerApi.deltagcust({ ids }).then((res) => {
+            this.$message.success("删除成功！");
             this.refTable.remoteData();
-          })
+          });
         }
-      }
+      },
     });
-    
   }
 
-  downTempFn () {
+  downTempFn() {
     this.$util.downFile({
-      url: backend.custService + '/api/ocrmftagcust/downloadtemplate',
+      url: backend.custService + "/api/ocrmftagcust/downloadtemplate",
       method: "get",
       fileName: "标签客户模板.xlsx",
     });
   }
 
-  uploadFn () {
+  uploadFn() {
     this.uploadVisible = true;
   }
 
-
-  exportFn (showTipModal?:boolean) {
+  exportFn(showTipModal?: boolean) {
     var searchQuery: any = (this as any)._.assign({}, this.searchForm.searchModel, {
-      fileName: '标签客户列表',
-      tagItemCode: this.searchForm.searchModel.tagItemCode.join(','),
+      fileName: "标签客户列表",
+      tagItemCode: this.searchForm.searchModel.tagItemCode.join(","),
       tagNo: this.row.tagNo,
-      queryField: this.searchForm.searchQueryField
+      queryField: this.searchForm.searchQueryField,
     });
     var apiParams = {
-      url: backend.custService + '/api/ocrmftagcust/exporttagcustquery',
+      url: backend.custService + "/api/ocrmftagcust/exporttagcustquery",
       params: searchQuery,
-      sort: this.refTable.sort
+      sort: this.refTable.sort,
     };
     (this as any).$util.exportTable({
       _this: this,
       apiParams,
-      showTipModal
+      showTipModal,
     });
   }
-
 }
 </script>

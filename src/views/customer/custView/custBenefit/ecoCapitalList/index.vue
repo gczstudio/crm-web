@@ -1,7 +1,7 @@
 <template>
   <div class="ecoCapitalList-container">
     <div class="yu-main-wrapper">
-      <MainLayout  is-tab>
+      <MainLayout is-tab>
         <template v-slot:header>
           <el-button icon="el-icon-download" @click="exportFn">导出</el-button>
         </template>
@@ -13,7 +13,9 @@
           </yu-xform>
         </template>
         <template v-slot:table>
-          <div class="total f3">信用风险经济资本占用合计：<span class="num">{{$util.formatMoney(creditRiskBalT)}}</span> 元</div>
+          <div class="total f3">
+            信用风险经济资本占用合计：<span class="num">{{ $util.formatMoney(creditRiskBalT) }}</span> 元
+          </div>
           <yu-xtable ref="refTable" :data-url="dataUrl" :base-params="baseParams" :loadEnd="loadEndFn" :dynamic-height="true" border>
             <yu-xtable-column label="">
               <yu-xtable-column label="客户号" prop="custId" width="200" :show-overflow-tooltip="true" is-num sortable="custom"></yu-xtable-column>
@@ -60,69 +62,65 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Ref } from 'vue-property-decorator'
-import { backend } from '@/config'
-import moment from 'moment';
+import { Component, Vue, Ref } from "vue-property-decorator";
+import { backend } from "@/config";
+import moment from "moment";
 @Component({
-  name: 'CustMIncome',
-  components: {
-  }
+  name: "CustMIncome",
+  components: {},
 })
 export default class extends Vue {
-  @Ref('searchForm') searchForm: any;
-  @Ref('refTable') refTable: any;
-  private dataUrl = backend.custService + '/api/acrmfcioccinfo/occlist'
-  private crmCustId = this.$route.query.crmCustId
-  private dataDt = sessionStorage.getItem('dataDt');
+  @Ref("searchForm") searchForm: any;
+  @Ref("refTable") refTable: any;
+  private dataUrl = backend.custService + "/api/acrmfcioccinfo/occlist";
+  private crmCustId = this.$route.query.crmCustId;
+  private dataDt = sessionStorage.getItem("dataDt");
   private queryFormData = {
-    startDate: moment(this.dataDt).format('YYYY-MM-DD')
-  }
+    startDate: moment(this.dataDt).format("YYYY-MM-DD"),
+  };
   private baseParams = {
     condition: JSON.stringify({
       crmCustId: this.crmCustId,
-      startDate: moment(this.dataDt).format('YYYY-MM-DD')
-    })
-  }
-  private creditRiskBalT = 0
+      startDate: moment(this.dataDt).format("YYYY-MM-DD"),
+    }),
+  };
+  private creditRiskBalT = 0;
 
-  mounted () {
-    this.$exportQueue.addQueue(this.$route.path, this.exportFn)
-  }
-
-  loadEndFn (data:any) {
-    this.creditRiskBalT = data[0]?.creditRiskBalT || 0
+  mounted() {
+    this.$exportQueue.addQueue(this.$route.path, this.exportFn);
   }
 
-  exportFn (showTipModal?:boolean) {
-    let queryField =  (this as any).$util.formatQueryField([ 
-      { cnName: "CRM内部客户号", value: this.crmCustId }
-    ])
+  loadEndFn(data: any) {
+    this.creditRiskBalT = data[0]?.creditRiskBalT || 0;
+  }
+
+  exportFn(showTipModal?: boolean) {
+    let queryField = (this as any).$util.formatQueryField([{ cnName: "CRM内部客户号", value: this.crmCustId }]);
 
     var searchQuery: any = (this as any)._.assign({}, this.searchForm.searchModel, {
-      fileName: '经济资本占用',
+      fileName: "经济资本占用",
       queryField: queryField + this.searchForm.searchQueryField,
-      crmCustId: this.crmCustId
+      crmCustId: this.crmCustId,
     });
 
     var apiParams = {
-      url: backend.custService + '/api/acrmfcioccinfo/exportocclist',
+      url: backend.custService + "/api/acrmfcioccinfo/exportocclist",
       params: searchQuery,
-      sort: this.refTable.sort
+      sort: this.refTable.sort,
     };
     (this as any).$util.exportTable({
       _this: this,
       apiParams,
-      showTipModal
+      showTipModal,
     });
   }
-
 }
 </script>
 
 <style lang="scss" scoped>
-  .ecoCapitalList-container {
-    .total {
-      padding: 0 16px 10px;
-    }
+.ecoCapitalList-container {
+  .total {
+    padding: 0 16px 10px;
   }
+}
 </style>

@@ -3,10 +3,10 @@
     <div class="yu-main-wrapper">
       <MainLayout>
         <template v-slot:header>
-          <el-button icon="el-icon-user" v-if="$checkCtr('assistMgr') || roleInfo.roleCode === 'R100001'"  @click="allotFn('assistMgr')">分配协管客户经理</el-button>
+          <el-button icon="el-icon-user" v-if="$checkCtr('assistMgr') || roleInfo.roleCode === 'R100001'" @click="allotFn('assistMgr')">分配协管客户经理</el-button>
         </template>
         <template v-slot:form>
-           <yu-xform ref="searchForm" class="search" :model="queryFormData" form-type="search" related-table-name="refTable">
+          <yu-xform ref="searchForm" class="search" :model="queryFormData" form-type="search" related-table-name="refTable">
             <yu-xform-group :column="4">
               <yu-xform-item label="核心客户号" placeholder="核心客户号" ctype="input" name="custId" :rules="globalRules.input"></yu-xform-item>
               <yu-xform-item label="客户名称" placeholder="客户名称" ctype="input" name="custNm" :rules="globalRules.input"></yu-xform-item>
@@ -26,7 +26,7 @@
             <yu-xtable-column label="组织机构代码" prop="insCredCode" min-width="150" :show-overflow-tooltip="true" is-num sortable="custom"></yu-xtable-column>
             <yu-xtable-column label="客户名称" prop="custNm" min-width="250" :show-overflow-tooltip="true" sortable="custom">
               <template slot-scope="scope">
-               <div class="yu-table__company" @click.prevent="customerViewFn(scope.row)"><i class="iconfont icon-qiyelogo"></i>{{scope.row.custNm}}</div>
+                <div class="yu-table__company" @click.prevent="customerViewFn(scope.row)"><i class="iconfont icon-qiyelogo"></i>{{ scope.row.custNm }}</div>
               </template>
             </yu-xtable-column>
             <!-- <yu-xtable-column label="证件类型" prop="insCredCode" min-width="120" :show-overflow-tooltip="true"></yu-xtable-column> -->
@@ -44,14 +44,9 @@
         </template>
       </MainLayout>
     </div>
-    <CustomerModal is-market :selection-type="selectionType" :is-auth-org="false" :show-other="showOther" :crm-cust-id="selectCrmCustIds" :visible.sync="customerVisible" @sure="customerSureFn"/>
+    <CustomerModal is-market :selection-type="selectionType" :is-auth-org="false" :show-other="showOther" :crm-cust-id="selectCrmCustIds" :visible.sync="customerVisible" @sure="customerSureFn" />
     <!-- 分配机构历史列表 -->
-    <yu-dialog
-      title="分配历史"
-      :visible.sync="historyVisible"
-      width="1200px"
-      custom-class="allot-dialog"
-    >
+    <yu-dialog title="分配历史" :visible.sync="historyVisible" width="1200px" custom-class="allot-dialog">
       <div>
         <el-tabs class="yu-tabs" v-model="activeName">
           <el-tab-pane label="分配机构历史" name="1" lazy>
@@ -60,7 +55,7 @@
               <yu-xtable-column label="客户号" prop="custId" width="150" fixed="left" :show-overflow-tooltip="true"></yu-xtable-column>
               <yu-xtable-column label="客户名称" prop="custNm" width="250" fixed="left" :show-overflow-tooltip="true">
                 <template>
-                  {{custRow.custNm}}
+                  {{ custRow.custNm }}
                 </template>
               </yu-xtable-column>
               <yu-xtable-column label="归属机构" prop="aOrgNm" width="150" :show-overflow-tooltip="true"></yu-xtable-column>
@@ -78,7 +73,7 @@
               <yu-xtable-column label="客户号" prop="custId" width="150" fixed="left" :show-overflow-tooltip="true"></yu-xtable-column>
               <yu-xtable-column label="客户名称" prop="custNm" width="250" fixed="left" :show-overflow-tooltip="true">
                 <template>
-                  {{custRow.custNm}}
+                  {{ custRow.custNm }}
                 </template>
               </yu-xtable-column>
               <yu-xtable-column label="归属客户经理" prop="aMgrNm" width="150" :show-overflow-tooltip="true"></yu-xtable-column>
@@ -98,86 +93,85 @@
 
 <script lang="ts">
 import { Component, Ref, Vue, Watch } from "vue-property-decorator";
-import { backend } from '@/config'
-import lookup from '@/utils/lookup'
-import  * as customerApi from '@/api/customer'
-import { getCheckedRole, getUserInfo } from '@/utils'
+import { backend } from "@/config";
+import lookup from "@/utils/lookup";
+import * as customerApi from "@/api/customer";
+import { getCheckedRole, getUserInfo } from "@/utils";
 
 @Component({
   name: "AssistCustAllot",
 })
 export default class extends Vue {
-  private dataUrl = backend.custService + '/api/custallocate/getcustlist'
+  private dataUrl = backend.custService + "/api/custallocate/getcustlist";
   private baseParams = {
     condition: JSON.stringify({
-      blgOrgType: 2
-    })
-  }
-  private queryFormData = {}
-  private customerVisible = false
-  private selectionType = 'checkbox'
-  private disType = ''
-  private orgId = ''
-  private historyVisible = false
-  private activeName = '1'
-  private allotOrgDataUrl = backend.custService + '/api/custallocate/getcustorghis'
-  private allotMgrDataUrl = backend.custService + '/api/custallocate/getcustmgrhis'
-  private allotBaseParams = {}
-  private custRow = {}
-  private selectOrgIds = ''
-  private selectCrmCustIds = ''
-  private showOther = false
-  private userInfo = getUserInfo()
-  private roleInfo = getCheckedRole()
+      blgOrgType: 2,
+    }),
+  };
+  private queryFormData = {};
+  private customerVisible = false;
+  private selectionType = "checkbox";
+  private disType = "";
+  private orgId = "";
+  private historyVisible = false;
+  private activeName = "1";
+  private allotOrgDataUrl = backend.custService + "/api/custallocate/getcustorghis";
+  private allotMgrDataUrl = backend.custService + "/api/custallocate/getcustmgrhis";
+  private allotBaseParams = {};
+  private custRow = {};
+  private selectOrgIds = "";
+  private selectCrmCustIds = "";
+  private showOther = false;
+  private userInfo = getUserInfo();
+  private roleInfo = getCheckedRole();
 
-  beforeRouteEnter (to:any, from:any, next:any) {
-    lookup.bind('YESNO', () => {
-      next()
-    }) 
+  beforeRouteEnter(to: any, from: any, next: any) {
+    lookup.bind("YESNO", () => {
+      next();
+    });
   }
 
   customerViewFn(row: any) {
-    this.$router.push({ path: '/custInfo/custView/' + row.crmCustId, query: { crmCustId: row.crmCustId, custId: row.custId, title: '客户详情-' + row.custNm }})
+    this.$router.push({ path: "/custInfo/custView/" + row.crmCustId, query: { crmCustId: row.crmCustId, custId: row.custId, title: "客户详情-" + row.custNm } });
   }
 
   // 确认分配客户经理
-  customerSureFn(data:any) {
-    if(!data?.length && this.disType !== 'assistMgr') {
-      this.$message.warning('请选择一条数据！')
-      return
+  customerSureFn(data: any) {
+    if (!data?.length && this.disType !== "assistMgr") {
+      this.$message.warning("请选择一条数据！");
+      return;
     }
-    this.sureAllotFn('userIds', data);
+    this.sureAllotFn("userIds", data);
   }
-
 
   // 分配机构/客户经理
   allotFn(disType: string, selectionType: string) {
-    if(this.roleInfo.roleCode === 'R100001' && ['mainMgr', 'assistMgr'].includes(disType)) {
-      this.$message.warning('暂无权限！')
+    if (this.roleInfo.roleCode === "R100001" && ["mainMgr", "assistMgr"].includes(disType)) {
+      this.$message.warning("暂无权限！");
       return;
     }
 
     let selections = (this.$refs.refTable as any).selections;
-    if(!selections.length) {
-      this.$message.warning('请选择一条或多条记录');
+    if (!selections.length) {
+      this.$message.warning("请选择一条或多条记录");
       return;
     }
 
     // 分配协管客户经理时，批量分配时，如果有客户存在已经分配了该机构下的客户经理，那么就不允许分配
-    if(disType === 'assistMgr') {
-      let bool = selections.length > 1 && selections.some((item: any)=> item.curOrgMgr);
-      if(bool) {
-        this.$message.warning('已存在该机构下的协管客户经理，不支持批量');
+    if (disType === "assistMgr") {
+      let bool = selections.length > 1 && selections.some((item: any) => item.curOrgMgr);
+      if (bool) {
+        this.$message.warning("已存在该机构下的协管客户经理，不支持批量");
         return;
       }
     }
 
-    this.selectionType = selectionType || 'checkbox';
+    this.selectionType = selectionType || "checkbox";
     this.disType = disType;
 
     // 分配协管客户经理时
-    this.showOther =  disType === 'assistMgr'
-    this.selectCrmCustIds = disType === 'assistMgr' ? (selections.length > 1 ? '' : selections[0].crmCustId) : ''
+    this.showOther = disType === "assistMgr";
+    this.selectCrmCustIds = disType === "assistMgr" ? (selections.length > 1 ? "" : selections[0].crmCustId) : "";
 
     this.$nextTick(() => {
       this.customerVisible = true;
@@ -186,30 +180,28 @@ export default class extends Vue {
 
   sureAllotFn(type: string, data: any) {
     let params = {
-      disType: this.disType,  //主管机构：mainOrg 协管机构：assistOrg 主办客户经理：mainMgr 协管客户经理：assistMgr
-      [type]: data.map((item:any)=> item.userId).join(','),
-      manageUserId: data[0].manageUserId || '',
-      crmCustIds: (this.$refs.refTable as any).selections.map((item:any)=>item.crmCustId).join(',')
-    }
-    customerApi.saveCustDistribute(params).then(res => {
-      this.$message.success('分配成功');
+      disType: this.disType, //主管机构：mainOrg 协管机构：assistOrg 主办客户经理：mainMgr 协管客户经理：assistMgr
+      [type]: data.map((item: any) => item.userId).join(","),
+      manageUserId: data[0].manageUserId || "",
+      crmCustIds: (this.$refs.refTable as any).selections.map((item: any) => item.crmCustId).join(","),
+    };
+    customerApi.saveCustDistribute(params).then((res) => {
+      this.$message.success("分配成功");
       this.customerVisible = false;
       (this.$refs.refTable as any).getTableData();
-    })
+    });
   }
 
   // 分配历史
-  allotHistoryFn(row:any) {
+  allotHistoryFn(row: any) {
     this.custRow = row;
     this.historyVisible = true;
     this.allotBaseParams = {
       condition: JSON.stringify({
-        crmCustId: row.crmCustId
-      })
-    }
+        crmCustId: row.crmCustId,
+      }),
+    };
   }
-
-  
 }
 </script>
 <style lang="scss">
@@ -218,5 +210,4 @@ export default class extends Vue {
     padding-top: 0;
   }
 }
-  
 </style>

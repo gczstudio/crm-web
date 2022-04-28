@@ -7,16 +7,16 @@
       </template>
       <template v-slot:form>
         <yu-xform ref="searchForm" :model="queryFormData" label-width="83px">
-            <yu-xform-group :column="4">
-              <yu-xform-item label="数据日期" name="etlDate" ctype="date-picker" placeholder="数据日期" disabled :clearable="false"></yu-xform-item>
-            </yu-xform-group>
-          </yu-xform>
+          <yu-xform-group :column="4">
+            <yu-xform-item label="数据日期" name="etlDate" ctype="date-picker" placeholder="数据日期" disabled :clearable="false"></yu-xform-item>
+          </yu-xform-group>
+        </yu-xform>
       </template>
       <template v-slot:table>
         <yu-xtable ref="refTable" :data-url="dataUrl" row-number :base-params="baseParams" selection-type="checkbox" :dynamic-height="true" border>
           <yu-xtable-column label="客户名称" prop="custName" min-width="250" fixed="left" :show-overflow-tooltip="true" sortable="custom">
             <template slot-scope="scope">
-              <div class="yu-table__company" @click.prevent="customerViewFn(scope.row)"><i class="iconfont icon-qiyelogo"></i>{{scope.row.custName}}</div>
+              <div class="yu-table__company" @click.prevent="customerViewFn(scope.row)"><i class="iconfont icon-qiyelogo"></i>{{ scope.row.custName }}</div>
             </template>
           </yu-xtable-column>
           <yu-xtable-column label="核心客户号" prop="custId" min-width="120" :show-overflow-tooltip="true" fixed="left" is-num sortable="custom"></yu-xtable-column>
@@ -42,7 +42,7 @@
 
 <script lang="ts">
 import { Component, Prop, Ref, Vue, Watch } from "vue-property-decorator";
-import { backend } from '@/config';
+import { backend } from "@/config";
 import moment from "moment";
 @Component({
   name: "TeamCustList",
@@ -50,68 +50,65 @@ import moment from "moment";
 export default class extends Vue {
   @Prop() private instance!: any;
   @Prop() private row!: any;
-  @Ref('searchForm') searchForm: any;
-  @Ref('refTable') refTable: any;
-  private dataUrl = backend.teamCenter + '/api/custteam/querytcust';
-  private queryFormData = {}
-  private baseParams = {}
-  
-  created () {
+  @Ref("searchForm") searchForm: any;
+  @Ref("refTable") refTable: any;
+  private dataUrl = backend.teamCenter + "/api/custteam/querytcust";
+  private queryFormData = {};
+  private baseParams = {};
 
+  created() {
     const { teamId, etlDate } = this.row;
     this.queryFormData = {
       teamId,
-      etlDate
-    }
+      etlDate,
+    };
     this.baseParams = {
-      condition: JSON.stringify(this.queryFormData)
-    }
+      condition: JSON.stringify(this.queryFormData),
+    };
   }
 
-  mounted () {
-    this.$checkCtr('exportTeamCust') && this.$exportQueue.addQueue(this.$route.path, this.exportFn, true);
+  mounted() {
+    this.$checkCtr("exportTeamCust") && this.$exportQueue.addQueue(this.$route.path, this.exportFn, true);
   }
 
   customerViewFn(row: any) {
-    this.$router.push({ path: '/custInfo/custView/' + row.crmCustId, query: { crmCustId: row.crmCustId, custId: row.custId, title: '客户详情-' + row.custName }})
+    this.$router.push({ path: "/custInfo/custView/" + row.crmCustId, query: { crmCustId: row.crmCustId, custId: row.custId, title: "客户详情-" + row.custName } });
   }
 
-  closeFn () {
+  closeFn() {
     this.instance.hide();
   }
 
-  exportFn (showTipModal?:boolean) {
+  exportFn(showTipModal?: boolean) {
     const { teamId, etlDate } = this.row;
     var searchQuery: any = (this as any)._.assign({}, this.searchForm.searchModel, {
-      etlDate: moment(etlDate).format('YYYY-MM-DD'),
+      etlDate: moment(etlDate).format("YYYY-MM-DD"),
       teamId,
-      fileName: '团队客户指标',
+      fileName: "团队客户指标",
       queryField: this.searchForm.searchQueryField,
     });
 
     var apiParams = {
-      url: backend.teamCenter + '/api/custteam/exportquerytcust',
+      url: backend.teamCenter + "/api/custteam/exportquerytcust",
       params: searchQuery,
-      sort: this.refTable.sort
+      sort: this.refTable.sort,
     };
     (this as any).$util.exportTable({
       _this: this,
       apiParams,
-      showTipModal
+      showTipModal,
     });
   }
 
-  destroyed () {
+  destroyed() {
     this.$exportQueue.removeQueue(this.$route.path, true);
   }
-
-
 }
 </script>
 
 <style lang="scss" scoped>
 ::v-deep.teamCustList-component {
-  .el-input.is-disabled .el-input__inner, 
+  .el-input.is-disabled .el-input__inner,
   .el-textarea.is-disabled .el-textarea__inner {
     background-color: #fff;
     color: #606266;
@@ -119,6 +116,4 @@ export default class extends Vue {
     cursor: default;
   }
 }
-
 </style>
-

@@ -1,22 +1,11 @@
 <template>
   <div class="yu-tree-node" ref="treeNode">
     <span>{{ node.label }}</span>
-    <div
-      class="yu-tree__operate-box"
-      v-if="selectNode.id === node.id && operates.length && !filterOperateNodes.includes(node.id)"
-    >
-      <img
-        class="yu-tree__more"
-        src="../../../assets/images/common/operate.png"
-        @mouseenter="mouseenterFn"
-      />
+    <div class="yu-tree__operate-box" v-if="selectNode.id === node.id && operates.length && !filterOperateNodes.includes(node.id)">
+      <img class="yu-tree__more" src="../../../assets/images/common/operate.png" @mouseenter="mouseenterFn" />
       <div class="yu-tree__operates" :style="getStyle">
         <ul>
-          <li
-            v-for="item in operates"
-            :key="item.label"
-            @click.stop="operateFn(item)"
-          >
+          <li v-for="item in operates" :key="item.label" @click.stop="operateFn(item)">
             {{ item.label }}
           </li>
         </ul>
@@ -33,7 +22,7 @@ export default {
     node: Object,
     selectNode: Object,
     operates: Array,
-    filterOperateNodes: Array
+    filterOperateNodes: Array,
   },
   data: function () {
     return {

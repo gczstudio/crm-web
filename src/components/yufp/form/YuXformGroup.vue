@@ -1,16 +1,16 @@
 <script>
 export default {
-  name: 'YuXformGroup',
-  inject: ['elForm'],
+  name: "YuXformGroup",
+  inject: ["elForm"],
   props: {
     column: {
       type: Number,
-      default: 2
+      default: 2,
     },
     fixed: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   render: function (h) {
     var slots = this.$slots.default;
@@ -29,9 +29,8 @@ export default {
         column = 3;
       }
     }
-    
-    if (this.elForm.formType === 'search') {
-      
+
+    if (this.elForm.formType === "search") {
       this.elForm.column = column;
       // 动态计算同一列的form的lable的宽度，以宽的为准
       var hasLabelRows = realRows.filter(function (item) {
@@ -41,16 +40,18 @@ export default {
       if (hasLabelRows.length === realRows.length) {
         for (var i = 0; i < column; i++) {
           // 找到最大值
-          var fitlerRows = realRows.filter(function (vdom, index) {
-            return (index % column) === i;
-          }).sort(function (a, b) {
-            return b.componentOptions.propsData.label.length - a.componentOptions.propsData.label.length;
-          });
+          var fitlerRows = realRows
+            .filter(function (vdom, index) {
+              return index % column === i;
+            })
+            .sort(function (a, b) {
+              return b.componentOptions.propsData.label.length - a.componentOptions.propsData.label.length;
+            });
           if (fitlerRows[0] && fitlerRows[0].componentOptions.propsData.label) {
             // 给每个元素设置width
             realRows.map(function (item, index) {
-              if ((index % column) === i) {
-                item.componentOptions.propsData.labelWidth = (fitlerRows[0].componentOptions.propsData.label.length * 14) + 10 + 16 + 'px'; // 10是：16是距离左侧的距离
+              if (index % column === i) {
+                item.componentOptions.propsData.labelWidth = fitlerRows[0].componentOptions.propsData.label.length * 14 + 10 + 16 + "px"; // 10是：16是距离左侧的距离
               }
             });
           }
@@ -59,13 +60,19 @@ export default {
     }
     realRows.map(function (vdom) {
       var span = vdom.componentOptions.propsData.colspan ? parseInt(vdom.componentOptions.propsData.colspan) : 24 / column;
-      rows.push(h('el-col', {
-        props: {
-          span: span
-        }
-      }, [vdom]));
+      rows.push(
+        h(
+          "el-col",
+          {
+            props: {
+              span: span,
+            },
+          },
+          [vdom]
+        )
+      );
     });
-    return h('el-row', rows);
-  }
-}
+    return h("el-row", rows);
+  },
+};
 </script>

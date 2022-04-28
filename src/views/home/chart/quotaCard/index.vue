@@ -1,22 +1,13 @@
 <template>
-  <div
-    class="quotaCard-container">
-    <i
-      v-if="chartStatus === 'opened'"
-      class="el-icon-close"
-      @click="deleteFn"
-    ></i>
+  <div class="quotaCard-container">
+    <i v-if="chartStatus === 'opened'" class="el-icon-close" @click="deleteFn"></i>
     <div class="top">
-      <img
-        :src="
-          require(`@/assets/images/theme/${themeType}/quota/icon-quota${(index + 1) % 8 || 8}.png`)"
-        alt=""
-      />
+      <img :src="require(`@/assets/images/theme/${themeType}/quota/icon-quota${(index + 1) % 8 || 8}.png`)" alt="" />
       <div class="total">
         <p :title="data.name">{{ data.name }}</p>
         <p>
-          <span class="num">{{ formatMoney(data.total, data.isAmount, true)}}</span>
-          <span class="unit">{{data.isAmount ? getUnit(data.total) : ''}}</span>
+          <span class="num">{{ formatMoney(data.total, data.isAmount, true) }}</span>
+          <span class="unit">{{ data.isAmount ? getUnit(data.total) : "" }}</span>
         </p>
       </div>
     </div>
@@ -24,15 +15,24 @@
       <el-row>
         <el-col :span="8">
           <p>比上日<i :class="['iconfont', getArrow(data.lastD)]"></i></p>
-          <p><span class="num">{{formatMoney(data.lastD, data.isAmount)}}</span><span class="unit" v-if="data.isAmount">{{getUnit(data.lastD)}}</span></p>
+          <p>
+            <span class="num">{{ formatMoney(data.lastD, data.isAmount) }}</span
+            ><span class="unit" v-if="data.isAmount">{{ getUnit(data.lastD) }}</span>
+          </p>
         </el-col>
         <el-col :span="8">
           <p>比上月<i :class="['iconfont', getArrow(data.lastM)]"></i></p>
-          <p><span class="num">{{formatMoney(data.lastM, data.isAmount)}}</span><span class="unit" v-if="data.isAmount">{{getUnit(data.lastM)}}</span></p>
+          <p>
+            <span class="num">{{ formatMoney(data.lastM, data.isAmount) }}</span
+            ><span class="unit" v-if="data.isAmount">{{ getUnit(data.lastM) }}</span>
+          </p>
         </el-col>
         <el-col :span="8">
           <p>比上年<i :class="['iconfont', getArrow(data.lastY)]"></i></p>
-          <p><span class="num">{{formatMoney(data.lastY, data.isAmount)}}</span><span class="unit" v-if="data.isAmount">{{getUnit(data.lastY)}}</span></p>
+          <p>
+            <span class="num">{{ formatMoney(data.lastY, data.isAmount) }}</span
+            ><span class="unit" v-if="data.isAmount">{{ getUnit(data.lastY) }}</span>
+          </p>
         </el-col>
       </el-row>
     </div>
@@ -42,7 +42,7 @@
 <script lang="ts">
 import { Component, Vue, Prop } from "vue-property-decorator";
 import { HomeModule } from "@/store/modules/home";
-import { SettingsModule } from '@/store/modules/settings';
+import { SettingsModule } from "@/store/modules/settings";
 import { formatMoney } from "@/utils";
 
 @Component({
@@ -60,14 +60,14 @@ export default class extends Vue {
   }
 
   get themeType() {
-    return SettingsModule.themeType
+    return SettingsModule.themeType;
   }
 
   // 格式化金额
   formatMoney(money: number, isAmount: boolean, noSymbol: boolean) {
-    let symbol = !money ? "" : (money > 0) ? "+" : "-";
-    if(noSymbol) {
-      symbol = money < 0 ? '-' : ''
+    let symbol = !money ? "" : money > 0 ? "+" : "-";
+    if (noSymbol) {
+      symbol = money < 0 ? "-" : "";
     }
     money = money ? Math.abs(money) : money;
     let m = money;
@@ -111,7 +111,7 @@ export default class extends Vue {
 .quotaCard-container {
   overflow: hidden;
   position: relative;
-  padding:  16px 16px 20px;
+  padding: 16px 16px 20px;
   height: 160px;
   background: #ffffff;
   box-shadow: 0px 2px 10px rgba(0, 92, 187, 0.3);
@@ -152,7 +152,7 @@ export default class extends Vue {
           font-weight: normal;
           margin-left: 6px;
           font-size: 12px;
-          color: rgba(51, 51, 51, .8);
+          color: rgba(51, 51, 51, 0.8);
         }
       }
     }
@@ -192,7 +192,7 @@ export default class extends Vue {
     }
   }
 }
-@media screen and (max-width: 1680px) { 
+@media screen and (max-width: 1680px) {
   .quotaCard-container {
     padding: 12px;
     height: 135px;

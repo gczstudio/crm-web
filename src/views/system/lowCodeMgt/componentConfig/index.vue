@@ -1,22 +1,23 @@
 <template>
   <div class="componentConfig-container">
-   <el-row :gutter="16">
+    <el-row :gutter="16">
       <el-col :span="5">
-        <yu-left-tree 
-          class="box-shadow" 
+        <yu-left-tree
+          class="box-shadow"
           title="业务组件目录"
-          ref="menuTree" 
-          :show-checkbox="false" 
-          :height="bHeight-(isMaxScreen?232:202)" 
+          ref="menuTree"
+          :show-checkbox="false"
+          :height="bHeight - (isMaxScreen ? 232 : 202)"
           :data-url="menuTreeUrl"
-          data-id="menuId" 
-          data-label="menuName" 
-          @node-xclick="nodeClickFn" 
-          data-pid="upMenuId" 
-          :expand-level='2' 
-          :highlight-current="true" 
-          :show-create="true" 
-          :create-fn="createFn">
+          data-id="menuId"
+          data-label="menuName"
+          @node-xclick="nodeClickFn"
+          data-pid="upMenuId"
+          :expand-level="2"
+          :highlight-current="true"
+          :show-create="true"
+          :create-fn="createFn"
+        >
         </yu-left-tree>
       </el-col>
       <el-col :span="19">
@@ -36,54 +37,50 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop, Ref } from 'vue-property-decorator'
-import { backend } from '@/config'
-import { getUserInfo } from '@/utils'
-import ChartList from './chartList/index.vue'
+import { Component, Vue, Prop, Ref } from "vue-property-decorator";
+import { backend } from "@/config";
+import { getUserInfo } from "@/utils";
+import ChartList from "./chartList/index.vue";
 @Component({
-  name: 'ComponentConfig',
+  name: "ComponentConfig",
   components: {
-    ChartList
-  }
+    ChartList,
+  },
 })
-export default class extends Vue { 
+export default class extends Vue {
+  private menuTreeUrl = backend.appOcaService + "/api/adminsmmenu/menutreequery?sysId=" + getUserInfo().logicSys.id;
 
-  private menuTreeUrl = backend.appOcaService + '/api/adminsmmenu/menutreequery?sysId=' + getUserInfo().logicSys.id
-
-  private activeName = '1'
+  private activeName = "1";
 
   createFn() {
-    console.log(1)
+    console.log(1);
   }
 
   nodeClickFn() {
-    console.log(2)
+    console.log(2);
   }
-
 }
 </script>
 
 <style lang="scss" scoped>
-  
-
-  .left-container{
-    position: relative;
-    height: calc(100vh - 128px);
-    background: #FFFFFF;
-    box-shadow: 0px 3px 6px  rgba(0, 0, 0, 0.2);
-    border-radius: 5px;
+.left-container {
+  position: relative;
+  height: calc(100vh - 128px);
+  background: #ffffff;
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  .yu-button-text {
+    position: absolute;
+    top: 18px;
+    right: 16px;
+    z-index: 11;
+  }
+}
+@media screen and (max-width: 1680px) {
+  .left-container {
     .yu-button-text {
-      position: absolute;
-      top: 18px;
-      right: 16px;
-      z-index: 11;
+      top: 15px;
     }
   }
-  @media screen and (max-width: 1680px) { 
-    .left-container {
-      .yu-button-text {
-        top: 15px;
-      }
-    }
-  }
+}
 </style>

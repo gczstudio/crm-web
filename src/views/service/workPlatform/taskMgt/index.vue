@@ -23,24 +23,24 @@
               <template slot-scope="scope">
                 <div class="yu-table__company" @click.prevent="customerViewFn(scope.row)">
                   <i class="iconfont icon-qiyelogo"></i>
-                  {{scope.row.custName}}
+                  {{ scope.row.custName }}
                 </div>
               </template>
             </yu-xtable-column>
             <yu-xtable-column label="核心客户号" prop="custId" width="120" :show-overflow-tooltip="true" is-num sortable="custom"></yu-xtable-column>
             <yu-xtable-column label="期初余额（万元）" width="160" :show-overflow-tooltip="true" prop="openBal" format-money align="right" sortable="custom">
               <template slot-scope="scope">
-                <span class="num">{{$util.formatMoney(scope.row.openBal / 10000)}}</span>
+                <span class="num">{{ $util.formatMoney(scope.row.openBal / 10000) }}</span>
               </template>
             </yu-xtable-column>
             <yu-xtable-column label="期末余额（万元）" width="160" align="right" format-money prop="closeBal" :show-overflow-tooltip="true" sortable="custom">
               <template slot-scope="scope">
-                <span class="num">{{$util.formatMoney(scope.row.closeBal / 10000)}}</span>
+                <span class="num">{{ $util.formatMoney(scope.row.closeBal / 10000) }}</span>
               </template>
             </yu-xtable-column>
             <yu-xtable-column label="变动金额（万元）" prop="chgAmt" width="180" align="right" format-money sortable="custom" :show-overflow-tooltip="true">
               <template slot-scope="scope">
-                <span class="num">{{$util.formatMoney(scope.row.chgAmt / 10000)}}</span>
+                <span class="num">{{ $util.formatMoney(scope.row.chgAmt / 10000) }}</span>
               </template>
             </yu-xtable-column>
             <yu-xtable-column label="变动原因" prop="reason" min-width="200" :show-overflow-tooltip="true"></yu-xtable-column>
@@ -68,7 +68,7 @@
 
 <script lang="ts">
 import { Component, Ref, Vue } from "vue-property-decorator";
-import { backend } from '@/config'
+import { backend } from "@/config";
 import moment from "moment";
 import { ServiceModule } from "@/store/modules/service";
 import Detail from "./detail.vue";
@@ -76,55 +76,52 @@ import Detail from "./detail.vue";
 @Component({
   name: "CustLevel",
   components: {
-    Detail
-  }
+    Detail,
+  },
 })
 export default class extends Vue {
-  @Ref('searchForm') searchForm: any;
-  @Ref('refTable') refTable: any;
-  private dataUrl = backend.workService + "/api/cstrmdmng/cstrmdlist"
-  private dataDt = sessionStorage.getItem('dataDt');
+  @Ref("searchForm") searchForm: any;
+  @Ref("refTable") refTable: any;
+  private dataUrl = backend.workService + "/api/cstrmdmng/cstrmdlist";
+  private dataDt = sessionStorage.getItem("dataDt");
   private isMgr: boolean = (this as any).$util.getCheckedRole().roleCode === "R300201";
-  private taskTypeOptions: any = [
-    {key: '1', value: '客户级动账提醒'}
-  ]
-  private queryFormData:any = {
-    taskType: '1'
-  }
+  private taskTypeOptions: any = [{ key: "1", value: "客户级动账提醒" }];
+  private queryFormData: any = {
+    taskType: "1",
+  };
 
   private baseParams = {
     condition: JSON.stringify({
-       taskType: '1'
-    })
-  }
+      taskType: "1",
+    }),
+  };
 
   private startPickerOptions = {
     disabledDate: (time: Date) => {
       if ((this.queryFormData as any).dateEnd) {
         return time.getTime() >= new Date((this.queryFormData as any).dateEnd).getTime();
       }
-    }
-  }
+    },
+  };
 
   private endPickerOptions = {
     disabledDate: (time: Date) => {
       if ((this.queryFormData as any).dateStart) {
         return time.getTime() <= new Date((this.queryFormData as any).dateStart).getTime() - 86400000;
       }
-    }
-  }
+    },
+  };
 
   private visible = false;
   private curId = "";
   private type = 1;
 
-
-  mounted () {
-    this.$checkCtr('export') && this.$exportQueue.addQueue(this.$route.path, this.exportFn)
+  mounted() {
+    this.$checkCtr("export") && this.$exportQueue.addQueue(this.$route.path, this.exportFn);
   }
 
   resetFn() {
-    this.queryFormData = {}
+    this.queryFormData = {};
   }
 
   customerViewFn(row: any) {
@@ -144,22 +141,21 @@ export default class extends Vue {
     this.type = type;
   }
 
-  exportFn (showTipModal?:boolean) {
+  exportFn(showTipModal?: boolean) {
     var searchQuery: any = (this as any)._.assign({}, this.searchForm.searchModel, {
-      fileName: '动账提醒-客户级',
-      queryField: this.searchForm.searchQueryField
+      fileName: "动账提醒-客户级",
+      queryField: this.searchForm.searchQueryField,
     });
     var apiParams = {
-      url: backend.workService + '/api/cstrmdmng/exportcstrmdlist',
+      url: backend.workService + "/api/cstrmdmng/exportcstrmdlist",
       params: searchQuery,
-      sort: this.refTable.sort
+      sort: this.refTable.sort,
     };
     (this as any).$util.exportTable({
       _this: this,
       apiParams,
-      showTipModal
+      showTipModal,
     });
   }
-
 }
 </script>

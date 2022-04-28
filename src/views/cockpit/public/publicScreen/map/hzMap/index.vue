@@ -1,32 +1,38 @@
 <template>
-  <div style="position: relative;" >
-     <div class="mapChart animate-bounce" ref="mapChart"></div>
-     <div class="dots animate-bounceDown">
-        <div class="dots-item" v-for="item in mapData.pos" :key="item.orgNo" @mouseenter="mouseenter(item)" @mouseleave="mouseleave(item)">
-         <img v-if="activeOrg===item.orgNo" :style="{'top': item.positionTop - 25 + 'px', 'left': item.positionLeft - 3 +'px'}" class="dots-img" src="~@/assets/images/screen/dot.png" alt="">
-         <img v-else :style="{'top': item.positionTop + 'px', 'left': item.positionLeft +'px'}" class="dots-img" src="~@/assets/images/screen/dot1.png" alt="">
-        </div>
-     </div>
-     <div v-if="activeOrg && Object.keys(modalData).length" id="modal" :key="activeOrg" :class="`modal ${modalClass}`" :style="mapStyle.modal">
+  <div style="position: relative">
+    <div class="mapChart animate-bounce" ref="mapChart"></div>
+    <div class="dots animate-bounceDown">
+      <div class="dots-item" v-for="item in mapData.pos" :key="item.orgNo" @mouseenter="mouseenter(item)" @mouseleave="mouseleave(item)">
+        <img v-if="activeOrg === item.orgNo" :style="{ top: item.positionTop - 25 + 'px', left: item.positionLeft - 3 + 'px' }" class="dots-img" src="~@/assets/images/screen/dot.png" alt="" />
+        <img v-else :style="{ top: item.positionTop + 'px', left: item.positionLeft + 'px' }" class="dots-img" src="~@/assets/images/screen/dot1.png" alt="" />
+      </div>
+    </div>
+    <div v-if="activeOrg && Object.keys(modalData).length" id="modal" :key="activeOrg" :class="`modal ${modalClass}`" :style="mapStyle.modal">
       <div class="line" :style="mapStyle.line"></div>
       <div class="modal-cont">
-        <div class="modal-title">{{modalData.orgNm}}</div>
+        <div class="modal-title">{{ modalData.orgNm }}</div>
         <div class="modal-compare">
           <el-row>
             <el-col :span="8" class="modal-compare-item">
               <p>对公存款余额(亿元)</p>
-              <p>{{$util.formatMoney(modalData.deptBal / 100000000)}}</p>
-              <p>比上年末<span class="updown-amount">{{(modalData.deptBalLastYear > 0 ? '+' : '') + $util.formatMoney(modalData.deptBalLastYear / 100000000)}}</span></p>
+              <p>{{ $util.formatMoney(modalData.deptBal / 100000000) }}</p>
+              <p>
+                比上年末<span class="updown-amount">{{ (modalData.deptBalLastYear > 0 ? "+" : "") + $util.formatMoney(modalData.deptBalLastYear / 100000000) }}</span>
+              </p>
             </el-col>
             <el-col :span="8" class="modal-compare-item">
               <p>对公存款日均(亿元)</p>
-              <p>{{$util.formatMoney(modalData.deptBalAvgYear / 100000000)}}</p>
-              <p>比上年末<span class="updown-amount">{{(modalData.deptBalAvgLastYear > 0 ? '+' : '') + $util.formatMoney(modalData.deptBalAvgLastYear / 100000000)}}</span></p>
+              <p>{{ $util.formatMoney(modalData.deptBalAvgYear / 100000000) }}</p>
+              <p>
+                比上年末<span class="updown-amount">{{ (modalData.deptBalAvgLastYear > 0 ? "+" : "") + $util.formatMoney(modalData.deptBalAvgLastYear / 100000000) }}</span>
+              </p>
             </el-col>
             <el-col :span="8" class="modal-compare-item">
               <p>对公贷款余额(亿元)</p>
-              <p>{{$util.formatMoney(modalData.loanBal / 100000000)}}</p>
-              <p>比上年末<span class="updown-amount">{{(modalData.loanBalLastYear > 0 ? '+' : '') + $util.formatMoney(modalData.loanBalLastYear / 100000000)}}</span></p>
+              <p>{{ $util.formatMoney(modalData.loanBal / 100000000) }}</p>
+              <p>
+                比上年末<span class="updown-amount">{{ (modalData.loanBalLastYear > 0 ? "+" : "") + $util.formatMoney(modalData.loanBalLastYear / 100000000) }}</span>
+              </p>
             </el-col>
           </el-row>
         </div>
@@ -34,54 +40,77 @@
           <el-row :gutter="4">
             <el-col :span="12">
               <ul class="quota-item quota-item-2">
-                <li>对公有效客户数<span class="amount">{{modalData.yxCustNum}}</span></li>
-                <li>对公信贷客户数<span class="amount">{{modalData.xdCustNum}}</span></li>
+                <li>
+                  对公有效客户数<span class="amount">{{ modalData.yxCustNum }}</span>
+                </li>
+                <li>
+                  对公信贷客户数<span class="amount">{{ modalData.xdCustNum }}</span>
+                </li>
               </ul>
             </el-col>
             <el-col :span="12">
               <ul class="quota-item">
-                <li>对公客户FTP利润({{$util.formatMoneyAutoUnit(modalData.ftpProfitBalnc).unit}})<span class="amount">{{$util.formatMoneyAutoUnit(modalData.ftpProfitBalnc).num}}</span></li>
-                <li>对公客户中收({{$util.formatMoneyAutoUnit(modalData.midBizInc).unit}})<span class="amount">{{$util.formatMoneyAutoUnit(modalData.midBizInc).num}}</span></li>
-                <li>对公客户EVA({{$util.formatMoneyAutoUnit(modalData.eva).unit}})<span class="amount">{{$util.formatMoneyAutoUnit(modalData.eva).num}}</span></li>
+                <li>
+                  对公客户FTP利润({{ $util.formatMoneyAutoUnit(modalData.ftpProfitBalnc).unit }})<span class="amount">{{ $util.formatMoneyAutoUnit(modalData.ftpProfitBalnc).num }}</span>
+                </li>
+                <li>
+                  对公客户中收({{ $util.formatMoneyAutoUnit(modalData.midBizInc).unit }})<span class="amount">{{ $util.formatMoneyAutoUnit(modalData.midBizInc).num }}</span>
+                </li>
+                <li>
+                  对公客户EVA({{ $util.formatMoneyAutoUnit(modalData.eva).unit }})<span class="amount">{{ $util.formatMoneyAutoUnit(modalData.eva).num }}</span>
+                </li>
               </ul>
             </el-col>
             <el-col :span="12">
               <ul class="quota-item">
-                <li>对公存款付息率(%)<span class="amount">{{modalData.avgDpsRate}}</span></li>
-                <li>对公贷款收息率(%)<span class="amount">{{modalData.avgLneRate}}</span></li>
-                <li>对公业务净利差(%)<span class="amount">{{modalData.netMargin}}</span></li>
+                <li>
+                  对公存款付息率(%)<span class="amount">{{ modalData.avgDpsRate }}</span>
+                </li>
+                <li>
+                  对公贷款收息率(%)<span class="amount">{{ modalData.avgLneRate }}</span>
+                </li>
+                <li>
+                  对公业务净利差(%)<span class="amount">{{ modalData.netMargin }}</span>
+                </li>
               </ul>
             </el-col>
             <el-col :span="12">
               <ul class="quota-item">
-                <li>授信敞口额度({{$util.formatMoneyAutoUnit(modalData.creditExposureAmt).unit}})<span class="amount">{{$util.formatMoneyAutoUnit(modalData.creditExposureAmt).num}}</span></li>
-                <li>已使用敞口额度({{$util.formatMoneyAutoUnit(modalData.userdCreditExposureAmt).unit}})<span class="amount">{{$util.formatMoneyAutoUnit(modalData.userdCreditExposureAmt).num}}</span></li>
-                <li>敞口额度使用率(%)<span class="amount">{{$util.toFixed(modalData.creditExposureUseRate, 2)}}</span></li>
+                <li>
+                  授信敞口额度({{ $util.formatMoneyAutoUnit(modalData.creditExposureAmt).unit }})<span class="amount">{{ $util.formatMoneyAutoUnit(modalData.creditExposureAmt).num }}</span>
+                </li>
+                <li>
+                  已使用敞口额度({{ $util.formatMoneyAutoUnit(modalData.userdCreditExposureAmt).unit }})<span class="amount">{{
+                    $util.formatMoneyAutoUnit(modalData.userdCreditExposureAmt).num
+                  }}</span>
+                </li>
+                <li>
+                  敞口额度使用率(%)<span class="amount">{{ $util.toFixed(modalData.creditExposureUseRate, 2) }}</span>
+                </li>
               </ul>
             </el-col>
           </el-row>
         </div>
       </div>
-     </div>
+    </div>
   </div>
- 
 </template>
 
 <script>
 import * as echarts from "echarts";
 import "echarts-gl";
 import axios from "axios";
-import { ScreenModule } from '@/store/modules/screen'
+import { ScreenModule } from "@/store/modules/screen";
 
 export default {
-  name: 'Map',
+  name: "Map",
   props: {
-    mapData: Object
+    mapData: Object,
   },
   data() {
     return {
       data: [],
-      activeOrg: '',
+      activeOrg: "",
       // result: [
       //   {
       //     orgNm: '重庆分行',
@@ -190,148 +219,151 @@ export default {
       //   }
       // ],
       timer: null,
-      modalClass: 'animate-bounce-modal-delay',
-      chart: null
+      modalClass: "animate-bounce-modal-delay",
+      chart: null,
     };
   },
   computed: {
     mapStyle() {
-      let curMap = this.mapData.pos.find(item => item.orgNo === this.activeOrg)
-      if(!curMap) return {}
-      let top  = curMap.positionTop, left = curMap.positionLeft
-      let modalWidth = 467, modalHeight = 299  // 弹出框宽高
-      let mapHalfWidth = 560, mapHalfHeight = 200  // map一半的宽高
+      let curMap = this.mapData.pos.find((item) => item.orgNo === this.activeOrg);
+      if (!curMap) return {};
+      let top = curMap.positionTop,
+        left = curMap.positionLeft;
+      let modalWidth = 467,
+        modalHeight = 299; // 弹出框宽高
+      let mapHalfWidth = 560,
+        mapHalfHeight = 200; // map一半的宽高
       // 左下角
-      if(top > mapHalfHeight && left < mapHalfWidth) {
+      if (top > mapHalfHeight && left < mapHalfWidth) {
         return {
           modal: {
-            top: top - modalHeight - 10 + 'px',
-            left: left + 55 + 'px',
-            transformOrigin: 'bottom left'
+            top: top - modalHeight - 10 + "px",
+            left: left + 55 + "px",
+            transformOrigin: "bottom left",
           },
           line: {
-            top: modalHeight - 8 + 'px',
+            top: modalHeight - 8 + "px",
             left: 0,
-            transform: 'rotate(135deg)'
-          }
-        }
+            transform: "rotate(135deg)",
+          },
+        };
       }
 
       // 左上角
-      if(top <= mapHalfHeight && left <= mapHalfWidth) {
+      if (top <= mapHalfHeight && left <= mapHalfWidth) {
         return {
           modal: {
-            top: top + 80 + 'px',
-            left: left + 56 + 'px',
-            transformOrigin: 'top left'
+            top: top + 80 + "px",
+            left: left + 56 + "px",
+            transformOrigin: "top left",
           },
           line: {
             top: 0,
             left: 0,
-            transform: 'rotate(-135deg)'
-          }
-        }
+            transform: "rotate(-135deg)",
+          },
+        };
       }
 
       // 右下角
-      if(top > mapHalfHeight && left  > mapHalfWidth) {
+      if (top > mapHalfHeight && left > mapHalfWidth) {
         // 超出边界时
-        let beyond = top - modalHeight
+        let beyond = top - modalHeight;
         if (beyond < 0) {
-          let rotate = beyond * 1.02 + 45
-          top = 0
-          if(beyond + 43 >0) {
-            left =  left - modalWidth - 50
+          let rotate = beyond * 1.02 + 45;
+          top = 0;
+          if (beyond + 43 > 0) {
+            left = left - modalWidth - 50;
           } else {
-            left =  left - modalWidth - 55
+            left = left - modalWidth - 55;
           }
 
           return {
             modal: {
               top: 0,
-              left: left + 'px',
-              transformOrigin: 'bottom right'
+              left: left + "px",
+              transformOrigin: "bottom right",
             },
             line: {
-              top: modalHeight - 10 + 'px',
-              left: modalWidth - 10 + 'px',
-              transform: `rotate(${rotate}deg)`
-            }
-          }
+              top: modalHeight - 10 + "px",
+              left: modalWidth - 10 + "px",
+              transform: `rotate(${rotate}deg)`,
+            },
+          };
         }
-       
+
         return {
           modal: {
-            top: top - modalHeight - 6 +  'px',
-            left: left - modalWidth - 43 + 'px',
-            transformOrigin: 'bottom right'
+            top: top - modalHeight - 6 + "px",
+            left: left - modalWidth - 43 + "px",
+            transformOrigin: "bottom right",
           },
           line: {
-            top: modalHeight - 10 + 'px',
-            left: modalWidth - 10 + 'px',
-            transform: 'rotate(45deg)'
-          }
-        }
+            top: modalHeight - 10 + "px",
+            left: modalWidth - 10 + "px",
+            transform: "rotate(45deg)",
+          },
+        };
       }
 
       // 右上角
-      if(top <= mapHalfHeight && left >= mapHalfWidth) {
+      if (top <= mapHalfHeight && left >= mapHalfWidth) {
         return {
           modal: {
-            top: top +  80 + 'px',
-            left: left -modalWidth - 46+ 'px',
-            transformOrigin: 'top right'
+            top: top + 80 + "px",
+            left: left - modalWidth - 46 + "px",
+            transformOrigin: "top right",
           },
           line: {
             top: 0,
-            left: modalWidth - 7 + 'px',
-            transform: 'rotate(315deg)'
-          }
-        }
+            left: modalWidth - 7 + "px",
+            transform: "rotate(315deg)",
+          },
+        };
       }
     },
     modalData() {
-      return this.mapData.data.find(item => item.orgNo === this.activeOrg) || {}
+      return this.mapData.data.find((item) => item.orgNo === this.activeOrg) || {};
     },
     curActiveOrg() {
-      return ScreenModule.activeOrg
+      return ScreenModule.activeOrg;
     },
     incrementStatus() {
-      return ScreenModule.incrementStatus
-    }
+      return ScreenModule.incrementStatus;
+    },
   },
   watch: {
     activeOrg(val) {
-      ScreenModule.SET_ACTIVE_ORG(val)
+      ScreenModule.SET_ACTIVE_ORG(val);
       this.execAnimate();
     },
     curActiveOrg(val) {
-      this.activeOrg = val
+      this.activeOrg = val;
     },
     incrementStatus(val) {
-      if(val) {
+      if (val) {
         // 点击增量时，清除定时器
-        this.stopAnimate()
+        this.stopAnimate();
         setTimeout(() => {
-          this.startAnimate()
-        }, 5000)
+          this.startAnimate();
+        }, 5000);
       }
-    }
+    },
   },
   mounted() {
     this.renderChart();
     setTimeout(() => {
-      this.activeOrg = this.curActiveOrg || '1309999'
-      this.modalClass = 'animate-bounce-modal';
+      this.activeOrg = this.curActiveOrg || "1309999";
+      this.modalClass = "animate-bounce-modal";
       this.$nextTick(() => {
         this.updateChart();
         this.startAnimate();
       });
-    }, 6000)
+    }, 6000);
   },
   methods: {
     mouseenter(item) {
-      this.stopAnimate()
+      this.stopAnimate();
       this.activeOrg = item.orgNo;
     },
     mouseleave(item) {
@@ -339,47 +371,47 @@ export default {
     },
     execAnimate() {
       this.$nextTick(() => {
-        this.updateChart()
+        this.updateChart();
       });
     },
     startAnimate() {
       let i = 0;
-      this.mapData.pos.forEach((item, index) =>{
-        if(item.orgNo === this.activeOrg) {
+      this.mapData.pos.forEach((item, index) => {
+        if (item.orgNo === this.activeOrg) {
           i = index;
         }
       });
-      if(!this.timer) {
+      if (!this.timer) {
         this.timer = setInterval(() => {
           i++;
-          if(!this.mapData.pos[i]) {
+          if (!this.mapData.pos[i]) {
             // 执行完了跳转到武汉地图
-            ScreenModule.SET_ACTIVE_ORG('')
-            ScreenModule.SET_ACTIVE_MAP('wuhan')
+            ScreenModule.SET_ACTIVE_ORG("");
+            ScreenModule.SET_ACTIVE_MAP("wuhan");
             // i = 0;
             this.stopAnimate();
             return;
           }
-          this.activeOrg = this.mapData.pos[i]?.orgNo
+          this.activeOrg = this.mapData.pos[i]?.orgNo;
           this.execAnimate();
           this.stopAnimate();
           this.startAnimate();
-        }, 5000)
+        }, 5000);
       }
     },
     stopAnimate() {
-      clearInterval(this.timer)
-      this.timer = null
+      clearInterval(this.timer);
+      this.timer = null;
     },
     renderChart() {
       this.chart = echarts.init(this.$refs.mapChart);
-      var chinaGeoCoordMap = {}
-      var chinaDatas = []
-      this.mapData.pos.forEach(item => {
-        chinaGeoCoordMap[item.orgNo] = [item.locationLng, item.locationLat]
-        chinaDatas.push([{name: item.orgNo, value: 0}])
-      })
-      
+      var chinaGeoCoordMap = {};
+      var chinaDatas = [];
+      this.mapData.pos.forEach((item) => {
+        chinaGeoCoordMap[item.orgNo] = [item.locationLng, item.locationLat];
+        chinaDatas.push([{ name: item.orgNo, value: 0 }]);
+      });
+
       var series = [];
       // [["武汉市", chinaDatas]].forEach(function(item) {
       //   series.push(
@@ -405,103 +437,103 @@ export default {
       //   );
       // });
 
-
-        axios.get(window.location.origin + window.location.pathname + "static/map/hz.json").then((res) => {
-          var geoJson = res.data;
-          var mapName = "hubei";
-          echarts.registerMap(mapName, geoJson);
-          var option = {
-            animation: false,
-            selectedMode: "multiple",
-            grid: {
-              top: 100,
-              right: 0, 
-              bottom: 0,
-              left: 0
+      axios.get(window.location.origin + window.location.pathname + "static/map/hz.json").then((res) => {
+        var geoJson = res.data;
+        var mapName = "hubei";
+        echarts.registerMap(mapName, geoJson);
+        var option = {
+          animation: false,
+          selectedMode: "multiple",
+          grid: {
+            top: 100,
+            right: 0,
+            bottom: 0,
+            left: 0,
+          },
+          geo: {
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0,
+            show: true,
+            map: mapName,
+            aspectScale: 0.75, //长宽比
+            zoom: 0.8,
+            zlevel: 1,
+            roam: false, //是否开启鼠标缩放和平移漫
+            itemStyle: {
+              areaColor: "#19437d", // 底图颜色
+              borderColor: "#45a1db", // 分割线颜色
+              borderWidth: 1,
             },
-            geo: {
-              top:0,
+            emphasis: {
+              // 高亮
+              label: {
+                color: "#fff",
+              },
+              itemStyle: {
+                color: "#77cbf4",
+              },
+            },
+            regions: [],
+          },
+          series: [
+            {
+              type: "map",
+              top: 0,
               right: 0,
               bottom: 0,
               left: 0,
-              show: true,
               map: mapName,
-              aspectScale: 0.75, //长宽比
               zoom: 0.8,
-              zlevel: 1,
-              roam: false,  //是否开启鼠标缩放和平移漫
-              itemStyle: {
-                areaColor: "#19437d",   // 底图颜色
-                borderColor: "#45a1db", // 分割线颜色
-                borderWidth: 1,
-              },
-              emphasis: { // 高亮
+              geoIndex: 1,
+              aspectScale: 0.75, //长宽比
+              roam: false,
+              emphasis: {
                 label: {
-                  color: '#fff',
+                  show: false,
                 },
-                itemStyle: {
-                  color: "#77cbf4"
-                }
               },
-              regions: []
+              itemStyle: {
+                shadowColor: "#67d0ff",
+                shadowOffsetX: 0,
+                shadowOffsetY: 8,
+              },
             },
-            series: [
-              {
-                type: "map",
-                top:0,
-                right: 0,
-                bottom: 0,
-                left: 0,
-                map: mapName,
-                zoom: 0.8,
-                geoIndex: 1,
-                aspectScale: 0.75, //长宽比
-                roam: false,
-                emphasis: {
-                  label:{
-                    show:false
-                  }
-                },
-                itemStyle: {
-                  shadowColor: "#67d0ff",
-                  shadowOffsetX: 0,
-                  shadowOffsetY: 8,
-                }
-              },
-              ...series
-            ]
-          };
-          this.chart.setOption(option);
-        });
+            ...series,
+          ],
+        };
+        this.chart.setOption(option);
+      });
     },
     updateChart() {
-      let city = ''
-      this.mapData.pos.forEach(item => {
-        if (item.orgNo === this.activeOrg){
-          city = item.city
+      let city = "";
+      this.mapData.pos.forEach((item) => {
+        if (item.orgNo === this.activeOrg) {
+          city = item.city;
         }
-      })
-      let userOptions = this.chart.getOption()
+      });
+      let userOptions = this.chart.getOption();
       userOptions.geo[0].regions = [
         {
           name: city,
           label: {
             show: true,
-            color: '#fff',
+            color: "#fff",
           },
           itemStyle: {
-            areaColor: '#77cbf4'
-          }
-        }
-      ]
-      this.chart.clear()
-      this.chart.setOption(userOptions)
-    }
+            areaColor: "#77cbf4",
+          },
+        },
+      ];
+      this.chart.clear();
+      this.chart.setOption(userOptions);
+    },
   },
   destroyed() {
-    clearInterval(this.timer)
-    this.timer = null
-  }
+    clearInterval(this.timer);
+    this.timer = null;
+  },
 };
 </script>
 
@@ -517,7 +549,7 @@ export default {
     .dots-img {
       cursor: pointer;
       position: absolute;
-      top:0;
+      top: 0;
       left: 0;
       z-index: 9;
     }
@@ -530,7 +562,7 @@ export default {
   height: 299px;
   background: url("../../../../../../assets/images/screen/map-modal.png") center no-repeat;
   z-index: 100;
-  transition: all .3s;
+  transition: all 0.3s;
   transform: scale(0);
   .line {
     position: absolute;
@@ -541,7 +573,7 @@ export default {
     border-radius: 50%;
     transform: rotate(135deg);
     &::before {
-      content: '';
+      content: "";
       position: absolute;
       top: 50%;
       left: 50%;
@@ -549,11 +581,11 @@ export default {
       display: inline-block;
       width: 6px;
       height: 6px;
-      background: #FFC801;
+      background: #ffc801;
       border-radius: 50%;
     }
     &::after {
-      content: '';
+      content: "";
       position: absolute;
       left: 10px;
       top: 50%;
@@ -561,19 +593,19 @@ export default {
       display: inline-block;
       width: 60px;
       height: 2px;
-      background: #FFC801;
+      background: #ffc801;
     }
   }
   .modal-cont {
     padding: 19px 10px 8px;
-    .modal-title{
+    .modal-title {
       text-align: center;
       font-size: 18px;
       font-weight: bold;
-      color: #FFC801;
+      color: #ffc801;
     }
-    .modal-compare{
-      background-color: rgba(8, 34, 47, .4);
+    .modal-compare {
+      background-color: rgba(8, 34, 47, 0.4);
       padding: 10px 0;
       margin-bottom: 4px;
       font-size: 14px;
@@ -581,13 +613,13 @@ export default {
       text-align: center;
       .modal-compare-item {
         p:nth-child(2) {
-          color: #FFC801;
+          color: #ffc801;
           font-size: 18px;
           line-height: 1;
           margin: 8px 0 6px;
         }
         .updown-amount {
-          color: #44F0FF;
+          color: #44f0ff;
         }
       }
     }
@@ -595,27 +627,26 @@ export default {
       .quota-item {
         margin-bottom: 4px;
         font-size: 13px;
-        background: rgba(8, 34, 47, .4);
+        background: rgba(8, 34, 47, 0.4);
         padding: 10px;
         height: 80px;
         li {
           line-height: 1.6;
           &::before {
-            content: '';
+            content: "";
             display: inline-block;
             width: 5px;
             height: 5px;
-            background-color: #44F0FF;
+            background-color: #44f0ff;
             border-radius: 50%;
             margin-right: 5px;
             position: relative;
             top: -2px;
-            
           }
         }
         .amount {
           float: right;
-          color: #44F0FF;
+          color: #44f0ff;
         }
       }
       .quota-item-2 {
@@ -634,7 +665,6 @@ export default {
   }
   100% {
     transform: scale(1);
-    
   }
 }
 .animate-bounce {
@@ -648,7 +678,6 @@ export default {
   animation-delay: 4s;
   animation-fill-mode: forwards;
 }
-
 
 @keyframes bounceDown {
   0% {
@@ -671,5 +700,3 @@ export default {
   animation-fill-mode: forwards;
 }
 </style>
-
-

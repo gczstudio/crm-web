@@ -4,15 +4,7 @@
       <img :src="require(`@/assets/images/login/yx-logo.png`)" alt />
     </div>
     <div class="login-box">
-      <el-form
-        ref="loginForm"
-        :model="loginForm"
-        :rules="loginRules"
-        class="login-form"
-        autocomplete="on"
-        label-position="left"
-        @keyup.enter.native="handleLogin"
-      >
+      <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on" label-position="left" @keyup.enter.native="handleLogin">
         <div class="login-title">
           <img :src="require(`@/assets/images/login/logo.png`)" alt />
         </div>
@@ -21,44 +13,18 @@
             <span class="svg-container">
               <i class="icon iconfont">&#xe633;</i>
             </span>
-            <el-input
-              ref="username"
-              v-model="loginForm.username"
-              placeholder="请输入用户名称"
-              name="username"
-              type="text"
-              tabindex="1"
-              autocomplete="new-username"
-            />
+            <el-input ref="username" v-model="loginForm.username" placeholder="请输入用户名称" name="username" type="text" tabindex="1" autocomplete="new-username" />
           </el-form-item>
           <el-form-item prop="password">
             <span class="svg-container">
               <i class="icon iconfont">&#xe632;</i>
             </span>
-            <el-input
-              :key="passwordType"
-              ref="password"
-              v-model="loginForm.password"
-              :type="passwordType"
-              placeholder="请输入用户密码"
-              name="password"
-              tabindex="2"
-              autocomplete="new-password"
-            />
+            <el-input :key="passwordType" ref="password" v-model="loginForm.password" :type="passwordType" placeholder="请输入用户密码" name="password" tabindex="2" autocomplete="new-password" />
             <span class="show-pwd" @click="showPwd">
-              <i
-                :class="[
-                'iconfont',
-                passwordType === 'password' ?  'icon-yincangmima' :'icon-yanjing',
-              ]"
-              ></i>
+              <i :class="['iconfont', passwordType === 'password' ? 'icon-yincangmima' : 'icon-yanjing']"></i>
             </span>
           </el-form-item>
-          <div
-            v-loading="loading"
-            class="login-btn"
-            @click.prevent="handleLogin"
-          >登&emsp;录</div>
+          <div v-loading="loading" class="login-btn" @click.prevent="handleLogin">登&emsp;录</div>
         </div>
       </el-form>
     </div>
@@ -77,7 +43,7 @@ import { baseUrl, backend } from "@/config";
 import { queryLogicsyskv, verifyCodeImage } from "@/api/users";
 import { genUUID, getRSAPublicKey } from "@/utils";
 import { JSEncrypt } from "jsencrypt";
-import { addloginlog } from '@/api/common'
+import { addloginlog } from "@/api/common";
 
 const clientId = genUUID(16, 16) + Date.now();
 
@@ -86,13 +52,7 @@ const clientId = genUUID(16, 16) + Date.now();
   components: {},
 })
 export default class extends Vue {
-  imageCodeUrl: string =
-    baseUrl +
-    backend.uaaService +
-    "/api/codeImage/" +
-    clientId +
-    "?t=" +
-    new Date().getTime();
+  imageCodeUrl: string = baseUrl + backend.uaaService + "/api/codeImage/" + clientId + "?t=" + new Date().getTime();
 
   private validateUsername = (rule: any, value: string, callback: any) => {
     if (!value) {
@@ -222,12 +182,7 @@ export default class extends Vue {
 
   // 刷新验证码
   refreshImageCode() {
-    this.imageCodeUrl =
-      baseUrl +
-      "/yusp-uaa/api/codeImage/" +
-      clientId +
-      "?t=" +
-      new Date().getTime();
+    this.imageCodeUrl = baseUrl + "/yusp-uaa/api/codeImage/" + clientId + "?t=" + new Date().getTime();
   }
 
   // 校验验证码
@@ -272,9 +227,9 @@ export default class extends Vue {
     }).then((res) => {
       // 记录登录日志
       addloginlog({
-        loginChnl:"P",
-        tokenId: res.refresh_token
-      })
+        loginChnl: "P",
+        tokenId: res.refresh_token,
+      });
       // 保存当前登录用户的信息
       let loginInfo = {
         username: data.username,
@@ -294,10 +249,9 @@ export default class extends Vue {
 }
 </script>
 <style lang="scss">
-
 .login-container {
   .iconfont {
-    color: #3DF1E7;
+    color: #3df1e7;
   }
   .el-input {
     display: inline-block;
@@ -313,7 +267,7 @@ export default class extends Vue {
       border: 0px;
       border-radius: 0px;
       padding: 0 5px 0 15px;
-      color: #3DF1E7;
+      color: #3df1e7;
       -webkit-appearance: none;
       &:-webkit-autofill {
         transition: color 99999s ease-out, background-color 99999s ease-out;
@@ -322,7 +276,7 @@ export default class extends Vue {
         -webkit-transition: color 99999s ease-out, background-color 99999s ease-out;
       }
       &::-webkit-input-placeholder {
-        color: #3DF1E7;
+        color: #3df1e7;
       }
     }
   }
@@ -341,190 +295,189 @@ export default class extends Vue {
 }
 </style>
 <style lang="scss" scoped>
-  .login-container {
-    height: 100%;
-    width: 100%;
-    overflow: hidden;
-    background: url("../../assets/images/login/bg.png") no-repeat center;
-    background-size: 100% 100%;
-    .login-header {
+.login-container {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  background: url("../../assets/images/login/bg.png") no-repeat center;
+  background-size: 100% 100%;
+  .login-header {
+    position: absolute;
+    top: 50px;
+    left: 100px;
+    img {
+      width: 200px;
+    }
+  }
+  .login-box {
+    .login-form {
       position: absolute;
-      top: 50px;
-      left: 100px;
-      img{
-        width: 200px;
+      top: 50%;
+      right: 195px;
+      transform: translateY(-50%);
+      z-index: 3;
+      width: 701px;
+      height: 515px;
+      background: url("../../assets/images/login/login-box-bg.png") no-repeat center;
+      .svg-container {
+        .iconfont {
+          font-size: 20px;
+          padding-right: 10px;
+          border-right: 1px solid #3df1e7;
+        }
+      }
+      .login-title {
+        margin-left: 22px;
+        text-align: center;
+        img {
+          width: 412px;
+          height: 73px;
+        }
+      }
+      .login-content {
+        padding: 34px 60px;
+        position: absolute;
+        top: 90px;
+        left: 156px;
+        width: 421px;
+        height: 303px;
+        background: url("../../assets/images/login/login-bg.png") no-repeat center;
+      }
+      .login-btn {
+        cursor: pointer;
+        text-align: center;
+        margin-top: 20px;
+        height: 61px;
+        line-height: 61px;
+        width: 100%;
+        background: url("../../assets/images/login/submit-bg.png") no-repeat center;
+        font-size: 22px;
+        color: #00ffcc;
+        border: 0;
+        &.el-loading-parent--relative {
+          ::v-deep.el-loading-mask {
+            background: transparent;
+          }
+        }
+      }
+    }
+  }
+  .show-pwd {
+    width: 16px;
+    height: 16px;
+    position: absolute;
+    right: 10px;
+    top: 5px;
+    font-size: 20px;
+    color: #889aa4;
+    cursor: pointer;
+    user-select: none;
+  }
+  .animate-text {
+    animation: upText 8s linear infinite;
+    width: 100%;
+    height: 578px;
+    position: absolute;
+    left: 0;
+    bottom: -500px;
+    z-index: 1;
+    // background: url("../../assets/images/login/up-text.png") no-repeat center;
+  }
+
+  @keyframes upText {
+    from {
+      bottom: -500px;
+      opacity: 1;
+    }
+    to {
+      bottom: 0px;
+      opacity: 0;
+    }
+  }
+
+  .meteor {
+    position: absolute;
+    width: 165px;
+    height: 165px;
+    z-index: 2;
+  }
+
+  @for $i from 1 through 5 {
+    .meteor#{$i} {
+      animation: animate-meteor + $i 8s linear #{3 * ($i - 1)}s infinite forwards;
+      right: 200 * $i + px;
+      top: -165 - 50 * $i + px;
+    }
+
+    @keyframes animate-meteor#{$i} {
+      0% {
+        right: 200 * $i + px;
+        top: -165 - 50 * $i + px;
+        opacity: 1;
+      }
+      100% {
+        right: 933 + 200 * $i + px;
+        top: 933px;
+        opacity: 0;
+      }
+    }
+  }
+
+  .listname {
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+}
+
+@media screen and (max-width: 1680px) {
+  .login-container {
+    .login-header {
+      img {
+        height: 69px;
       }
     }
     .login-box {
       .login-form {
-        position: absolute;
-        top: 50%;
-        right: 195px;
-        transform: translateY(-50%);
-        z-index: 3;
-        width: 701px;
-        height: 515px;
-        background: url("../../assets/images/login/login-box-bg.png") no-repeat center;
-        .svg-container {
-          .iconfont {
-            font-size: 20px;
-            padding-right: 10px;
-            border-right: 1px solid #3DF1E7;
-          }
-        }
+        right: 167px;
+        width: 489px;
+        height: 465px;
+        background-size: 489px 332px;
         .login-title {
-          margin-left: 22px;
-          text-align: center;
-          img{
-            width: 412px;
-            height: 73px;
+          margin-left: 8px;
+          img {
+            width: 423px;
           }
         }
         .login-content {
-          padding: 34px 60px;
-          position: absolute;
-          top: 90px;
-          left: 156px;
-          width: 421px;
-          height: 303px;
-          background: url("../../assets/images/login/login-bg.png") no-repeat center;
+          top: 76px;
+          left: 89px;
+          padding: 29px 40px;
+          width: 332px;
+          height: 240px;
+          background-size: 332px 240px;
         }
         .login-btn {
-          cursor: pointer;
-          text-align: center;
-          margin-top: 20px;
-          height: 61px;
-          line-height: 61px;
-          width: 100%;
-          background: url("../../assets/images/login/submit-bg.png") no-repeat center;
-          font-size: 22px;
-          color: #00FFCC;
-          border: 0;
-          &.el-loading-parent--relative {
-            ::v-deep.el-loading-mask {
-              background: transparent;
-            }
-          }
-        }
-      }
-    }
-    .show-pwd {
-      width: 16px;
-      height: 16px;
-      position: absolute;
-      right: 10px;
-      top: 5px;
-      font-size: 20px;
-      color: #889aa4;
-      cursor: pointer;
-      user-select: none;
-    }
-    .animate-text {
-      animation: upText 8s linear infinite;
-      width: 100%;
-      height: 578px;
-      position: absolute;
-      left: 0;
-      bottom: -500px;
-      z-index: 1;
-      // background: url("../../assets/images/login/up-text.png") no-repeat center;
-    }
-
-    @keyframes upText {
-      from {
-        bottom: -500px;
-        opacity: 1;
-      }
-      to {
-        bottom: 0px;
-        opacity: 0;
-      }
-    }
-
-    .meteor {
-      position: absolute;
-      width: 165px;
-      height: 165px;
-      z-index: 2;
-    }
-
-    @for $i from 1 through 5 {
-      .meteor#{$i} {
-        animation: animate-meteor + $i 8s linear #{3*($i - 1)}s infinite forwards;
-        right: 200 * $i + px;
-        top: -165 - 50 * $i + px;
-      }
-
-      @keyframes animate-meteor#{$i} {
-        0% {
-          right: 200 * $i + px;
-          top: -165 - 50 * $i + px;
-          opacity: 1;
-        }
-        100% {
-          right: 933 + 200 * $i + px;
-          top: 933px;
-          opacity: 0;
+          height: 40px;
+          line-height: 40px;
+          background-size: 128px 40px;
+          font-size: 16px;
         }
       }
     }
 
-    .listname {
-      backface-visibility: hidden;
-      -webkit-backface-visibility: hidden;
-    }
-
-  }
-
-  @media screen and (max-width: 1680px) { 
-    .login-container {
-      .login-header {
-        img {
-          height: 69px;
-        }
-      }
-      .login-box {
-        .login-form {
-          right: 167px;
-          width: 489px;
-          height: 465px;
-          background-size: 489px 332px;
-          .login-title {
-            margin-left: 8px;
-            img{
-              width: 423px;
-            }
-          }
-          .login-content {
-            top: 76px;
-            left: 89px;
-            padding: 29px 40px;
-            width: 332px;
-            height: 240px;
-            background-size: 332px 240px;
-          }
-          .login-btn {
-            height: 40px;
-            line-height: 40px;
-            background-size: 128px 40px;
-            font-size: 16px;
-          }
-        }
-      }
-
-      ::v-deep.el-form-item {
-        margin-bottom: 24px;
-        background-size: 240px 40px;
-        height: 40px;
-        .el-input {
-          width: calc(100% - 60px);
-          font-size: 14px;
-          input {
-            height: 40px;
-            line-height: 40px;
-          }
+    ::v-deep.el-form-item {
+      margin-bottom: 24px;
+      background-size: 240px 40px;
+      height: 40px;
+      .el-input {
+        width: calc(100% - 60px);
+        font-size: 14px;
+        input {
+          height: 40px;
+          line-height: 40px;
         }
       }
     }
   }
+}
 </style>

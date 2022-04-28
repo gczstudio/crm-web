@@ -3,7 +3,10 @@
     <div class="section-title">
       <div>
         <i class="iconfont icon-daibanrenwu"></i>
-        <span>待办任务（<i class="num">{{ total }}</i>）</span>
+        <span
+          >待办任务（<i class="num">{{ total }}</i
+          >）</span
+        >
       </div>
     </div>
     <div class="view-more" @click="moreFn">
@@ -56,14 +59,12 @@ export default class extends Vue {
   }
 
   queryLargerCustFlow() {
-    homeApi
-      .queryLargerCustFlow({ page: 1, size: 4, condition: this.condition })
-      .then((res: any) => {
-        if (res.code === 0) {
-          this.taskData = res.data;
-          this.total = res.total;
-        }
-      });
+    homeApi.queryLargerCustFlow({ page: 1, size: 4, condition: this.condition }).then((res: any) => {
+      if (res.code === 0) {
+        this.taskData = res.data;
+        this.total = res.total;
+      }
+    });
   }
 
   showDetailFn(id: string, type: number) {

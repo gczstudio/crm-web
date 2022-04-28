@@ -1,69 +1,69 @@
 <template>
-	<div class="YufpCustomerModal-container">
-		<CstgroupModal :selection-type="selectionType" :ids="selectIds" :visible.sync="visible" @sure="sureFn" />
+  <div class="YufpCustomerModal-container">
+    <CstgroupModal :selection-type="selectionType" :ids="selectIds" :visible.sync="visible" @sure="sureFn" />
     <el-input v-model="inputVal" readonly @click.native="focusFn" suffix-icon="el-icon-search"></el-input>
-	</div>
+  </div>
 </template>
 <script>
-import { backend } from "@/config"
-import request from "@/utils/request"
+import { backend } from "@/config";
+import request from "@/utils/request";
 export default {
-  name: 'YufpCstgroupModal',
-	props: {
+  name: "YufpCstgroupModal",
+  props: {
     selectionType: {
       type: String,
-      default: 'checkbox'
+      default: "checkbox",
     },
-		value: String | Number
+    value: String | Number,
   },
-	data() {
-		return {
-      dataUrl: backend.custService + '/api/ocrmfcifqdbcol/cstgroupdraglist',
-			visible: false,
-			inputVal: '',
-      customerData:[],
-      selectIds: '',
-		}
-	},
-	watch: {
-		value: {
-      handler (val) {
-        if(val) {
-          this.selectIds = val
-          this.querySelectData()
+  data() {
+    return {
+      dataUrl: backend.custService + "/api/ocrmfcifqdbcol/cstgroupdraglist",
+      visible: false,
+      inputVal: "",
+      customerData: [],
+      selectIds: "",
+    };
+  },
+  watch: {
+    value: {
+      handler(val) {
+        if (val) {
+          this.selectIds = val;
+          this.querySelectData();
         }
       },
-      immediate: true
-    }
-	},
-	methods: {
-    querySelectData () {
+      immediate: true,
+    },
+  },
+  methods: {
+    querySelectData() {
       request({
-        method: 'GET',
+        method: "GET",
         url: this.dataUrl,
         params: {
           condition: JSON.stringify({
-            ids: this.selectIds.split(',')
-          })
-        }
-      }).then(res => {
-        this.inputVal = res.data.map(item => item.custGroupNm).join(',');
-      })
+            ids: this.selectIds.split(","),
+          }),
+        },
+      }).then((res) => {
+        this.inputVal = res.data.map((item) => item.custGroupNm).join(",");
+      });
     },
-		getSelectVal () {
-			return this.inputVal;
-		},
-		focusFn() {
-			this.visible = true;
-		},
-		sureFn(data) {
-			let names = data.map(item => item.custGroupNm).join(',');
-			let ids = data.map(item => item.custGroupId).join(',');
-			this.inputVal = names;
-			this.$emit('input', ids);
-			this.$emit('select-fn', data);
-			this.visible = false;
-		}
-	}
-}
+    getSelectVal() {
+      return this.inputVal;
+    },
+    focusFn() {
+      this.visible = true;
+    },
+    sureFn(data) {
+      let names = data.map((item) => item.custGroupNm).join(",");
+      let ids = data.map((item) => item.custGroupId).join(",");
+      this.inputVal = names;
+      this.$emit("input", ids);
+      this.$emit("select-fn", data);
+      this.visible = false;
+    },
+  },
+};
 </script>

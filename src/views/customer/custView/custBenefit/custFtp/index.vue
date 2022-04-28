@@ -13,7 +13,10 @@
           </yu-xform>
         </template>
         <template v-slot:table>
-          <div class="total f3">FTP利润总额：<span class="num">{{$util.formatMoney(sumFtp)}}</span>元</div>
+          <div class="total f3">
+            FTP利润总额：<span class="num">{{ $util.formatMoney(sumFtp) }}</span
+            >元
+          </div>
           <yu-xtable ref="refTable" :data-url="dataUrl" :base-params="baseParams" :loadEnd="loadEndFn" :dynamic-height="true" border>
             <yu-xtable-column label="基础信息">
               <yu-xtable-column label="账号" prop="acctNo" width="200" :show-overflow-tooltip="true" is-num sortable="custom"></yu-xtable-column>
@@ -88,10 +91,10 @@
               <yu-xtable-column label="金额" prop="reguAdjAmt" width="120" :show-overflow-tooltip="true" align="right" format-money sortable="custom"></yu-xtable-column>
             </yu-xtable-column>
             <yu-xtable-column label="调节后" width="510" fixed="right">
-              <yu-xtable-column label="FTP成本/收益率" prop="aAdjFtpCost" width="150" :show-overflow-tooltip="true"  fixed="right" align="right" format-money sortable="custom"></yu-xtable-column>
-              <yu-xtable-column label="FTP收支" prop="aAdjFtpRev" width="120" :show-overflow-tooltip="true"  fixed="right" align="right" format-money sortable="custom"></yu-xtable-column>
-              <yu-xtable-column label="FTP利差" prop="aAdjFtpMarg" width="120" :show-overflow-tooltip="true"  fixed="right" align="right" format-money sortable="custom"></yu-xtable-column>
-              <yu-xtable-column label="FTP利润" prop="aAdjFtpProf" width="120" :show-overflow-tooltip="true"  fixed="right" align="right" format-money sortable="custom"></yu-xtable-column>
+              <yu-xtable-column label="FTP成本/收益率" prop="aAdjFtpCost" width="150" :show-overflow-tooltip="true" fixed="right" align="right" format-money sortable="custom"></yu-xtable-column>
+              <yu-xtable-column label="FTP收支" prop="aAdjFtpRev" width="120" :show-overflow-tooltip="true" fixed="right" align="right" format-money sortable="custom"></yu-xtable-column>
+              <yu-xtable-column label="FTP利差" prop="aAdjFtpMarg" width="120" :show-overflow-tooltip="true" fixed="right" align="right" format-money sortable="custom"></yu-xtable-column>
+              <yu-xtable-column label="FTP利润" prop="aAdjFtpProf" width="120" :show-overflow-tooltip="true" fixed="right" align="right" format-money sortable="custom"></yu-xtable-column>
             </yu-xtable-column>
           </yu-xtable>
         </template>
@@ -101,71 +104,65 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Ref } from 'vue-property-decorator'
-import { backend } from '@/config'
-import moment from 'moment';
+import { Component, Vue, Ref } from "vue-property-decorator";
+import { backend } from "@/config";
+import moment from "moment";
 @Component({
-  name: 'CustFtp',
-  components: {
-  }
+  name: "CustFtp",
+  components: {},
 })
 export default class extends Vue {
-  @Ref('searchForm') searchForm: any;
-  @Ref('refTable') refTable: any;
-  private dataUrl = backend.custService + '/api/acrmfciftpprofinfo/ftpList'
-  private crmCustId = this.$route.query.crmCustId
-  private ftpDate = sessionStorage.getItem('ftpDate');
+  @Ref("searchForm") searchForm: any;
+  @Ref("refTable") refTable: any;
+  private dataUrl = backend.custService + "/api/acrmfciftpprofinfo/ftpList";
+  private crmCustId = this.$route.query.crmCustId;
+  private ftpDate = sessionStorage.getItem("ftpDate");
   private queryFormData = {
-    startDate: moment(this.ftpDate).format('YYYY-MM-DD')
-  }
+    startDate: moment(this.ftpDate).format("YYYY-MM-DD"),
+  };
   private baseParams = {
     condition: JSON.stringify({
       crmCustId: this.crmCustId,
-      startDate: moment(this.ftpDate).format('YYYY-MM-DD')
-    })
+      startDate: moment(this.ftpDate).format("YYYY-MM-DD"),
+    }),
+  };
+
+  private sumFtp = 0;
+
+  mounted() {
+    this.$exportQueue.addQueue(this.$route.path, this.exportFn);
   }
 
-  private sumFtp = 0
-
-  mounted () {
-    this.$exportQueue.addQueue(this.$route.path, this.exportFn)
+  loadEndFn(data: any) {
+    this.sumFtp = data[0]?.sumFtp || 0;
   }
 
-  loadEndFn (data:any) {
-    this.sumFtp = data[0]?.sumFtp || 0
-  }
-
-
-  exportFn (showTipModal?:boolean) {
-    let queryField =  (this as any).$util.formatQueryField([
-      { cnName: "CRM内部客户号", value: this.crmCustId }
-    ])
+  exportFn(showTipModal?: boolean) {
+    let queryField = (this as any).$util.formatQueryField([{ cnName: "CRM内部客户号", value: this.crmCustId }]);
 
     var searchQuery: any = (this as any)._.assign({}, this.searchForm.searchModel, {
-      fileName: 'FTP利润',
+      fileName: "FTP利润",
       queryField: queryField + this.searchForm.searchQueryField,
-      crmCustId: this.crmCustId
+      crmCustId: this.crmCustId,
     });
     var apiParams = {
-      url: backend.custService + '/api/acrmfciftpprofinfo/exportftpList',
+      url: backend.custService + "/api/acrmfciftpprofinfo/exportftpList",
       params: searchQuery,
-      sort: this.refTable.sort
+      sort: this.refTable.sort,
     };
     (this as any).$util.exportTable({
       _this: this,
       apiParams,
-      showTipModal
+      showTipModal,
     });
   }
-
 }
 </script>
 
 <style lang="scss" scoped>
-  .custFtp-container {
-    .total {
-      padding: 0 16px 10px;
-    }
+.custFtp-container {
+  .total {
+    padding: 0 16px 10px;
   }
+}
 </style>
-

@@ -5,7 +5,15 @@
         <yu-xform-group :column="1">
           <yu-xform-item label="客户群编号" placeholder="客户群编号" ctype="input" name="custGroupId" disabled></yu-xform-item>
           <yu-xform-item label="客户群名称" placeholder="客户群名称" ctype="input" name="custGroupNm" :rules="globalRules.requiredInput"></yu-xform-item>
-          <yu-xform-item label="客户群类别" placeholder="客户群类别" ctype="select" name="custGroupType" data-code="CUST_GROUP_TYPE" :rules="globalRules.required" @change="custGroupTypeChangeFn"></yu-xform-item>
+          <yu-xform-item
+            label="客户群类别"
+            placeholder="客户群类别"
+            ctype="select"
+            name="custGroupType"
+            data-code="CUST_GROUP_TYPE"
+            :rules="globalRules.required"
+            @change="custGroupTypeChangeFn"
+          ></yu-xform-item>
           <yu-xform-item label="是否需审批" placeholder="是否需审批" ctype="select" name="isAppr" data-code="YESNO" disabled></yu-xform-item>
           <yu-xform-item label="客户群成员数" placeholder="客户群成员数" ctype="input" name="custGroupMember" disabled></yu-xform-item>
           <yu-xform-item label="客户群描述" placeholder="客户群描述" ctype="input" type="textarea" name="custGroupRemark" :rows="5" :rules="globalRules.input500"></yu-xform-item>
@@ -16,14 +24,14 @@
       <div><el-button type="primary" v-debounce="saveFn">保存</el-button></div>
     </div>
     <div class="base-title">
-      <img src="~@/assets/images/customer/cust-group-title.png" alt="">
+      <img src="~@/assets/images/customer/cust-group-title.png" alt="" />
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Ref, Vue, InjectReactive, Inject } from "vue-property-decorator";
-import { updatecrowd } from '@/api/customer'
+import { updatecrowd } from "@/api/customer";
 
 @Component({
   name: "EditBaseInfo",
@@ -31,28 +39,28 @@ import { updatecrowd } from '@/api/customer'
 export default class extends Vue {
   @Inject() readonly groupInstance!: any;
   @InjectReactive() readonly row!: any;
-  @Prop({default: false }) private visible!: boolean;
-  @Ref('form') form: any;
+  @Prop({ default: false }) private visible!: boolean;
+  @Ref("form") form: any;
   private formData = {};
 
-  created () {
+  created() {
     this.formData = this._.cloneDeep(this.row);
   }
 
-  custGroupTypeChangeFn (value: string) {
+  custGroupTypeChangeFn(value: string) {
     this.$nextTick(() => {
-      this.$set(this.formData, 'isAppr', value);
+      this.$set(this.formData, "isAppr", value);
     });
   }
 
-  saveFn () {
+  saveFn() {
     this.form.validate((valid: boolean) => {
       if (valid) {
-        updatecrowd(this.formData).then(res => {
+        updatecrowd(this.formData).then((res) => {
           // 保存成功
           this.$message.success("保存成功！");
           this.groupInstance.refreshTable();
-        })
+        });
       }
     });
   }
@@ -60,41 +68,40 @@ export default class extends Vue {
 </script>
 
 <style lang="scss" scoped>
-  .EditBaseInfo-component {
-    position: relative;
-    background: #fff;
-    min-height: calc(100vh - 182px);
-    .base-form {
-      margin-right: 553px;
-      padding: 0 20px;
-      text-align: center;
-      .yu-xform {
-        margin-top: 65px;
-        display: inline-block;
-        width: 70%;
-        text-align: right;
-      }
+.EditBaseInfo-component {
+  position: relative;
+  background: #fff;
+  min-height: calc(100vh - 182px);
+  .base-form {
+    margin-right: 553px;
+    padding: 0 20px;
+    text-align: center;
+    .yu-xform {
+      margin-top: 65px;
+      display: inline-block;
+      width: 70%;
+      text-align: right;
     }
-    .base-title {
+  }
+  .base-title {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 555px;
+    height: 100%;
+    background: url("../../../../../../assets/images/customer/group-bg.png") no-repeat center right;
+    background-size: 555px 100%;
+    img {
       position: absolute;
-      top: 0;
-      right: 0;
-      width: 555px;
-      height: 100%;
-      background: url('../../../../../../assets/images/customer/group-bg.png') no-repeat center right;
-      background-size: 555px 100%;
-      img {
-        position: absolute;
-        top: 82px;
-        right: 176px;
-      }
+      top: 82px;
+      right: 176px;
     }
   }
+}
 
-  @media screen and (max-width: 1680px) { 
-    .EditBaseInfo-component {
-      min-height: calc(100vh - 155px);
-    }
+@media screen and (max-width: 1680px) {
+  .EditBaseInfo-component {
+    min-height: calc(100vh - 155px);
   }
-
+}
 </style>

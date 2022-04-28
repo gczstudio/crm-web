@@ -1,22 +1,23 @@
 <template>
   <div class="pageMgt-container">
-   <el-row :gutter="16">
+    <el-row :gutter="16">
       <el-col :span="5">
-        <yu-left-tree 
-          class="box-shadow" 
+        <yu-left-tree
+          class="box-shadow"
           title="页面目录"
-          ref="menuTree" 
-          :show-checkbox="false" 
-          :height="bHeight-(isMaxScreen?232:202)" 
+          ref="menuTree"
+          :show-checkbox="false"
+          :height="bHeight - (isMaxScreen ? 232 : 202)"
           :data-url="menuTreeUrl"
-          data-id="menuId" 
-          data-label="menuName" 
-          @node-xclick="nodeClickFn" 
-          data-pid="upMenuId" 
-          :expand-level='2' 
-          :highlight-current="true" 
-          :show-create="true" 
-          :create-fn="createFn">
+          data-id="menuId"
+          data-label="menuName"
+          @node-xclick="nodeClickFn"
+          data-pid="upMenuId"
+          :expand-level="2"
+          :highlight-current="true"
+          :show-create="true"
+          :create-fn="createFn"
+        >
         </yu-left-tree>
       </el-col>
       <el-col :span="19">
@@ -59,51 +60,43 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop, Ref } from 'vue-property-decorator'
-import { backend } from '@/config'
-import { getUserInfo } from '@/utils'
-import AddPageComp from './addPageComp/index.vue'
+import { Component, Vue, Prop, Ref } from "vue-property-decorator";
+import { backend } from "@/config";
+import { getUserInfo } from "@/utils";
+import AddPageComp from "./addPageComp/index.vue";
 @Component({
-  name: 'PageMgt',
+  name: "PageMgt",
   components: {
-    AddPageComp
-  }
+    AddPageComp,
+  },
 })
-export default class extends Vue { 
-  @Ref('searchForm') searchForm: any;
-  @Ref('refTable') refTable: any;
-  private dataUrl = backend.mockService + '/lowcode/layout/list'
-  private queryFormData = {}
+export default class extends Vue {
+  @Ref("searchForm") searchForm: any;
+  @Ref("refTable") refTable: any;
+  private dataUrl = backend.mockService + "/lowcode/layout/list";
+  private queryFormData = {};
 
-  private menuTreeUrl = backend.appOcaService + '/api/adminsmmenu/menutreequery?sysId=' + getUserInfo().logicSys.id
+  private menuTreeUrl = backend.appOcaService + "/api/adminsmmenu/menutreequery?sysId=" + getUserInfo().logicSys.id;
 
-  private activeName = '1'
-  private contentVisible = false
+  private activeName = "1";
+  private contentVisible = false;
 
   createFn() {
-    console.log(1)
+    console.log(1);
   }
 
   nodeClickFn() {
-    console.log(2)
+    console.log(2);
   }
 
   addFn() {
-    this.contentVisible = true
+    this.contentVisible = true;
   }
 
-  editFn() {
+  editFn() {}
 
-  }
-  
-  deleteFn() {
-
-  }
-
-
+  deleteFn() {}
 }
 </script>
 
-<style lang="scss" scoped>
-  
-</style>
+<style lang="scss" scoped></style>

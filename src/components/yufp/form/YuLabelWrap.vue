@@ -1,27 +1,31 @@
 <script>
 export default {
-  name: 'YuLabelWrap',
+  name: "YuLabelWrap",
   props: {
     isAutoWidth: Boolean,
-    updateAll: Boolean
+    updateAll: Boolean,
   },
-  inject: ['elForm', 'elFormItem'],
+  inject: ["elForm", "elFormItem"],
   render: function (h) {
     var slots = this.$slots.default;
     if (!slots) return null;
     if (this.isAutoWidth) {
       var autoLabelWidth = this.elForm.autoLabelWidth;
       var style = {};
-      if (autoLabelWidth && autoLabelWidth !== 'auto') {
+      if (autoLabelWidth && autoLabelWidth !== "auto") {
         var marginLeft = parseInt(autoLabelWidth, 10) - this.computedWidth;
         if (marginLeft) {
-          style.marginLeft = marginLeft + 'px';
+          style.marginLeft = marginLeft + "px";
         }
       }
-      return h('div', {
-        class: 'el-form-item__label-wrap',
-        style: style
-      }, slots);
+      return h(
+        "div",
+        {
+          class: "el-form-item__label-wrap",
+          style: style,
+        },
+        slots
+      );
       // (<div class="el-form-item__label-wrap" style={style}>{ slots }</div>)
     } else {
       return slots[0];
@@ -37,15 +41,15 @@ export default {
       }
     },
     updateLabelWidth: function (action) {
-      action = action || 'update';
+      action = action || "update";
       if (this.$slots.default && this.isAutoWidth && this.$el.firstElementChild) {
-        if (action === 'update') {
+        if (action === "update") {
           this.computedWidth = this.getLabelWidth();
-        } else if (action === 'remove') {
+        } else if (action === "remove") {
           this.elForm.deregisterLabelWidth(this.computedWidth);
         }
       }
-    }
+    },
   },
   watch: {
     computedWidth: function (val, oldVal) {
@@ -53,21 +57,21 @@ export default {
         this.elForm.registerLabelWidth(val, oldVal);
         this.elFormItem.updateComputedLabelWidth(val);
       }
-    }
+    },
   },
   data: function () {
     return {
-      computedWidth: 0
+      computedWidth: 0,
     };
   },
   mounted: function () {
-    this.updateLabelWidth('update');
+    this.updateLabelWidth("update");
   },
   updated: function () {
-    this.updateLabelWidth('update');
+    this.updateLabelWidth("update");
   },
   beforeDestroy: function () {
-    this.updateLabelWidth('remove');
-  }
-}
+    this.updateLabelWidth("remove");
+  },
+};
 </script>

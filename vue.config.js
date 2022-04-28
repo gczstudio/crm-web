@@ -25,15 +25,15 @@ module.exports = {
     proxy: {
       // change xxx-api/login => /mock-api/v1/login
       // detail: https://cli.vuejs.org/config/#devserver-proxy
-      '/mock-api': {
+      "/mock-api": {
         target: `http://localhost:${mockServerPort}/`,
         changeOrigin: true, // needed for virtual hosted sites
         // ws: true, // proxy websockets
         pathRewrite: {
-          ['^' + '/mock-api']: ''
-        }
+          ["^" + "/mock-api"]: "",
+        },
       },
-    }
+    },
   },
   pwa: {
     name: name,
@@ -45,10 +45,7 @@ module.exports = {
   pluginOptions: {
     "style-resources-loader": {
       preProcessor: "scss",
-      patterns: [
-        path.resolve(__dirname, "src/styles/_variables.scss"),
-        path.resolve(__dirname, "src/styles/_mixins.scss"),
-      ],
+      patterns: [path.resolve(__dirname, "src/styles/_variables.scss"), path.resolve(__dirname, "src/styles/_mixins.scss")],
     },
   },
   configureWebpack: (config) => {

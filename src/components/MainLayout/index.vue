@@ -1,7 +1,7 @@
 <template>
   <div class="main-layout">
-    <div ref="formHeader" :class="['form-header','clearfix',isTab ? 'is-tab' : '']" :style="getHeaderStyle">
-      <div class="form-title fl" v-if="title">{{title}}</div>
+    <div ref="formHeader" :class="['form-header', 'clearfix', isTab ? 'is-tab' : '']" :style="getHeaderStyle">
+      <div class="form-title fl" v-if="title">{{ title }}</div>
       <div ref="formToolbar" class="form-toolbar fr">
         <slot name="header"></slot>
       </div>
@@ -12,88 +12,87 @@
         <slot name="form"></slot>
       </div>
     </div>
-    <div class="form-table" :style="{'padding-top': showFormArrow ? '20px' : '0'}">
+    <div class="form-table" :style="{ 'padding-top': showFormArrow ? '20px' : '0' }">
       <!-- 查询结果表格 -->
       <slot name="table"></slot>
     </div>
   </div>
-  
 </template>
 <script>
 export default {
-  name: 'MainLayout',
+  name: "MainLayout",
   data() {
     return {
       showFormArrow: false,
       execFormArrow: false,
-      fixedStyle: null
-    }
+      fixedStyle: null,
+    };
   },
   props: {
     isTab: {
       type: Boolean,
-      default: false
+      default: false,
     },
-    title: String
+    title: String,
   },
   computed: {
-    getHeaderStyle () {
+    getHeaderStyle() {
       return {
-        padding: this.$scopedSlots.header && !this.isTab ? (this.isMaxScreen ? '12px' : '10px') : 0,
-      }
-    }
+        padding: this.$scopedSlots.header && !this.isTab ? (this.isMaxScreen ? "12px" : "10px") : 0,
+      };
+    },
   },
   mounted() {
-    this.fixedStyle = this.getStyle()
+    this.fixedStyle = this.getStyle();
     this.setTableHeight();
     if (this.$refs.formToolbar && !this.$refs.formToolbar.innerText) {
-      this.$refs.formHeader.style.padding = '0';
+      this.$refs.formHeader.style.padding = "0";
     }
   },
   methods: {
-    setTableHeight () {
+    setTableHeight() {
       this.$nextTick(() => {
         // 计算一下table的高度
-        var children =  this.$children;
-        var tableNode = children.find(item => item.$options._componentTag === 'yu-xtable');
-        if(tableNode) {
+        var children = this.$children;
+        var tableNode = children.find((item) => item.$options._componentTag === "yu-xtable");
+        if (tableNode) {
           tableNode.setTableHeight();
         }
       });
     },
-    getStyle () {
-      var formVue = this.$children.find(item => item.$options._componentTag === 'yu-xform');
-      if(!formVue) return;
+    getStyle() {
+      var formVue = this.$children.find((item) => item.$options._componentTag === "yu-xform");
+      if (!formVue) return;
       var fileLen = formVue?.fields?.length || 0;
       var column = formVue.column;
-      var height = '53px';
-      if(this.isMaxScreen && fileLen > column) {
+      var height = "53px";
+      if (this.isMaxScreen && fileLen > column) {
         this.execFormArrow = true;
-        height = '120px'
+        height = "120px";
       } else if (!this.isMaxScreen && fileLen > column) {
         this.execFormArrow = true;
-        height = '94px'
-      } else if (fileLen > 0 ) {
+        height = "94px";
+      } else if (fileLen > 0) {
         this.execFormArrow = false;
-        height = this.isMaxScreen ? '68px' : '53px'
+        height = this.isMaxScreen ? "68px" : "53px";
       } else {
-        height = '20px'
+        height = "20px";
       }
 
       return {
-        height: this.showFormArrow ? '0px' : height,
-        overflow: this.showFormArrow ? 'hidden' : 'visible',
-      }
+        height: this.showFormArrow ? "0px" : height,
+        overflow: this.showFormArrow ? "hidden" : "visible",
+      };
     },
-    toggleFormArrow () {
-      if(this.execFormArrow) {
+    toggleFormArrow() {
+      if (this.execFormArrow) {
         this.showFormArrow = !this.showFormArrow;
-        this.fixedStyle = this.getStyle()
+        this.fixedStyle = this.getStyle();
         this.setTableHeight();
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 <style lang="scss" scoped>
 .main-layout {
@@ -120,19 +119,24 @@ export default {
       padding: 0 20px;
       border: 0;
       font-size: 14px;
-      background: #fff!important;
-      &:active, &:hover, &:visited {
-        color: #007EFF;
+      background: #fff !important;
+      &:active,
+      &:hover,
+      &:visited {
+        color: #007eff;
         background: #fff;
       }
     }
-    .el-button + .el-button {margin-left: 0; border-left: 1px solid #707070;}
+    .el-button + .el-button {
+      margin-left: 0;
+      border-left: 1px solid #707070;
+    }
   }
   .form-fixed {
     background: #fff;
     position: relative;
     height: 0;
-    transition: height .3s ease;
+    transition: height 0.3s ease;
     .form-wrapper {
       // padding: 16px 16px 0 16px;
       width: 100%;
@@ -144,7 +148,6 @@ export default {
     .yu-xform {
       padding: 16px 16px 0 16px;
     }
-
   }
 }
 .form-title {
@@ -158,7 +161,7 @@ export default {
   transform: translateX(-50%);
   width: 54px;
   height: 34px;
-  background: url('../../assets/images/common/arrow-bg.png') no-repeat center / 100% 100%;
+  background: url("../../assets/images/common/arrow-bg.png") no-repeat center / 100% 100%;
   text-align: center;
   .iconfont {
     margin-top: 6px;
@@ -166,7 +169,7 @@ export default {
     font-size: 12px;
     color: #666;
     transform: scale(0.7);
-    transition: all .3s;
+    transition: all 0.3s;
     // &:hover {
     //   color: $blue;
     // }
@@ -174,17 +177,18 @@ export default {
 }
 .form-table {
   background: #fff;
-  transition: all .3s ease;
+  transition: all 0.3s ease;
 }
 
-.arrow-enter-active, .arrow-leave-active {
-  transition: all .5s ease;
+.arrow-enter-active,
+.arrow-leave-active {
+  transition: all 0.5s ease;
 }
 
-.arrow-enter, .arrow-leave-to {
+.arrow-enter,
+.arrow-leave-to {
   height: 0;
 }
-
 
 @media screen and (max-width: 1680px) {
   .main-layout {

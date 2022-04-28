@@ -1,18 +1,8 @@
 <template>
   <div class="quota-container">
     <div class="quota-header">
-      <i class="iconfont icon-zidingyishezhi f3"></i
-      ><span class="title f3">自定义设置</span>
-      <el-input
-        class="fr"
-        style="width: 50%"
-        placeholder="请输入关键字"
-        suffix-icon="el-icon-search"
-        size="small"
-        v-model="keyword"
-        clearable
-        @input="inputChange"
-      ></el-input>
+      <i class="iconfont icon-zidingyishezhi f3"></i><span class="title f3">自定义设置</span>
+      <el-input class="fr" style="width: 50%" placeholder="请输入关键字" suffix-icon="el-icon-search" size="small" v-model="keyword" clearable @input="inputChange"></el-input>
     </div>
     <div class="quota-tree">
       <div class="tip">将所需指标拖拽至左侧相应板块中</div>
@@ -64,8 +54,8 @@ export default class extends Vue {
       item.expand = true;
       if (item.chartNm.includes(value)) {
         item.checked = true;
-        if(parent?.childList) {
-          parent.checked = true
+        if (parent?.childList) {
+          parent.checked = true;
         }
       } else if (item.childList && item.childList.length) {
         this.recursion(item.childList, value, item);
@@ -112,7 +102,7 @@ export default class extends Vue {
   }
   .tip {
     padding: 10px 20px;
-    color: #007EFF;
+    color: #007eff;
   }
 }
 .btns {

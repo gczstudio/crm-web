@@ -31,11 +31,10 @@ export default {
         toolbar:
           "fontselect fontsizeselect link lineheight forecolor backcolor bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | image quicklink h2 h3 blockquote table numlist bullist preview fullscreen,'fontsizeselect fontselect'",
         branding: false,
-        font_formats:
-          "宋体=宋体;黑体=黑体;仿宋=仿宋;微软雅黑=微软雅黑;Arial=arial,helvetica,sans-serif; Courier New=courier new,courier,monospace; AkrutiKndPadmini=Akpdmi-n;",
+        font_formats: "宋体=宋体;黑体=黑体;仿宋=仿宋;微软雅黑=微软雅黑;Arial=arial,helvetica,sans-serif; Courier New=courier new,courier,monospace; AkrutiKndPadmini=Akpdmi-n;",
         setup: (editor) => {
           editor.on("focus", (e) => {
-            if (this.values == "请输入内容" ) {
+            if (this.values == "请输入内容") {
               this.values = "";
             }
           });
@@ -73,5 +72,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

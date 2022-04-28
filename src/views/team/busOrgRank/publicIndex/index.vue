@@ -16,17 +16,53 @@
           <yu-xtable ref="refTable" :data-url="dataUrl" :page-size="50" row-number :base-params="baseParams" :dynamic-height="true" border>
             <yu-xtable-column label="机构名称" prop="orgNm" width="150" fixed="left" :show-overflow-tooltip="true" sortable="custom"></yu-xtable-column>
             <yu-xtable-column label="对公存款余额（万元）" prop="deptBal" width="190" align="right" format-money :unit="10000" :show-overflow-tooltip="true" sortable="custom"></yu-xtable-column>
-            <yu-xtable-column label="对公存款余额增量（万元）" prop="deptBalLastYear" width="210" align="right" format-money :unit="10000" :show-overflow-tooltip="true" sortable="custom"></yu-xtable-column>
-            <yu-xtable-column label="对公存款日均（万元）" prop="deptBalAvgYear" width="190" align="right" format-money :unit="10000" :show-overflow-tooltip="true" sortable="custom"></yu-xtable-column>
-            <yu-xtable-column label="对公存款日均增量（万元）" prop="deptBalAvgLastYear" width="210" align="right" format-money :unit="10000" :show-overflow-tooltip="true" sortable="custom"></yu-xtable-column>
-            <yu-xtable-column label="对公贷款余额（万元）" prop="loanBal"  width="190" align="right" format-money :unit="10000" :show-overflow-tooltip="true" sortable="custom"></yu-xtable-column>
-            <yu-xtable-column label="对公贷款余额增量（万元）" prop="loanBalLastYear"  width="210" align="right" format-money :unit="10000" :show-overflow-tooltip="true" sortable="custom"></yu-xtable-column>
-            <yu-xtable-column label="结算客户数（户）" prop="jsCustNum"  width="190" align="right" format-money="0" :show-overflow-tooltip="true" sortable="custom"></yu-xtable-column>
-            <yu-xtable-column label="结算客户数增量（户）" prop="jsCustNumLastYear"  width="190" align="right" format-money="0" :show-overflow-tooltip="true" sortable="custom"></yu-xtable-column>
-            <yu-xtable-column label="有效客户数（户）" prop="yxCustNum"  width="190" align="right" format-money="0" :show-overflow-tooltip="true" sortable="custom"></yu-xtable-column>
-            <yu-xtable-column label="有效客户数增量（户）" prop="yxCustNumLastYear"  width="190" align="right" format-money="0" :show-overflow-tooltip="true" sortable="custom"></yu-xtable-column>
-            <yu-xtable-column label="信贷客户数（户）" prop="xdCustNum"  width="190" align="right" format-money="0" :show-overflow-tooltip="true" sortable="custom"></yu-xtable-column>
-            <yu-xtable-column label="信贷客户数增量（户）" prop="xdCustNumLastYear"  width="190" align="right" format-money="0" :show-overflow-tooltip="true" sortable="custom"></yu-xtable-column>
+            <yu-xtable-column
+              label="对公存款余额增量（万元）"
+              prop="deptBalLastYear"
+              width="210"
+              align="right"
+              format-money
+              :unit="10000"
+              :show-overflow-tooltip="true"
+              sortable="custom"
+            ></yu-xtable-column>
+            <yu-xtable-column
+              label="对公存款日均（万元）"
+              prop="deptBalAvgYear"
+              width="190"
+              align="right"
+              format-money
+              :unit="10000"
+              :show-overflow-tooltip="true"
+              sortable="custom"
+            ></yu-xtable-column>
+            <yu-xtable-column
+              label="对公存款日均增量（万元）"
+              prop="deptBalAvgLastYear"
+              width="210"
+              align="right"
+              format-money
+              :unit="10000"
+              :show-overflow-tooltip="true"
+              sortable="custom"
+            ></yu-xtable-column>
+            <yu-xtable-column label="对公贷款余额（万元）" prop="loanBal" width="190" align="right" format-money :unit="10000" :show-overflow-tooltip="true" sortable="custom"></yu-xtable-column>
+            <yu-xtable-column
+              label="对公贷款余额增量（万元）"
+              prop="loanBalLastYear"
+              width="210"
+              align="right"
+              format-money
+              :unit="10000"
+              :show-overflow-tooltip="true"
+              sortable="custom"
+            ></yu-xtable-column>
+            <yu-xtable-column label="结算客户数（户）" prop="jsCustNum" width="190" align="right" format-money="0" :show-overflow-tooltip="true" sortable="custom"></yu-xtable-column>
+            <yu-xtable-column label="结算客户数增量（户）" prop="jsCustNumLastYear" width="190" align="right" format-money="0" :show-overflow-tooltip="true" sortable="custom"></yu-xtable-column>
+            <yu-xtable-column label="有效客户数（户）" prop="yxCustNum" width="190" align="right" format-money="0" :show-overflow-tooltip="true" sortable="custom"></yu-xtable-column>
+            <yu-xtable-column label="有效客户数增量（户）" prop="yxCustNumLastYear" width="190" align="right" format-money="0" :show-overflow-tooltip="true" sortable="custom"></yu-xtable-column>
+            <yu-xtable-column label="信贷客户数（户）" prop="xdCustNum" width="190" align="right" format-money="0" :show-overflow-tooltip="true" sortable="custom"></yu-xtable-column>
+            <yu-xtable-column label="信贷客户数增量（户）" prop="xdCustNumLastYear" width="190" align="right" format-money="0" :show-overflow-tooltip="true" sortable="custom"></yu-xtable-column>
           </yu-xtable>
         </template>
       </MainLayout>
@@ -36,47 +72,46 @@
 
 <script lang="ts">
 import { Component, Ref, Vue } from "vue-property-decorator";
-import { backend } from '@/config'
+import { backend } from "@/config";
 import moment from "moment";
 @Component({
   name: "PublicIndex",
 })
 export default class extends Vue {
-  @Ref('searchForm') searchForm: any;
-  @Ref('refTable') refTable: any;
-  private dataUrl = backend.teamCenter + '/api/indexquery/publiclist'
-  private dataDt = sessionStorage.getItem('dataDt');
+  @Ref("searchForm") searchForm: any;
+  @Ref("refTable") refTable: any;
+  private dataUrl = backend.teamCenter + "/api/indexquery/publiclist";
+  private dataDt = sessionStorage.getItem("dataDt");
 
   private queryFormData = {
-    queryDate: moment(this.dataDt).format('YYYY-MM-DD')
-  }
+    queryDate: moment(this.dataDt).format("YYYY-MM-DD"),
+  };
 
   private baseParams = {
     condition: JSON.stringify({
-      queryDate: moment(this.dataDt).format('YYYY-MM-DD')
-    })
+      queryDate: moment(this.dataDt).format("YYYY-MM-DD"),
+    }),
+  };
+
+  mounted() {
+    this.$checkCtr("export") && this.$exportQueue.addQueue(this.$route.path, this.exportFn);
   }
 
-  mounted () {
-    this.$checkCtr('export') && this.$exportQueue.addQueue(this.$route.path, this.exportFn)
-  }
-
-  exportFn (showTipModal?:boolean) {
+  exportFn(showTipModal?: boolean) {
     var searchQuery: any = (this as any)._.assign({}, this.searchForm.searchModel, {
-      fileName: '对公类指标排名',
-      queryField: this.searchForm.searchQueryField
+      fileName: "对公类指标排名",
+      queryField: this.searchForm.searchQueryField,
     });
     var apiParams = {
-      url: backend.teamCenter + '/api/indexquery/exportpubliclist',
+      url: backend.teamCenter + "/api/indexquery/exportpubliclist",
       params: searchQuery,
-      sort: this.refTable.sort
+      sort: this.refTable.sort,
     };
     (this as any).$util.exportTable({
       _this: this,
       apiParams,
-      showTipModal
+      showTipModal,
     });
   }
-
 }
 </script>

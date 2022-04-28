@@ -1,13 +1,13 @@
 <template>
-  <el-scrollbar wrap-class="scrollbar-wrapper" :style="{height: height + 'px'}">
+  <el-scrollbar wrap-class="scrollbar-wrapper" :style="{ height: height + 'px' }">
     <el-tree ref="tree" :node-key="dataId" :data="treeData" v-bind="$attrs" v-on="$listeners"></el-tree>
   </el-scrollbar>
 </template>
 <script>
 import request from "@/utils/request";
-import { CommonModule } from '@/store/modules/common'
+import { CommonModule } from "@/store/modules/common";
 export default {
-  name: 'YuExtTree',
+  name: "YuExtTree",
   inheritAttrs: false,
   props: {
     treeKey: String, // 将数据放到vuex中
@@ -18,36 +18,36 @@ export default {
     dataPid: [String, Number],
     requestType: {
       type: String,
-      default: 'GET'
+      default: "GET",
     },
     dataParams: {
       type: Object,
-      default: () => {}
+      default: () => {},
     },
     height: {
       type: Number,
-      default: 500
+      default: 500,
     },
     expandLevel: {
       type: Number,
-      default: 2
+      default: 2,
     },
     level: {
       type: String,
-      default: 'orgLevel'
+      default: "orgLevel",
     },
-    orgLevel: String,   // 可选择的层级
+    orgLevel: String, // 可选择的层级
     filterIds: {
       type: Array,
       default: () => {
-        return []
-      }
-    }
+        return [];
+      },
+    },
   },
   data() {
     return {
       originTreeData: [],
-      treeData: []
+      treeData: [],
     };
   },
   mounted() {
@@ -55,39 +55,39 @@ export default {
   },
   methods: {
     filterByIds(data, ids) {
-      for(var i= data.length-1;i>=0;i--) {
-        var item = data[i]
-        if(ids.includes(item.orgId)) {
-          data.splice(i, 1)
-        } else if(item.children?.length) {
-          this.filterByIds(item.children, ids)
+      for (var i = data.length - 1; i >= 0; i--) {
+        var item = data[i];
+        if (ids.includes(item.orgId)) {
+          data.splice(i, 1);
+        } else if (item.children?.length) {
+          this.filterByIds(item.children, ids);
         }
       }
     },
     // 更新树数据，按照层级
-    updataTreeDataByLevel () {
-      var originData = CommonModule.treeOriginMgr[this.treeKey]
-      let transData = originData.map(item => {
+    updataTreeDataByLevel() {
+      var originData = CommonModule.treeOriginMgr[this.treeKey];
+      let transData = originData.map((item) => {
         return {
           ...item,
           label: item[this.dataLabel],
           id: item[this.dataId],
-          disabled: this.orgLevel ? !this.orgLevel.split(',').includes(String(item[this.level])) : false
-        }
-      })
-      let treeData = this.$util.arrayToTree(transData, this.dataId, this.dataPid)
-      this.filterIds.length && this.filterByIds(treeData, this.filterIds)
+          disabled: this.orgLevel ? !this.orgLevel.split(",").includes(String(item[this.level])) : false,
+        };
+      });
+      let treeData = this.$util.arrayToTree(transData, this.dataId, this.dataPid);
+      this.filterIds.length && this.filterByIds(treeData, this.filterIds);
       return treeData;
     },
-    filter (val) {
+    filter(val) {
       this.$refs.tree.filter(val);
     },
-    getRef () {
-      return this.$refs.tree
+    getRef() {
+      return this.$refs.tree;
     },
-    remoteData () {
-      if(CommonModule.treeMgr[this.treeKey]) {
-        this.treeData = this.updataTreeDataByLevel()
+    remoteData() {
+      if (CommonModule.treeMgr[this.treeKey]) {
+        this.treeData = this.updataTreeDataByLevel();
         this.$emit("get-tree-datas", CommonModule.treeOriginMgr[this.treeKey]);
         setTimeout(() => {
           // 默认展开根节点
@@ -96,31 +96,31 @@ export default {
         return;
       }
 
-      let paramsKey = this.requestType.toUpperCase() === 'GET' ? 'params' : 'data'
+      let paramsKey = this.requestType.toUpperCase() === "GET" ? "params" : "data";
       request({
         method: this.requestType,
         url: this.dataUrl,
         [paramsKey]: this.dataParams,
-      }).then(res => {
-        let originTreeData = this._.cloneDeep(res.data)
+      }).then((res) => {
+        let originTreeData = this._.cloneDeep(res.data);
         this.originTreeData = originTreeData;
         this.$emit("get-tree-datas", originTreeData);
         // 添加label属性
-        let transData = res.data.map(item => {
+        let transData = res.data.map((item) => {
           return {
             ...item,
             label: item[this.dataLabel],
             id: item[this.dataId],
-            disabled: this.orgLevel ?!this.orgLevel.split(',').includes(String(item[this.level])) : false
-          }
-        })
-        this.treeData = this.$util.arrayToTree(transData, this.dataId, this.dataPid)
-        if(this.dataRoot) {
-          this.dataRoot.children = this.treeData
-          this.treeData = [this.dataRoot]
+            disabled: this.orgLevel ? !this.orgLevel.split(",").includes(String(item[this.level])) : false,
+          };
+        });
+        this.treeData = this.$util.arrayToTree(transData, this.dataId, this.dataPid);
+        if (this.dataRoot) {
+          this.dataRoot.children = this.treeData;
+          this.treeData = [this.dataRoot];
         }
         // 将请求的数据设置到vuex中
-        if(this.treeKey) {
+        if (this.treeKey) {
           this.$nextTick(function () {
             let treeMgr = CommonModule.treeMgr;
             let treeOriginMgr = CommonModule.treeOriginMgr;
@@ -154,11 +154,11 @@ export default {
         }
       }
     },
-  }
-}
+  },
+};
 </script>
 <style lang="scss">
-  .scrollbar-wrapper {
-    overflow-x: hidden!important;
-  }
+.scrollbar-wrapper {
+  overflow-x: hidden !important;
+}
 </style>

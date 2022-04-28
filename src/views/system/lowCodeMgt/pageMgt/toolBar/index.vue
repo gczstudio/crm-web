@@ -1,25 +1,17 @@
 <template>
-  <div class="toolBar-container">
-   
-  </div>
+  <div class="toolBar-container"></div>
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop, Ref } from 'vue-property-decorator'
+import { Component, Vue, Prop, Ref } from "vue-property-decorator";
 @Component({
-  name: 'ToolBar',
-  components: {
-  }
+  name: "ToolBar",
+  components: {},
 })
-export default class extends Vue { 
-  
-  
-
-}
+export default class extends Vue {}
 </script>
 
 <style lang="scss" scoped>
-  .toolBar-container {
-    
-  }
+.toolBar-container {
+}
 </style>

@@ -4,7 +4,7 @@
       <!-- 表格工具栏 -->
       <div class="yu-main__header clearfix">
         <div class="yu-main-toolbar fr">
-          <el-button icon="el-icon-download"  @click="exportFn" v-permission="'trendExport'">导出</el-button>
+          <el-button icon="el-icon-download" @click="exportFn" v-permission="'trendExport'">导出</el-button>
         </div>
       </div>
       <!--查询form表单 -->
@@ -53,83 +53,81 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Ref } from 'vue-property-decorator'
-import { backend } from '@/config'
-import { getUserInfo } from '@/utils'
-import moment from 'moment'
+import { Component, Vue, Ref } from "vue-property-decorator";
+import { backend } from "@/config";
+import { getUserInfo } from "@/utils";
+import moment from "moment";
 @Component({
-  name: 'CustRunAccount',
-  components: {
-  }
+  name: "CustRunAccount",
+  components: {},
 })
 export default class extends Vue {
-  @Ref('searchForm') searchForm: any;
-  @Ref('refTable') refTable: any;
-  private dataUrl = backend.custService + '/api/custoverview/accountdeallist'
+  @Ref("searchForm") searchForm: any;
+  @Ref("refTable") refTable: any;
+  private dataUrl = backend.custService + "/api/custoverview/accountdeallist";
   private queryFormData = {
-    tranDateStart: moment().subtract(3, 'month').format('YYYY-MM-DD'),
-    tranDateEnd: moment().format('YYYY-MM-DD')
-  }
+    tranDateStart: moment().subtract(3, "month").format("YYYY-MM-DD"),
+    tranDateEnd: moment().format("YYYY-MM-DD"),
+  };
   private baseParams = {
     condition: JSON.stringify({
       ...this.$route.query,
-      tranDateStart: moment().subtract(3, 'month').format('YYYY-MM-DD'),
-      tranDateEnd: moment().format('YYYY-MM-DD')
-    })
-  }
+      tranDateStart: moment().subtract(3, "month").format("YYYY-MM-DD"),
+      tranDateEnd: moment().format("YYYY-MM-DD"),
+    }),
+  };
 
-  private userInfo = getUserInfo()
+  private userInfo = getUserInfo();
 
   private startPickerOptions = {
     disabledDate: (time: Date) => {
       if (this.queryFormData.tranDateEnd) {
         return time.getTime() >= new Date(this.queryFormData.tranDateEnd).getTime();
       }
-    }
-  }
+    },
+  };
 
   private endPickerOptions = {
     disabledDate: (time: Date) => {
       if (this.queryFormData.tranDateStart) {
         return time.getTime() <= new Date(this.queryFormData.tranDateStart).getTime() - 86400000;
       }
-    }
+    },
+  };
+
+  mounted() {
+    this.$checkCtr("trendExport") && this.$exportQueue.addQueue(this.$route.path, this.exportFn);
   }
 
-  mounted () {
-    this.$checkCtr('trendExport') && this.$exportQueue.addQueue(this.$route.path, this.exportFn)
-  }
-
-
-  resetFn () {
+  resetFn() {
     this.queryFormData = {
-      tranDateStart: '',
-      tranDateEnd: ''
-    }
+      tranDateStart: "",
+      tranDateEnd: "",
+    };
   }
 
   // 导出
-  exportFn (showTipModal?:boolean) {
-    let queryField =  (this as any).$util.formatQueryField([ 
-      { cnName: this.$route.query.acctSubNo ? '款项代码' : '账号', value: this.$route.query.acctSubNo || this.$route.query.acctNo}
-    ])
-    var searchQuery: any = (this as any)._.assign({}, {
-      ...this.$route.query,
-      ...this.searchForm.searchModel,
-      fileName: this.$route.query.title,
-      queryField: queryField + this.searchForm.searchQueryField
-    });
+  exportFn(showTipModal?: boolean) {
+    let queryField = (this as any).$util.formatQueryField([{ cnName: this.$route.query.acctSubNo ? "款项代码" : "账号", value: this.$route.query.acctSubNo || this.$route.query.acctNo }]);
+    var searchQuery: any = (this as any)._.assign(
+      {},
+      {
+        ...this.$route.query,
+        ...this.searchForm.searchModel,
+        fileName: this.$route.query.title,
+        queryField: queryField + this.searchForm.searchQueryField,
+      }
+    );
     var apiParams = {
-      url: backend.custService + '/api/custoverview/exportaccountdeallist',
+      url: backend.custService + "/api/custoverview/exportaccountdeallist",
       params: searchQuery,
-      sort: this.refTable.sort
+      sort: this.refTable.sort,
     };
     (this as any).$util.exportTable({
       _this: this,
       apiParams,
-      showTipModal
+      showTipModal,
     });
   }
-
 }
 </script>

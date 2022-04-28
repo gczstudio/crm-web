@@ -1,32 +1,38 @@
 <template>
-  <div style="position: relative;" >
-     <div class="mapChart animate-bounce" ref="mapChart"></div>
-     <div class="dots animate-bounceDown">
-        <div class="dots-item" v-for="item in mapData.pos" :key="item.orgNo" @mouseenter="mouseenter(item)" @mouseleave="mouseleave(item)">
-         <img v-if="activeOrg===item.orgNo" :style="{'top': item.positionTop - 11 + 'px', 'left': item.positionLeft +'px'}" class="dots-img dots-img1" src="~@/assets/images/screen/dot.png" alt="">
-         <img v-else :style="{'top': item.positionTop + 'px', 'left': item.positionLeft +'px'}" class="dots-img dots-img2" src="~@/assets/images/screen/dot1.png" alt="">
-        </div>
-     </div>
-     <div v-if="activeOrg && Object.keys(modalData).length" id="modal" :key="activeOrg" :class="`modal ${modalClass}`" :style="mapStyle.modal">
+  <div style="position: relative">
+    <div class="mapChart animate-bounce" ref="mapChart"></div>
+    <div class="dots animate-bounceDown">
+      <div class="dots-item" v-for="item in mapData.pos" :key="item.orgNo" @mouseenter="mouseenter(item)" @mouseleave="mouseleave(item)">
+        <img v-if="activeOrg === item.orgNo" :style="{ top: item.positionTop - 11 + 'px', left: item.positionLeft + 'px' }" class="dots-img dots-img1" src="~@/assets/images/screen/dot.png" alt="" />
+        <img v-else :style="{ top: item.positionTop + 'px', left: item.positionLeft + 'px' }" class="dots-img dots-img2" src="~@/assets/images/screen/dot1.png" alt="" />
+      </div>
+    </div>
+    <div v-if="activeOrg && Object.keys(modalData).length" id="modal" :key="activeOrg" :class="`modal ${modalClass}`" :style="mapStyle.modal">
       <div class="line" :style="mapStyle.line"></div>
       <div class="modal-cont">
-        <div class="modal-title">{{modalData.orgNm === '经济技术开发区支行' ? ('武汉' + modalData.orgNm) : modalData.orgNm}}</div>
+        <div class="modal-title">{{ modalData.orgNm === "经济技术开发区支行" ? "武汉" + modalData.orgNm : modalData.orgNm }}</div>
         <div class="modal-compare">
           <el-row>
             <el-col :span="8" class="modal-compare-item">
               <p>对公存款余额(亿元)</p>
-              <p>{{$util.formatMoney(modalData.deptBal / 100000000)}}</p>
-              <p>比上年末<span class="updown-amount">{{(modalData.deptBalLastYear > 0 ? '+' : '') + $util.formatMoney(modalData.deptBalLastYear / 100000000)}}</span></p>
+              <p>{{ $util.formatMoney(modalData.deptBal / 100000000) }}</p>
+              <p>
+                比上年末<span class="updown-amount">{{ (modalData.deptBalLastYear > 0 ? "+" : "") + $util.formatMoney(modalData.deptBalLastYear / 100000000) }}</span>
+              </p>
             </el-col>
             <el-col :span="8" class="modal-compare-item">
               <p>对公存款日均(亿元)</p>
-              <p>{{$util.formatMoney(modalData.deptBalAvgYear / 100000000)}}</p>
-              <p>比上年末<span class="updown-amount">{{(modalData.deptBalAvgLastYear > 0 ? '+' : '') + $util.formatMoney(modalData.deptBalAvgLastYear / 100000000)}}</span></p>
+              <p>{{ $util.formatMoney(modalData.deptBalAvgYear / 100000000) }}</p>
+              <p>
+                比上年末<span class="updown-amount">{{ (modalData.deptBalAvgLastYear > 0 ? "+" : "") + $util.formatMoney(modalData.deptBalAvgLastYear / 100000000) }}</span>
+              </p>
             </el-col>
             <el-col :span="8" class="modal-compare-item">
               <p>对公贷款余额(亿元)</p>
-              <p>{{$util.formatMoney(modalData.loanBal / 100000000)}}</p>
-              <p>比上年末<span class="updown-amount">{{(modalData.loanBalLastYear > 0 ? '+' : '') + $util.formatMoney(modalData.loanBalLastYear / 100000000)}}</span></p>
+              <p>{{ $util.formatMoney(modalData.loanBal / 100000000) }}</p>
+              <p>
+                比上年末<span class="updown-amount">{{ (modalData.loanBalLastYear > 0 ? "+" : "") + $util.formatMoney(modalData.loanBalLastYear / 100000000) }}</span>
+              </p>
             </el-col>
           </el-row>
         </div>
@@ -34,405 +40,431 @@
           <el-row :gutter="4">
             <el-col :span="12">
               <ul class="quota-item quota-item-2">
-                <li>对公有效客户数<span class="amount">{{modalData.yxCustNum}}</span></li>
-                <li>对公信贷客户数<span class="amount">{{modalData.xdCustNum}}</span></li>
+                <li>
+                  对公有效客户数<span class="amount">{{ modalData.yxCustNum }}</span>
+                </li>
+                <li>
+                  对公信贷客户数<span class="amount">{{ modalData.xdCustNum }}</span>
+                </li>
               </ul>
             </el-col>
             <el-col :span="12">
               <ul class="quota-item">
-                <li>对公客户FTP利润({{$util.formatMoneyAutoUnit(modalData.ftpProfitBalnc).unit}})<span class="amount">{{$util.formatMoneyAutoUnit(modalData.ftpProfitBalnc).num}}</span></li>
-                <li>对公客户中收({{$util.formatMoneyAutoUnit(modalData.midBizInc).unit}})<span class="amount">{{$util.formatMoneyAutoUnit(modalData.midBizInc).num}}</span></li>
-                <li>对公客户EVA({{$util.formatMoneyAutoUnit(modalData.eva).unit}})<span class="amount">{{$util.formatMoneyAutoUnit(modalData.eva).num}}</span></li>
+                <li>
+                  对公客户FTP利润({{ $util.formatMoneyAutoUnit(modalData.ftpProfitBalnc).unit }})<span class="amount">{{ $util.formatMoneyAutoUnit(modalData.ftpProfitBalnc).num }}</span>
+                </li>
+                <li>
+                  对公客户中收({{ $util.formatMoneyAutoUnit(modalData.midBizInc).unit }})<span class="amount">{{ $util.formatMoneyAutoUnit(modalData.midBizInc).num }}</span>
+                </li>
+                <li>
+                  对公客户EVA({{ $util.formatMoneyAutoUnit(modalData.eva).unit }})<span class="amount">{{ $util.formatMoneyAutoUnit(modalData.eva).num }}</span>
+                </li>
               </ul>
             </el-col>
             <el-col :span="12">
               <ul class="quota-item">
-                <li>对公存款付息率(%)<span class="amount">{{modalData.avgDpsRate}}</span></li>
-                <li>对公贷款收息率(%)<span class="amount">{{modalData.avgLneRate}}</span></li>
-                <li>对公业务净利差(%)<span class="amount">{{modalData.netMargin}}</span></li>
+                <li>
+                  对公存款付息率(%)<span class="amount">{{ modalData.avgDpsRate }}</span>
+                </li>
+                <li>
+                  对公贷款收息率(%)<span class="amount">{{ modalData.avgLneRate }}</span>
+                </li>
+                <li>
+                  对公业务净利差(%)<span class="amount">{{ modalData.netMargin }}</span>
+                </li>
               </ul>
             </el-col>
             <el-col :span="12">
               <ul class="quota-item">
-                <li>授信敞口额度({{$util.formatMoneyAutoUnit(modalData.creditExposureAmt).unit}})<span class="amount">{{$util.formatMoneyAutoUnit(modalData.creditExposureAmt).num}}</span></li>
-                <li>已使用敞口额度({{$util.formatMoneyAutoUnit(modalData.userdCreditExposureAmt).unit}})<span class="amount">{{$util.formatMoneyAutoUnit(modalData.userdCreditExposureAmt).num}}</span></li>
-                <li>敞口额度使用率(%)<span class="amount">{{$util.toFixed(modalData.creditExposureUseRate, 2)}}</span></li>
+                <li>
+                  授信敞口额度({{ $util.formatMoneyAutoUnit(modalData.creditExposureAmt).unit }})<span class="amount">{{ $util.formatMoneyAutoUnit(modalData.creditExposureAmt).num }}</span>
+                </li>
+                <li>
+                  已使用敞口额度({{ $util.formatMoneyAutoUnit(modalData.userdCreditExposureAmt).unit }})<span class="amount">{{
+                    $util.formatMoneyAutoUnit(modalData.userdCreditExposureAmt).num
+                  }}</span>
+                </li>
+                <li>
+                  敞口额度使用率(%)<span class="amount">{{ $util.toFixed(modalData.creditExposureUseRate, 2) }}</span>
+                </li>
               </ul>
             </el-col>
           </el-row>
         </div>
       </div>
-     </div>
+    </div>
   </div>
- 
 </template>
 <script>
 import * as echarts from "echarts";
 import "echarts-gl";
 import axios from "axios";
-import { ScreenModule } from '@/store/modules/screen'
+import { ScreenModule } from "@/store/modules/screen";
 export default {
-  name: 'Map',
+  name: "Map",
   props: {
-    mapData: Object
+    mapData: Object,
   },
   data() {
     return {
       data: [],
-      activeOrg: '',
+      activeOrg: "",
       result: [
         {
-          orgNm: '光谷分行',
-          city: '武汉市',
-          area: '江夏区',
-          address: '武汉市东湖新技术开发区民族大道1号',
+          orgNm: "光谷分行",
+          city: "武汉市",
+          area: "江夏区",
+          address: "武汉市东湖新技术开发区民族大道1号",
           locationLng: 114.40271635550005,
           locationLat: 114.40271635550005,
           positionTop: 340,
-          positionLeft: 310
+          positionLeft: 310,
         },
         {
-          orgNm: '科技金融服务中心',
-          city: '武汉市',
-          area: '江夏区',
-          address: '武汉市东湖新技术开发区关山大道特1号光谷软件园A5栋',
+          orgNm: "科技金融服务中心",
+          city: "武汉市",
+          area: "江夏区",
+          address: "武汉市东湖新技术开发区关山大道特1号光谷软件园A5栋",
           locationLng: 114.41393125063938,
           locationLat: 30.479852522383474,
           positionTop: 345,
-          positionLeft: 324
+          positionLeft: 324,
         },
         {
-          orgNm: '总行营业部',
-          city: '武汉市',
-          area: '江汉区',
-          address: '武汉市江汉区建设大道933号',
+          orgNm: "总行营业部",
+          city: "武汉市",
+          area: "江汉区",
+          address: "武汉市江汉区建设大道933号",
           locationLng: 114.27709228247389,
           locationLat: 30.601877713000025,
           positionTop: 295,
-          positionLeft: 265
+          positionLeft: 265,
         },
         {
-          orgNm: '武汉经济技术开发区支行',
-          city: '武汉市',
-          area: '蔡甸区',
-          address: '武汉市武汉经济技术开发区创业路12号嘉昱建银商务公馆',
+          orgNm: "武汉经济技术开发区支行",
+          city: "武汉市",
+          area: "蔡甸区",
+          address: "武汉市武汉经济技术开发区创业路12号嘉昱建银商务公馆",
           locationLng: 114.16872223286951,
           locationLat: 30.498254183282615,
           positionTop: 335,
-          positionLeft: 222
+          positionLeft: 222,
         },
         {
-          orgNm: '江岸支行',
-          city: '武汉市',
-          area: '江岸区',
-          address: '武汉市江岸区中山大道1541号三阳金城B栋1层',
+          orgNm: "江岸支行",
+          city: "武汉市",
+          area: "江岸区",
+          address: "武汉市江岸区中山大道1541号三阳金城B栋1层",
           locationLng: 114.30970526401363,
           locationLat: 30.604427881376736,
           positionTop: 295,
-          positionLeft: 278
+          positionLeft: 278,
         },
         {
-          orgNm: '江汉支行',
-          city: '武汉市',
-          area: '江汉区',
-          address: '武汉市江汉区新华下路特8号1-2层 ',
+          orgNm: "江汉支行",
+          city: "武汉市",
+          area: "江汉区",
+          address: "武汉市江汉区新华下路特8号1-2层 ",
           locationLng: 114.27143700013582,
           locationLat: 30.634193866973884,
           positionTop: 278,
-          positionLeft: 250
+          positionLeft: 250,
         },
         {
-          orgNm: '硚口支行',
-          city: '武汉市',
-          area: '硚口区',
-          address: '武汉市硚口区硚口路160号',
+          orgNm: "硚口支行",
+          city: "武汉市",
+          area: "硚口区",
+          address: "武汉市硚口区硚口路160号",
           locationLng: 114.2592869689606,
           locationLat: 30.582476200865088,
           positionTop: 306,
-          positionLeft: 243
+          positionLeft: 243,
         },
         {
-          orgNm: '汉正街支行',
-          city: '武汉市',
-          area: '硚口区',
-          address: '武汉市硚口区利济南路107-109号',
+          orgNm: "汉正街支行",
+          city: "武汉市",
+          area: "硚口区",
+          address: "武汉市硚口区利济南路107-109号",
           locationLng: 114.27888628840785,
           locationLat: 30.573373879171257,
           positionTop: 310,
-          positionLeft: 255
+          positionLeft: 255,
         },
         {
-          orgNm: '汉阳支行',
-          city: '武汉市',
-          area: '汉阳区',
-          address: '武汉市汉阳区翠微路1号宏阳大厦1层',
+          orgNm: "汉阳支行",
+          city: "武汉市",
+          area: "汉阳区",
+          address: "武汉市汉阳区翠微路1号宏阳大厦1层",
           locationLng: 114.27224188187274,
           locationLat: 30.551625955571033,
           positionTop: 320,
-          positionLeft: 235
+          positionLeft: 235,
         },
         {
-          orgNm: '武昌支行',
-          city: '武汉市',
-          area: '武昌区',
-          address: '武汉市武昌区中山路440号',
+          orgNm: "武昌支行",
+          city: "武汉市",
+          area: "武昌区",
+          address: "武汉市武昌区中山路440号",
           locationLng: 114.32431171160587,
           locationLat: 30.544813217235955,
           positionTop: 320,
-          positionLeft: 284
+          positionLeft: 284,
         },
         {
-          orgNm: '水果湖支行',
-          city: '武汉市',
-          area: '洪山区',
-          address: '武汉市洪山区洪山路33号',
+          orgNm: "水果湖支行",
+          city: "武汉市",
+          area: "洪山区",
+          address: "武汉市洪山区洪山路33号",
           locationLng: 114.35069817833376,
           locationLat: 30.551922728687526,
           positionTop: 318,
-          positionLeft: 296
+          positionLeft: 296,
         },
         {
-          orgNm: '青山支行',
-          city: '武汉市',
-          area: '青山区',
-          address: '武汉市青山区沿港路5号',
+          orgNm: "青山支行",
+          city: "武汉市",
+          area: "青山区",
+          address: "武汉市青山区沿港路5号",
           locationLng: 114.4103815964167,
           locationLat: 30.64376027962228,
           positionTop: 278,
-          positionLeft: 325
+          positionLeft: 325,
         },
         {
-          orgNm: '洪山支行',
-          city: '武汉市',
-          area: '洪山区',
-          address: '武汉市洪山区珞瑜路745号',
+          orgNm: "洪山支行",
+          city: "武汉市",
+          area: "洪山区",
+          address: "武汉市洪山区珞瑜路745号",
           locationLng: 114.35234746725007,
           locationLat: 30.598584859414313,
           positionTop: 300,
-          positionLeft: 304
+          positionLeft: 304,
         },
         {
-          orgNm: '蔡甸支行',
-          city: '武汉市',
-          area: '蔡甸区',
-          address: '武汉市蔡甸区蔡甸大街208号',
+          orgNm: "蔡甸支行",
+          city: "武汉市",
+          area: "蔡甸区",
+          address: "武汉市蔡甸区蔡甸大街208号",
           locationLng: 114.03641539566296,
           locationLat: 30.577376883465757,
           positionTop: 305,
-          positionLeft: 165
+          positionLeft: 165,
         },
         {
-          orgNm: '江夏支行',
-          city: '武汉市',
-          area: '江夏区',
-          address: '武汉市江夏区文华路中百江夏购物中心',
+          orgNm: "江夏支行",
+          city: "武汉市",
+          area: "江夏区",
+          address: "武汉市江夏区文华路中百江夏购物中心",
           locationLng: 114.31998466379486,
           locationLat: 30.35421397592687,
           positionTop: 390,
-          positionLeft: 285
+          positionLeft: 285,
         },
         {
-          orgNm: '东西湖支行',
-          city: '武汉市',
-          area: '东西湖区',
-          address: '武汉市东西湖区吴家山吴中路288号',
+          orgNm: "东西湖支行",
+          city: "武汉市",
+          area: "东西湖区",
+          address: "武汉市东西湖区吴家山吴中路288号",
           locationLng: 114.15766481068609,
           locationLat: 30.634934654896696,
           positionTop: 280,
-          positionLeft: 202
+          positionLeft: 202,
         },
         {
-          orgNm: '黄陂支行',
-          city: '武汉市',
-          area: '黄陂区',
-          address: '武汉市黄陂区黄陂大道387号',
+          orgNm: "黄陂支行",
+          city: "武汉市",
+          area: "黄陂区",
+          address: "武汉市黄陂区黄陂大道387号",
           locationLng: 114.38220579494347,
           locationLat: 30.886248254352076,
           positionTop: 185,
-          positionLeft: 315
+          positionLeft: 315,
         },
         {
-          orgNm: '阳逻开发区支行',
-          city: '武汉市',
-          area: '新洲区',
-          address: '武汉市武汉阳逻经济开发区汉施路特1号',
+          orgNm: "阳逻开发区支行",
+          city: "武汉市",
+          area: "新洲区",
+          address: "武汉市武汉阳逻经济开发区汉施路特1号",
           locationLng: 114.57624454611792,
           locationLat: 30.709622560400312,
           positionTop: 255,
-          positionLeft: 395
+          positionLeft: 395,
         },
         {
-          orgNm: '小微企业金融服务中心',
-          city: '武汉市',
-          area: '江汉区',
-          address: '武汉市江汉区建设大道933号',
+          orgNm: "小微企业金融服务中心",
+          city: "武汉市",
+          area: "江汉区",
+          address: "武汉市江汉区建设大道933号",
           locationLng: 114.27709228247389,
           locationLat: 30.601877713000025,
           positionTop: 290,
-          positionLeft: 230
-        }
+          positionLeft: 230,
+        },
       ],
       timer: null,
-      modalClass: 'animate-bounce-modal-delay',
-      chart: null
+      modalClass: "animate-bounce-modal-delay",
+      chart: null,
     };
   },
   computed: {
     mapStyle() {
-      let curMap = this.mapData.pos.find(item => item.orgNo === this.activeOrg)
-      if(!curMap) return {}
-      let top  = curMap.positionTop, left = curMap.positionLeft
-      let modalWidth = 467, modalHeight = 299  // 弹出框宽高
-      let mapHalfWidth = 320, mapHalfHeight = 200  // map一半的宽高
+      let curMap = this.mapData.pos.find((item) => item.orgNo === this.activeOrg);
+      if (!curMap) return {};
+      let top = curMap.positionTop,
+        left = curMap.positionLeft;
+      let modalWidth = 467,
+        modalHeight = 299; // 弹出框宽高
+      let mapHalfWidth = 320,
+        mapHalfHeight = 200; // map一半的宽高
       // 左下角
-      if(top > mapHalfHeight && left < mapHalfWidth) {
+      if (top > mapHalfHeight && left < mapHalfWidth) {
         return {
           modal: {
-            top: top - modalHeight + 'px',
-            left: left + 62 + 'px',
-            transformOrigin: 'bottom left'
+            top: top - modalHeight + "px",
+            left: left + 62 + "px",
+            transformOrigin: "bottom left",
           },
           line: {
-            top: modalHeight - 8 + 'px',
+            top: modalHeight - 8 + "px",
             left: 0,
-            transform: 'rotate(150deg)'
-          }
-        }
+            transform: "rotate(150deg)",
+          },
+        };
       }
 
       // 左上角
-      if(top <= mapHalfHeight && left <= mapHalfWidth) {
+      if (top <= mapHalfHeight && left <= mapHalfWidth) {
         // 特殊处理，黄陂支行
-        if(this.activeOrg === '1103699') { //黄陂支行
+        if (this.activeOrg === "1103699") {
+          //黄陂支行
           return {
             modal: {
-              top: top + 76 + 'px',
-              left: left - 50 + 'px',
-              transformOrigin: 'top left'
+              top: top + 76 + "px",
+              left: left - 50 + "px",
+              transformOrigin: "top left",
             },
             line: {
               top: 0,
               left: 0,
-              transform: 'rotate(-45deg)'
-            }
-          }
+              transform: "rotate(-45deg)",
+            },
+          };
         }
         return {
           modal: {
-            top: top + 74 + 'px',
-            left: left + 52 + 'px',
-            transformOrigin: 'top left'
+            top: top + 74 + "px",
+            left: left + 52 + "px",
+            transformOrigin: "top left",
           },
           line: {
             top: 0,
             left: 0,
-            transform: 'rotate(-135deg)'
-          }
-        }
+            transform: "rotate(-135deg)",
+          },
+        };
       }
 
-
       // 右下角
-      if(top > mapHalfHeight && left  > mapHalfWidth) {
+      if (top > mapHalfHeight && left > mapHalfWidth) {
         // 超出边界时
-        let beyond = top - modalHeight
+        let beyond = top - modalHeight;
         if (beyond < 0) {
-          let rotate = 45 + (1.2 * beyond)
+          let rotate = 45 + 1.2 * beyond;
           top = 0;
-          if(beyond + 43 >0) {
-            top = -10
-            left =  left - modalWidth - 57
+          if (beyond + 43 > 0) {
+            top = -10;
+            left = left - modalWidth - 57;
           } else {
-            left =  left - modalWidth - 58
+            left = left - modalWidth - 58;
           }
 
           return {
             modal: {
-              top: top + 'px',
-              left: left + 'px',
-              transformOrigin: 'bottom right'
+              top: top + "px",
+              left: left + "px",
+              transformOrigin: "bottom right",
             },
             line: {
-              top: modalHeight - 10 + 'px',
-              left: modalWidth - 10 + 'px',
-              transform: `rotate(${rotate}deg)`
-            }
-          }
+              top: modalHeight - 10 + "px",
+              left: modalWidth - 10 + "px",
+              transform: `rotate(${rotate}deg)`,
+            },
+          };
         }
-       
+
         return {
           modal: {
-            top: top - modalHeight - 12 +  'px',
-            left: left - modalWidth - 40 + 'px',
-            transformOrigin: 'bottom right'
+            top: top - modalHeight - 12 + "px",
+            left: left - modalWidth - 40 + "px",
+            transformOrigin: "bottom right",
           },
           line: {
-            top: modalHeight - 10 + 'px',
-            left: modalWidth - 10 + 'px',
-            transform: 'rotate(45deg)'
-          }
-        }
+            top: modalHeight - 10 + "px",
+            left: modalWidth - 10 + "px",
+            transform: "rotate(45deg)",
+          },
+        };
       }
 
       // 右上角
-      if(top <= mapHalfHeight && left >= mapHalfWidth) {
+      if (top <= mapHalfHeight && left >= mapHalfWidth) {
         return {
           modal: {
-            top: top +  72 + 'px',
-            left: left -modalWidth - 44+ 'px',
-            transformOrigin: 'top right'
+            top: top + 72 + "px",
+            left: left - modalWidth - 44 + "px",
+            transformOrigin: "top right",
           },
           line: {
             top: 0,
-            left: modalWidth - 7 + 'px',
-            transform: 'rotate(315deg)'
-          }
-        }
+            left: modalWidth - 7 + "px",
+            transform: "rotate(315deg)",
+          },
+        };
       }
     },
     modalData() {
-      return this.mapData.data.find(item => item.orgNo === this.activeOrg) || {}
+      return this.mapData.data.find((item) => item.orgNo === this.activeOrg) || {};
     },
     curActiveOrg() {
-      return ScreenModule.activeOrg
+      return ScreenModule.activeOrg;
     },
     incrementStatus() {
-      return ScreenModule.incrementStatus
-    }
+      return ScreenModule.incrementStatus;
+    },
   },
   watch: {
     activeOrg(val) {
       // val = val === '经济技术开发区支行' ? ('武汉' + val) : val
-      ScreenModule.SET_ACTIVE_ORG(val)
+      ScreenModule.SET_ACTIVE_ORG(val);
       this.execAnimate();
     },
     curActiveOrg(val) {
-      this.activeOrg = val
+      this.activeOrg = val;
     },
     incrementStatus(val) {
-      if(val) {
+      if (val) {
         // 点击增量时，清除定时器
-        this.stopAnimate()
+        this.stopAnimate();
         setTimeout(() => {
-          this.startAnimate()
-        }, 5000)
+          this.startAnimate();
+        }, 5000);
       }
-    }
+    },
   },
   mounted() {
     this.renderChart();
     setTimeout(() => {
-      this.activeOrg = this.curActiveOrg || '1102899';
-      this.modalClass = 'animate-bounce-modal';
+      this.activeOrg = this.curActiveOrg || "1102899";
+      this.modalClass = "animate-bounce-modal";
       this.$nextTick(() => {
         this.updateChart();
         this.startAnimate();
       });
-    }, 6000)
+    }, 6000);
   },
   methods: {
     mouseenter(item) {
-      this.stopAnimate()
+      this.stopAnimate();
       this.activeOrg = item.orgNo;
     },
     mouseleave(item) {
@@ -440,48 +472,48 @@ export default {
     },
     execAnimate() {
       this.$nextTick(() => {
-        this.updateChart()
+        this.updateChart();
       });
     },
     startAnimate() {
       let i = 0;
-      this.mapData.pos.forEach((item, index) =>{
-        if(item.orgNo === this.activeOrg) {
+      this.mapData.pos.forEach((item, index) => {
+        if (item.orgNo === this.activeOrg) {
           i = index;
         }
       });
-      if(!this.timer) {
+      if (!this.timer) {
         this.timer = setInterval(() => {
           i++;
-          if(!this.mapData.pos[i]) {
+          if (!this.mapData.pos[i]) {
             // 执行完了跳转到湖北地图
-            ScreenModule.SET_ACTIVE_ORG('')
-            ScreenModule.SET_ACTIVE_MAP('hubei')
+            ScreenModule.SET_ACTIVE_ORG("");
+            ScreenModule.SET_ACTIVE_MAP("hubei");
             // i = 0;
             this.stopAnimate();
             return;
           }
-          
-          this.activeOrg = this.mapData.pos[i]?.orgNo
+
+          this.activeOrg = this.mapData.pos[i]?.orgNo;
           this.execAnimate();
           this.stopAnimate();
           this.startAnimate();
-        }, 5000)
+        }, 5000);
       }
     },
     stopAnimate() {
-      clearInterval(this.timer)
-      this.timer = null
+      clearInterval(this.timer);
+      this.timer = null;
     },
     renderChart() {
       this.chart = echarts.init(this.$refs.mapChart);
-      var chinaGeoCoordMap = {}
-      var chinaDatas = []
-      this.mapData.pos.forEach(item => {
-        chinaGeoCoordMap[item.orgNo] = [item.locationLng, item.locationLat]
-        chinaDatas.push([{name: item.orgNo, value: 0}])
-      })
-      
+      var chinaGeoCoordMap = {};
+      var chinaDatas = [];
+      this.mapData.pos.forEach((item) => {
+        chinaGeoCoordMap[item.orgNo] = [item.locationLng, item.locationLat];
+        chinaDatas.push([{ name: item.orgNo, value: 0 }]);
+      });
+
       var series = [];
       // 显示具体的经纬度的点
       // [["武汉市", chinaDatas]].forEach(function(item) {
@@ -507,7 +539,7 @@ export default {
       //     }
       //   );
       // });
-      axios.get(window.location.origin + window.location.pathname + "static/map/wuhan.json").then((res)=> {
+      axios.get(window.location.origin + window.location.pathname + "static/map/wuhan.json").then((res) => {
         var geoJson = res.data;
         var mapName = "hubei";
         echarts.registerMap(mapName, geoJson);
@@ -516,12 +548,12 @@ export default {
           selectedMode: "multiple", // 选中效果固话
           grid: {
             top: 100,
-            right: 0, 
+            right: 0,
             bottom: 0,
-            left: 0
+            left: 0,
           },
           geo: {
-            top:0,
+            top: 0,
             right: 0,
             bottom: 0,
             left: 0,
@@ -530,26 +562,27 @@ export default {
             // aspectScale: 0.75, //长宽比
             zoom: 0.9,
             zlevel: 1,
-            roam: false,  //是否开启鼠标缩放和平移漫
+            roam: false, //是否开启鼠标缩放和平移漫
             itemStyle: {
-              areaColor: "#19437d",   // 底图颜色
+              areaColor: "#19437d", // 底图颜色
               borderColor: "#45a1db", // 分割线颜色
               borderWidth: 1,
             },
-            emphasis: { // 高亮
+            emphasis: {
+              // 高亮
               label: {
-                color: '#fff',
+                color: "#fff",
               },
               itemStyle: {
-                color: "#77cbf4"
-              }
+                color: "#77cbf4",
+              },
             },
-            regions: []
+            regions: [],
           },
           series: [
             {
               type: "map",
-              top:0,
+              top: 0,
               right: 0,
               bottom: 0,
               left: 0,
@@ -558,51 +591,50 @@ export default {
               geoIndex: 1,
               roam: false,
               emphasis: {
-                label:{
-                  show:false
-                }
+                label: {
+                  show: false,
+                },
               },
               itemStyle: {
                 shadowColor: "#67d0ff",
                 shadowOffsetX: 0,
                 shadowOffsetY: 8,
-              }
+              },
             },
-            ...series
-            
-          ]
+            ...series,
+          ],
         };
         this.chart.setOption(option);
       });
     },
     updateChart() {
-      let area = ''
-      this.mapData.pos.forEach(item => {
-        if (item.orgNo === this.activeOrg){
-          area = item.area
+      let area = "";
+      this.mapData.pos.forEach((item) => {
+        if (item.orgNo === this.activeOrg) {
+          area = item.area;
         }
-      })
-      let userOptions = this.chart.getOption()
+      });
+      let userOptions = this.chart.getOption();
       userOptions.geo[0].regions = [
         {
           name: area,
           label: {
             show: true,
-            color: '#fff',
+            color: "#fff",
           },
           itemStyle: {
-            areaColor: '#77cbf4'
-          }
-        }
-      ]
-      this.chart.clear()
-      this.chart.setOption(userOptions)
-    }
+            areaColor: "#77cbf4",
+          },
+        },
+      ];
+      this.chart.clear();
+      this.chart.setOption(userOptions);
+    },
   },
   destroyed() {
-    clearInterval(this.timer)
-    this.timer = null
-  }
+    clearInterval(this.timer);
+    this.timer = null;
+  },
 };
 </script>
 
@@ -613,12 +645,11 @@ export default {
 }
 .tooltip {
   position: relative;
-  .line{
+  .line {
     width: 4px;
     height: 20px;
     background: red;
   }
-  
 }
 
 .dots {
@@ -627,7 +658,7 @@ export default {
     .dots-img {
       cursor: pointer;
       position: absolute;
-      top:0;
+      top: 0;
       left: 0;
       z-index: 9;
     }
@@ -648,7 +679,7 @@ export default {
   height: 299px;
   background: url("../../../../../../assets/images/screen/map-modal.png") center no-repeat;
   z-index: 100;
-  transition: all .3s;
+  transition: all 0.3s;
   transform: scale(0);
   .line {
     position: absolute;
@@ -659,7 +690,7 @@ export default {
     border-radius: 50%;
     transform: rotate(135deg);
     &::before {
-      content: '';
+      content: "";
       position: absolute;
       top: 50%;
       left: 50%;
@@ -667,11 +698,11 @@ export default {
       display: inline-block;
       width: 6px;
       height: 6px;
-      background: #FFC801;
+      background: #ffc801;
       border-radius: 50%;
     }
     &::after {
-      content: '';
+      content: "";
       position: absolute;
       left: 10px;
       top: 50%;
@@ -679,19 +710,19 @@ export default {
       display: inline-block;
       width: 60px;
       height: 2px;
-      background: #FFC801;
+      background: #ffc801;
     }
   }
   .modal-cont {
     padding: 19px 10px 8px;
-    .modal-title{
+    .modal-title {
       text-align: center;
       font-size: 18px;
       font-weight: bold;
-      color: #FFC801;
+      color: #ffc801;
     }
-    .modal-compare{
-      background-color: rgba(8, 34, 47, .4);
+    .modal-compare {
+      background-color: rgba(8, 34, 47, 0.4);
       padding: 10px 0;
       margin-bottom: 4px;
       font-size: 14px;
@@ -699,13 +730,13 @@ export default {
       text-align: center;
       .modal-compare-item {
         p:nth-child(2) {
-          color: #FFC801;
+          color: #ffc801;
           font-size: 18px;
           line-height: 1;
           margin: 8px 0 6px;
         }
         .updown-amount {
-          color: #44F0FF;
+          color: #44f0ff;
         }
       }
     }
@@ -713,27 +744,26 @@ export default {
       .quota-item {
         margin-bottom: 4px;
         font-size: 13px;
-        background: rgba(8, 34, 47, .4);
+        background: rgba(8, 34, 47, 0.4);
         padding: 10px;
         height: 80px;
         li {
           line-height: 1.6;
           &::before {
-            content: '';
+            content: "";
             display: inline-block;
             width: 5px;
             height: 5px;
-            background-color: #44F0FF;
+            background-color: #44f0ff;
             border-radius: 50%;
             margin-right: 5px;
             position: relative;
             top: -2px;
-            
           }
         }
         .amount {
           float: right;
-          color: #44F0FF;
+          color: #44f0ff;
         }
       }
       .quota-item-2 {
@@ -752,7 +782,6 @@ export default {
   }
   100% {
     transform: scale(1);
-    
   }
 }
 .animate-bounce {
@@ -766,7 +795,6 @@ export default {
   animation-delay: 4s;
   animation-fill-mode: forwards;
 }
-
 
 @keyframes bounceDown {
   0% {

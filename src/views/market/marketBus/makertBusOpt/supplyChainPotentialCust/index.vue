@@ -15,11 +15,11 @@
         </yu-xform>
       </template>
       <template v-slot:table>
-        <div style="padding-top: 16px;">
+        <div style="padding-top: 16px">
           <yu-xtable ref="refTable" :data-url="dataUrl" row-number selection-type="checkbox" :dynamic-height="true" border :default-load="false">
             <yu-xtable-column label="客户名称" prop="custName" width="250" fixed="left" :show-overflow-tooltip="true" sortable="custom">
               <template slot-scope="scope">
-                <div class="yu-table__company" @click.prevent="customerViewFn(scope.row)"><i class="iconfont icon-qiyelogo"></i>{{scope.row.custName}}</div>
+                <div class="yu-table__company" @click.prevent="customerViewFn(scope.row)"><i class="iconfont icon-qiyelogo"></i>{{ scope.row.custName }}</div>
               </template>
             </yu-xtable-column>
             <yu-xtable-column label="核心客户号" prop="custId" width="120" :show-overflow-tooltip="true" fixed="left" is-num sortable="custom"></yu-xtable-column>
@@ -43,7 +43,7 @@
 
 <script lang="ts">
 import { Component, Prop, Ref, Vue, Watch } from "vue-property-decorator";
-import { backend } from '@/config';
+import { backend } from "@/config";
 @Component({
   name: "SupplyChainPotentialCust",
 })
@@ -51,80 +51,76 @@ export default class extends Vue {
   @Prop() private instance!: any;
   @Prop() private title!: any;
   @Prop() private isMark!: any;
-  @Ref('refTable') refTable: any;
-  @Ref('searchForm') searchForm: any;
-  private dataUrl = backend.mgrMkt + '/api/mkcustsc/querysc';
-  private queryFormData: any = {}
+  @Ref("refTable") refTable: any;
+  @Ref("searchForm") searchForm: any;
+  private dataUrl = backend.mgrMkt + "/api/mkcustsc/querysc";
+  private queryFormData: any = {};
   private startPickerOptions = {
     disabledDate: (time: Date) => {
       if (this.queryFormData.dateEnd) {
         return time.getTime() >= new Date(this.queryFormData.dateEnd).getTime();
       }
-    }
-  }
+    },
+  };
 
   private endPickerOptions = {
     disabledDate: (time: Date) => {
       if (this.queryFormData.dateStart) {
         return time.getTime() <= new Date(this.queryFormData.dateStart).getTime() - 86400000;
       }
-    }
-  }
+    },
+  };
 
-  mounted () {
-    this.getTableData()
-    this.$checkCtr('exportSupply') && this.$exportQueue.addQueue(this.$route.path, this.exportFn, true);
+  mounted() {
+    this.getTableData();
+    this.$checkCtr("exportSupply") && this.$exportQueue.addQueue(this.$route.path, this.exportFn, true);
   }
 
   async searchFn() {
-    this.$emit('mark-change', '1')
-    await this.$nextTick()
-    this.getTableData()
+    this.$emit("mark-change", "1");
+    await this.$nextTick();
+    this.getTableData();
   }
 
   getTableData() {
     this.refTable.remoteData({
       condition: JSON.stringify({
         ...this.queryFormData,
-        isMark: this.isMark
-      })
-    })
+        isMark: this.isMark,
+      }),
+    });
   }
 
   customerViewFn(row: any) {
-    this.$router.push({ path: '/custInfo/custView/' + row.crmCustId, query: { crmCustId: row.crmCustId, custId: row.custId, title: '客户详情-' + row.custName }})
+    this.$router.push({ path: "/custInfo/custView/" + row.crmCustId, query: { crmCustId: row.crmCustId, custId: row.custId, title: "客户详情-" + row.custName } });
   }
 
-  closeFn () {
-    this.$emit('mark-change', '1')
+  closeFn() {
+    this.$emit("mark-change", "1");
     this.instance.hide();
   }
 
-  exportFn (showTipModal?:boolean) {
-
+  exportFn(showTipModal?: boolean) {
     var searchQuery: any = (this as any)._.assign({}, this.searchForm.searchModel, {
-      fileName: '供应链潜在客户',
+      fileName: "供应链潜在客户",
       queryField: this.searchForm.searchQueryField,
-      isMark: this.isMark
+      isMark: this.isMark,
     });
 
     var apiParams = {
-      url: backend.mgrMkt + '/api/mkcustsc/exportquerysc',
+      url: backend.mgrMkt + "/api/mkcustsc/exportquerysc",
       params: searchQuery,
-      sort: this.refTable.sort
+      sort: this.refTable.sort,
     };
     (this as any).$util.exportTable({
       _this: this,
       apiParams,
-      showTipModal
+      showTipModal,
     });
   }
 
-  destroyed () {
+  destroyed() {
     this.$exportQueue.removeQueue(this.$route.path, true);
   }
-
-
 }
 </script>
-

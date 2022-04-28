@@ -15,36 +15,10 @@
               fixed="left"
               is-num
             ></yu-xtable-column> -->
-            <yu-xtable-column
-              label="数据日期"
-              prop="etlDate"
-              min-width="200"
-              fixed="left"
-              :show-overflow-tooltip="true"
-              is-num
-            ></yu-xtable-column>
-            <yu-xtable-column
-              label="跑批开始时间"
-              prop="batchBeginTime"
-              min-width="200"
-              :show-overflow-tooltip="true"
-              fixed="left"
-              is-num
-            ></yu-xtable-column>
-            <yu-xtable-column
-              label="跑批结束时间"
-              prop="batchEndTime"
-              min-width="200"
-              :show-overflow-tooltip="true"
-              is-num
-            ></yu-xtable-column>
-            <yu-xtable-column
-              label="跑批状态"
-              prop="runStat"
-              min-width="200"
-              :show-overflow-tooltip="true"
-              is-num
-            ></yu-xtable-column>
+            <yu-xtable-column label="数据日期" prop="etlDate" min-width="200" fixed="left" :show-overflow-tooltip="true" is-num></yu-xtable-column>
+            <yu-xtable-column label="跑批开始时间" prop="batchBeginTime" min-width="200" :show-overflow-tooltip="true" fixed="left" is-num></yu-xtable-column>
+            <yu-xtable-column label="跑批结束时间" prop="batchEndTime" min-width="200" :show-overflow-tooltip="true" is-num></yu-xtable-column>
+            <yu-xtable-column label="跑批状态" prop="runStat" min-width="200" :show-overflow-tooltip="true" is-num></yu-xtable-column>
           </yu-xtable>
         </template>
       </MainLayout>

@@ -13,7 +13,7 @@
           <yu-xtable ref="refTable" :data-url="dataUrl" row-number :dynamic-height="true" border>
             <yu-xtable-column label="客户名称" prop="custNm" width="250" fixed="left" :show-overflow-tooltip="true" sortable="custom">
               <template slot-scope="scope">
-               <div class="yu-table__company" @click.prevent="customerViewFn(scope.row)"><i class="iconfont icon-qiyelogo"></i>{{scope.row.custNm}}</div>
+                <div class="yu-table__company" @click.prevent="customerViewFn(scope.row)"><i class="iconfont icon-qiyelogo"></i>{{ scope.row.custNm }}</div>
               </template>
             </yu-xtable-column>
             <yu-xtable-column label="核心客户号" prop="custId" width="120" :show-overflow-tooltip="true" fixed="left" is-num sortable="custom"></yu-xtable-column>
@@ -53,36 +53,36 @@
 
 <script lang="ts">
 import { Component, Ref, Vue } from "vue-property-decorator";
-import { backend } from '@/config'
-import { getUserInfo } from '@/utils'
+import { backend } from "@/config";
+import { getUserInfo } from "@/utils";
 
 @Component({
   name: "RealTimeAccountBalance",
 })
 export default class extends Vue {
-  @Ref('searchForm') searchForm: any;
-  @Ref('refTable') refTable: any;
-  private dataUrl = backend.custService + '/api/custquery/managecustlist'
-  private queryFormData = {}
+  @Ref("searchForm") searchForm: any;
+  @Ref("refTable") refTable: any;
+  private dataUrl = backend.custService + "/api/custquery/managecustlist";
+  private queryFormData = {};
   private yesNoOptions = [
-    { key: '1', value: '是'},
-    { key: '0', value: '否'},
-  ]
-  private userInfo = getUserInfo()
+    { key: "1", value: "是" },
+    { key: "0", value: "否" },
+  ];
+  private userInfo = getUserInfo();
 
   searchFn() {
     let params = {
-      condition: JSON.stringify(this.queryFormData)
-    }
-    this.refTable.remoteData(params)
+      condition: JSON.stringify(this.queryFormData),
+    };
+    this.refTable.remoteData(params);
   }
 
   searchAccountFn(row: any) {
-    this.$router.push({ path: '/custInfo/accountList/' + row.crmCustId, query: { title: '账户列表-' + row.custNm }})
+    this.$router.push({ path: "/custInfo/accountList/" + row.crmCustId, query: { title: "账户列表-" + row.custNm } });
   }
 
   customerViewFn(row: any) {
-    this.$router.push({ path: '/custInfo/custView/' + row.crmCustId, query: { crmCustId: row.crmCustId, custId: row.custId, title: '客户详情-' + row.custNm }})
+    this.$router.push({ path: "/custInfo/custView/" + row.crmCustId, query: { crmCustId: row.crmCustId, custId: row.custId, title: "客户详情-" + row.custNm } });
   }
 }
 </script>

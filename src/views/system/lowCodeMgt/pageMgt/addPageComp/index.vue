@@ -13,15 +13,15 @@
         <el-row>
           <el-col :span="5">
             <div class="sider-tab">
-              <div :class="{'tab-item': true, 'active': item.key===curTab}" v-for="item in siderTabs" :key="item.key" @click="tabClickFn(item.key)">
+              <div :class="{ 'tab-item': true, active: item.key === curTab }" v-for="item in siderTabs" :key="item.key" @click="tabClickFn(item.key)">
                 <i :class="`iconfont icon-${item.icon}`"></i>
-                <p>{{item.name}}</p>
+                <p>{{ item.name }}</p>
               </div>
             </div>
           </el-col>
           <el-col :span="19">
-            <LayoutList v-show="curTab=='layout'" />
-            <CompList v-show="curTab=='comp'" />
+            <LayoutList v-show="curTab == 'layout'" />
+            <CompList v-show="curTab == 'comp'" />
           </el-col>
         </el-row>
       </div>
@@ -34,29 +34,28 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop, Ref } from 'vue-property-decorator'
-import { backend } from '@/config'
-import { getUserInfo } from '@/utils'
-import LayoutList from '../layoutList/index.vue'
-import CompList from '../compList/index.vue'
-import ToolBar from '../toolBar/index.vue'
+import { Component, Vue, Prop, Ref } from "vue-property-decorator";
+import { backend } from "@/config";
+import { getUserInfo } from "@/utils";
+import LayoutList from "../layoutList/index.vue";
+import CompList from "../compList/index.vue";
+import ToolBar from "../toolBar/index.vue";
 @Component({
-  name: 'AddPageComp',
+  name: "AddPageComp",
   components: {
     LayoutList,
     CompList,
-    ToolBar
-  }
+    ToolBar,
+  },
 })
-export default class extends Vue { 
+export default class extends Vue {
   @Prop() private instance!: any;
-  private curTab = 'layout'
+  private curTab = "layout";
   private siderTabs = [
-    { key: 'layout', name: '布局', icon: 'buju' },
-    { key: 'comp', name: '组件', icon: 'zujian' },
+    { key: "layout", name: "布局", icon: "buju" },
+    { key: "comp", name: "组件", icon: "zujian" },
     // { key: 'code', name: '代码', icon: 'daimashili' },
-  ]
-
+  ];
 
   // let data = {
   //   type: 'page',
@@ -80,73 +79,71 @@ export default class extends Vue {
   tabClickFn(key: string) {
     this.curTab = key;
   }
-
 }
 </script>
 
 <style lang="scss" scoped>
-  .addPageComp-container {
-    position: relative;
-    height: calc(100vh - 100px);
-    background: #FFFFFF;
-    .header{
-      padding-top: 10px;
-      height: 36px;
-      border-bottom: 1px solid #e6e6e8;
-      text-align: right;
-    }
-    .content{
-      height: calc(100% - 36px);
-      display: grid;
-      grid-template-columns: 314px auto 300px;
-      grid-template-rows: 100%;
-      .left-box {
-        width: 314px;
+.addPageComp-container {
+  position: relative;
+  height: calc(100vh - 100px);
+  background: #ffffff;
+  .header {
+    padding-top: 10px;
+    height: 36px;
+    border-bottom: 1px solid #e6e6e8;
+    text-align: right;
+  }
+  .content {
+    height: calc(100% - 36px);
+    display: grid;
+    grid-template-columns: 314px auto 300px;
+    grid-template-rows: 100%;
+    .left-box {
+      width: 314px;
+      height: 100%;
+      & > .el-row {
         height: 100%;
-        &>.el-row{
+        & > .el-col {
           height: 100%;
-          &>.el-col{
-            height: 100%;
-          }
         }
-        .sider-tab {
-          height: 100%;
-          width: 60px;
-          border-right: 1px solid #e6e6e8;
-          padding-top: 20px;
-          .tab-item {
-            cursor: pointer;
-            text-align: center;
-            margin-bottom: 20px;
+      }
+      .sider-tab {
+        height: 100%;
+        width: 60px;
+        border-right: 1px solid #e6e6e8;
+        padding-top: 20px;
+        .tab-item {
+          cursor: pointer;
+          text-align: center;
+          margin-bottom: 20px;
+          .iconfont {
+            font-size: 20px;
+            color: #666;
+            font-weight: bold;
+          }
+          p {
+            margin-top: 6px;
+            color: #999;
+          }
+          &.active {
             .iconfont {
-              font-size: 20px;
-              color: #666;
-              font-weight: bold;
+              color: #007eff;
             }
-            p{
-              margin-top: 6px;
-              color: #999;
-            }
-            &.active{
-              .iconfont {
-              color: #007EFF;
-              }
-              p{
-              color: #007EFF;
-              }
-              
+            p {
+              color: #007eff;
             }
           }
         }
       }
-      .center-box {
-        height: 100%;
-        background: #f2f2f4;
-      }
-      .right-box {
-        width: 300px;
-        height: 100%;
-      }
+    }
+    .center-box {
+      height: 100%;
+      background: #f2f2f4;
+    }
+    .right-box {
+      width: 300px;
+      height: 100%;
     }
   }
+}
 </style>

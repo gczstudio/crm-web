@@ -1,82 +1,45 @@
 <template>
   <div :class="['chart-container', editClass, isDraging ? 'draging' : '']">
-    <div
-      :class="[
-        'chart-card',
-        isDraging && dragType === 'card' ? 'card-draging' : '',
-      ]"
-    >
-      <div class="edit-chart" @click="showFn">
-        <span>自定义设置</span><i class="iconfont icon-zidingyishezhi"></i>
-      </div>
-      <div class="section-title">
-        <i class="iconfont icon-zhibiao"></i><span>指标</span>
-      </div>
+    <div :class="['chart-card', isDraging && dragType === 'card' ? 'card-draging' : '']">
+      <div class="edit-chart" @click="showFn"><span>自定义设置</span><i class="iconfont icon-zidingyishezhi"></i></div>
+      <div class="section-title"><i class="iconfont icon-zhibiao"></i><span>指标</span></div>
       <div class="chart-card__content" style="position: relative">
-        <el-carousel ref="carouselRef" :indicator-position="cardGroupData.length > 1 ? 'outside' : 'none'" :key="1" :autoplay="false" arrow="never"  :height="isMaxScreen ? (cardData.length > 6 ? '360px' : '375px') : (cardData.length > 6 ? '300px' : '315px')" trigger="click" @change="carouselChangeFn">
+        <el-carousel
+          ref="carouselRef"
+          :indicator-position="cardGroupData.length > 1 ? 'outside' : 'none'"
+          :key="1"
+          :autoplay="false"
+          arrow="never"
+          :height="isMaxScreen ? (cardData.length > 6 ? '360px' : '375px') : cardData.length > 6 ? '300px' : '315px'"
+          trigger="click"
+          @change="carouselChangeFn"
+        >
           <el-carousel-item v-for="(item, oIndex) in cardGroupData.length" :key="item">
             <el-row :gutter="isMaxScreen ? 16 : 12">
-              <draggable
-                v-model="cardGroupData[oIndex]"
-                :options="{ disabled: chartStatus === 'closed' }"
-                group="card"
-                animation="300"
-                @start="drag = true"
-                @end="drag = false"
-              >
+              <draggable v-model="cardGroupData[oIndex]" :options="{ disabled: chartStatus === 'closed' }" group="card" animation="300" @start="drag = true" @end="drag = false">
                 <transition-group>
-                  
-                  <el-col
-                    :span="8"
-                    v-for="(item, index) in cardGroupData[oIndex]"
-                    :key="item.chartId"
-                  >
-                    <QuotaCard
-                      :index="index"
-                      :data="item"
-                      @delete="deleteFn(item, oIndex* 6 + index, 'card')"
-                    />
+                  <el-col :span="8" v-for="(item, index) in cardGroupData[oIndex]" :key="item.chartId">
+                    <QuotaCard :index="index" :data="item" @delete="deleteFn(item, oIndex * 6 + index, 'card')" />
                   </el-col>
                 </transition-group>
               </draggable>
             </el-row>
-            </el-carousel-item>
-          </el-carousel>
-          <Empty v-if="!cardData.length" description="暂无数据，请从自定义设置中配置" />
-        
+          </el-carousel-item>
+        </el-carousel>
+        <Empty v-if="!cardData.length" description="暂无数据，请从自定义设置中配置" />
       </div>
     </div>
     <div class="chart-basic-and-rank">
       <el-tabs class="yu-tabs" v-model="activeFirstTab" @tab-click="firstTabChange">
         <el-tab-pane name="chart" lazy>
           <span slot="label"><i class="iconfont icon-tubiao"></i>趋势</span>
-          <div
-            :class="[
-              'chart-basic',
-              isDraging && dragType === 'chart' ? 'chart-draging' : '',
-            ]"
-          >
+          <div :class="['chart-basic', isDraging && dragType === 'chart' ? 'chart-draging' : '']">
             <div class="chart-basic__content" style="position: relative">
               <el-row :gutter="isMaxScreen ? 16 : 12">
-                <draggable
-                  v-model="chartData"
-                  :options="{ disabled: chartStatus === 'closed' }"
-                  group="chart"
-                  animation="300"
-                  @start="drag = true"
-                  @end="drag = false"
-                >
+                <draggable v-model="chartData" :options="{ disabled: chartStatus === 'closed' }" group="chart" animation="300" @start="drag = true" @end="drag = false">
                   <transition-group>
-                    <el-col
-                      :span="12"
-                      v-for="(item, index) in chartData"
-                      :key="item.chartId"
-                    >
-                      <TrendChart
-                        v-if="activeFirstTab==='chart'"
-                        :options="item"
-                        @delete="deleteFn(item, index, 'chart')"
-                      />
+                    <el-col :span="12" v-for="(item, index) in chartData" :key="item.chartId">
+                      <TrendChart v-if="activeFirstTab === 'chart'" :options="item" @delete="deleteFn(item, index, 'chart')" />
                     </el-col>
                   </transition-group>
                 </draggable>
@@ -87,35 +50,13 @@
         </el-tab-pane>
         <el-tab-pane name="rank" lazy>
           <span slot="label"><i class="iconfont icon-paiming"></i>排名</span>
-          <div
-            v-if="!isMgr"
-            :class="[
-              'chart-basic',
-              isDraging && dragType === 'rank' ? 'rank-draging' : '',
-            ]"
-          >
+          <div v-if="!isMgr" :class="['chart-basic', isDraging && dragType === 'rank' ? 'rank-draging' : '']">
             <div class="chart-rank__content" style="position: relative">
               <el-row :gutter="isMaxScreen ? 16 : 12">
-                <draggable
-                  v-model="rankData"
-                  :options="{ disabled: chartStatus === 'closed' }"
-                  group="rank"
-                  animation="300"
-                  @start="drag = true"
-                  @end="drag = false"
-                >
+                <draggable v-model="rankData" :options="{ disabled: chartStatus === 'closed' }" group="rank" animation="300" @start="drag = true" @end="drag = false">
                   <transition-group>
-                    <el-col
-                      :span="12"
-                      v-for="(item, index) in rankData"
-                      :key="item.chartId"
-                      style="position: relative"
-                    >
-                      <i
-                        v-if="chartStatus === 'opened'"
-                        class="el-icon-close"
-                        @click="deleteFn(item, index, 'rank')"
-                      ></i>
+                    <el-col :span="12" v-for="(item, index) in rankData" :key="item.chartId" style="position: relative">
+                      <i v-if="chartStatus === 'opened'" class="el-icon-close" @click="deleteFn(item, index, 'rank')"></i>
                       <top-table
                         class="chart-rank__table"
                         :height="253"
@@ -136,52 +77,19 @@
               </el-row>
             </div>
           </div>
-          <custom-tabs
-            v-else
-            class="cust-rank"
-            v-model="activeTab"
-            position="left"
-            @tab-click="tabChangeFn"
-          >
-            <custom-tab-pane
-              v-for="item in custTas"
-              :label="item.label"
-              :name="item.key"
-              :key="item.key"
-            >
+          <custom-tabs v-else class="cust-rank" v-model="activeTab" position="left" @tab-click="tabChangeFn">
+            <custom-tab-pane v-for="item in custTas" :label="item.label" :name="item.key" :key="item.key">
               <div class="custom-tab-unit">单位：元</div>
-              <top-table
-                border
-                showMore
-                rank-key="rankNo"
-                :key="item.key"
-                :data="custData"
-                :columns="custColumns"
-                @view-more="viewMoreCustRankFn(item)"
-              ></top-table>
+              <top-table border showMore rank-key="rankNo" :key="item.key" :data="custData" :columns="custColumns" @view-more="viewMoreCustRankFn(item)"></top-table>
             </custom-tab-pane>
           </custom-tabs>
         </el-tab-pane>
       </el-tabs>
     </div>
-    <el-drawer
-      ref="drawerRef"
-      title="自定义设置"
-      :size="drawerSize"
-      :with-header="false"
-      :visible.sync="drawer"
-      direction="rtl"
-      append-to-body
-      custom-class="custom-chart-drawer"
-      :modal="false"
-    >
+    <el-drawer ref="drawerRef" title="自定义设置" :size="drawerSize" :with-header="false" :visible.sync="drawer" direction="rtl" append-to-body custom-class="custom-chart-drawer" :modal="false">
       <Tree ref="treeRef" @cancel="cancelFn" :data="treeData" @save="saveFn" />
     </el-drawer>
-    <view-more
-      :visible.sync="moreVisible"
-      :options="viewMoreOptions"
-      :width="custRankWidth"
-    ></view-more>
+    <view-more :visible.sync="moreVisible" :options="viewMoreOptions" :width="custRankWidth"></view-more>
   </div>
 </template>
 
@@ -211,8 +119,7 @@ export default class extends Vue {
   @Ref("drawerRef") drawerRef: any;
   @Ref("treeRef") treeRef: any;
   @Ref("carouselRef") carouselRef: any;
-  private isMgr: boolean =
-    (this as any).$util.getCheckedRole().roleCode === "R300201";
+  private isMgr: boolean = (this as any).$util.getCheckedRole().roleCode === "R300201";
   private drawer = false;
   private drawerSize = 300;
   private keyword = "";
@@ -224,7 +131,6 @@ export default class extends Vue {
   private allCardData: Array<any> = []; // 所有指标数据
   private cardData: Array<any> = []; // 指标数据
   private cardGroupData: Array<any> = [[]]; // 指标数据
-
 
   private chartData: Array<any> = []; // 图表数据
   private rankData: Array<any> = []; // 排名数据
@@ -242,50 +148,50 @@ export default class extends Vue {
     { label: "EVA", key: "8" },
     { label: "业务利润", key: "4" },
     { label: "FTP利润", key: "5" },
-    { label: "中收", key: "6" }
+    { label: "中收", key: "6" },
   ];
   private custColumns = [];
   private carouselIndex = 0;
-  
+
   @Watch("cardGroupData")
   onCardGroupDataChange() {
-    this.cardData = this._.flatten(this.cardGroupData)
+    this.cardData = this._.flatten(this.cardGroupData);
   }
 
   @Watch("cardData")
   onCardDataChange(newData: any, oldData: any) {
     // 判断当前卡片拖入的位置是否正确，然后调整
-    var oldChartIds = oldData.map((item:any) => item.chartId);
-    var dragCard = null, dragIndex: any = null;
-    newData.forEach((item:any, index:number) => {
-      if(!oldChartIds.includes(item.chartId)) {
+    var oldChartIds = oldData.map((item: any) => item.chartId);
+    var dragCard = null,
+      dragIndex: any = null;
+    newData.forEach((item: any, index: number) => {
+      if (!oldChartIds.includes(item.chartId)) {
         dragCard = item;
         dragIndex = index;
       }
-    })
-    if(dragIndex && (dragIndex + 1) < Math.floor(newData.length / 6 ) * 6) {
-      newData.splice(dragIndex, 1)
-      newData.push(dragCard)
+    });
+    if (dragIndex && dragIndex + 1 < Math.floor(newData.length / 6) * 6) {
+      newData.splice(dragIndex, 1);
+      newData.push(dragCard);
       this.cardData = newData;
     }
 
     // 判断一下是否和cardGroup中的元素是否相同，如果相同就不需要更新
     var groupdIds = this._.flatten(this.cardGroupData).map((item: any) => item.chartId);
-    var filters = this.cardData.filter(item => !groupdIds.includes(item.chartId));
-    var bool = this.cardGroupData.some(item => item.length > 6);
-    
-    if(filters.length || groupdIds.length !== this.cardData.length || bool ) {
+    var filters = this.cardData.filter((item) => !groupdIds.includes(item.chartId));
+    var bool = this.cardGroupData.some((item) => item.length > 6);
+
+    if (filters.length || groupdIds.length !== this.cardData.length || bool) {
       // 记录当前的index，this.cardGroupData改变后，整个组件会回到第一页
       var carouselIndex = this.carouselIndex;
       this.cardGroupData = this.cardData.length ? [] : [[]];
-      for(var i = 0; i< Math.ceil(this.cardData.length / 6); i++) {
-        this.cardGroupData.push(this.cardData.slice(6*i, (6*i + 6) > this.cardData.length ? this.cardData.length : (6*i + 6)))
+      for (var i = 0; i < Math.ceil(this.cardData.length / 6); i++) {
+        this.cardGroupData.push(this.cardData.slice(6 * i, 6 * i + 6 > this.cardData.length ? this.cardData.length : 6 * i + 6));
       }
-      this.$nextTick( () => {
+      this.$nextTick(() => {
         this.carouselRef.setActiveItem(carouselIndex);
       });
     }
-    
 
     HomeModule.UPDATE_CARD_DATA(this.cardData);
     let chartIds = this.configData.map((item: any) => item.chartId);
@@ -318,7 +224,7 @@ export default class extends Vue {
   @Watch("rankData")
   onRankDataChange(newValue: any[], oldValue: any[]) {
     // 第一次进来时，不用请求, 如果当前是排名，才请求
-    if(this.activeFirstTab !== 'rank') {
+    if (this.activeFirstTab !== "rank") {
       return;
     }
     HomeModule.UPDATE_RANK_DATA(this.rankData);
@@ -363,10 +269,10 @@ export default class extends Vue {
 
   @Watch("dragStatus")
   onDragStatusChange(value: string) {
-    if(this.dragType === 'card') {
-      var index = Math.ceil(this.cardData.length / 6) + (this.cardData.length %6 === 0 ? 1 : 0)
-      if(value === 'draging') {
-        if(this.cardData.length %6 === 0 && this.cardGroupData.length < index) {
+    if (this.dragType === "card") {
+      var index = Math.ceil(this.cardData.length / 6) + (this.cardData.length % 6 === 0 ? 1 : 0);
+      if (value === "draging") {
+        if (this.cardData.length % 6 === 0 && this.cardGroupData.length < index) {
           this.cardGroupData.push([]);
         }
         this.$nextTick(() => {
@@ -374,13 +280,13 @@ export default class extends Vue {
         });
       } else {
         this.cardGroupData.forEach((item, index) => {
-          if(!item.length) {
+          if (!item.length) {
             this.cardGroupData.splice(index, 1);
             this.$nextTick(() => {
               this.carouselRef.setActiveItem(this.cardGroupData.length - 1);
             });
           }
-        })
+        });
       }
     }
   }
@@ -395,13 +301,13 @@ export default class extends Vue {
     }
   }
 
-  get originTreeData () {
-    return HomeModule.customTreeData
+  get originTreeData() {
+    return HomeModule.customTreeData;
   }
 
   @Watch("originTreeData")
   onOriginTreeDataChange(value: any) {
-    this.updateTreeData()
+    this.updateTreeData();
   }
 
   created() {
@@ -419,13 +325,11 @@ export default class extends Vue {
     }
   }
 
-  
-
   private setChartStatus(value: string) {
     HomeModule.UPDATE_CHART_STATUS(value);
   }
 
-  carouselChangeFn (index: number) {
+  carouselChangeFn(index: number) {
     this.carouselIndex = index;
   }
 
@@ -439,19 +343,16 @@ export default class extends Vue {
         this.smallChangeFn(item, 0);
       });
     } else {
-
     }
   }
 
   customerViewFn(scope: any) {
     this.moreVisible = false;
     var row = scope.row;
-    this.$router.push({ path: '/custInfo/custView/' + row.crmCustId, query: { crmCustId: row.crmCustId, custId: row.custId, title: '客户详情-' + row.custNm }})
-
+    this.$router.push({ path: "/custInfo/custView/" + row.crmCustId, query: { crmCustId: row.crmCustId, custId: row.custId, title: "客户详情-" + row.custNm } });
   }
 
-
-  setCustColumns () {
+  setCustColumns() {
     var columns = [
       {
         prop: "custNm",
@@ -459,9 +360,9 @@ export default class extends Vue {
         minWidth: 130,
         showOverflowTooltip: true,
         render: (scope: any) => {
-          return `<div class="yu-table__company"><i class="iconfont icon-qiyelogo"></i>${scope.row.custNm}</div>`
+          return `<div class="yu-table__company"><i class="iconfont icon-qiyelogo"></i>${scope.row.custNm}</div>`;
         },
-        onClick: this.customerViewFn
+        onClick: this.customerViewFn,
       },
       {
         prop: "depBal",
@@ -470,7 +371,7 @@ export default class extends Vue {
         minWidth: 90,
         showOverflowTooltip: true,
         isNum: true,
-        tabId: '1',
+        tabId: "1",
         render: (scope: any) => {
           return formatMoney(scope.row.depBal);
         },
@@ -482,19 +383,19 @@ export default class extends Vue {
         minWidth: 90,
         showOverflowTooltip: true,
         isNum: true,
-        tabId: '2',
+        tabId: "2",
         render: (scope: any) => {
           return formatMoney(scope.row.depBalAvg);
         },
       },
-       {
+      {
         prop: "xdLoanBal",
         label: "信贷余额",
         align: "right",
         minWidth: 88,
         showOverflowTooltip: true,
         isNum: true,
-        tabId: '7',
+        tabId: "7",
         render: (scope: any) => {
           return formatMoney(scope.row.xdLoanBal);
         },
@@ -506,7 +407,7 @@ export default class extends Vue {
         minWidth: 90,
         showOverflowTooltip: true,
         isNum: true,
-        tabId: '3',
+        tabId: "3",
         render: (scope: any) => {
           return formatMoney(scope.row.loanBal);
         },
@@ -518,7 +419,7 @@ export default class extends Vue {
         minWidth: 70,
         showOverflowTooltip: true,
         isNum: true,
-        tabId: '8',
+        tabId: "8",
         render: (scope: any) => {
           return formatMoney(scope.row.eva);
         },
@@ -530,7 +431,7 @@ export default class extends Vue {
         minWidth: 88,
         showOverflowTooltip: true,
         isNum: true,
-        tabId: '4',
+        tabId: "4",
         render: (scope: any) => {
           return formatMoney(scope.row.profCtr);
         },
@@ -542,7 +443,7 @@ export default class extends Vue {
         minWidth: 70,
         showOverflowTooltip: true,
         isNum: true,
-        tabId: '5',
+        tabId: "5",
         render: (scope: any) => {
           return formatMoney(scope.row.ftpProf);
         },
@@ -554,26 +455,26 @@ export default class extends Vue {
         minWidth: 70,
         showOverflowTooltip: true,
         isNum: true,
-        tabId: '6',
+        tabId: "6",
         render: (scope: any) => {
           return formatMoney(scope.row.imdeIncom);
-        }
-      }
+        },
+      },
     ];
     var copyColumns = (this as any)._.cloneDeep(columns);
 
     columns.forEach((item: any, index: number) => {
-      if(item.tabId === this.activeTab) {
-        copyColumns.splice(index, 1)
+      if (item.tabId === this.activeTab) {
+        copyColumns.splice(index, 1);
         copyColumns.splice(1, 0, item);
       }
-    })
+    });
     this.custColumns = copyColumns;
   }
 
   tabChangeFn() {
     // 客户经理角色才执行
-    if((this as any).$util.getCheckedRole().roleCode !== 'R300201') {
+    if ((this as any).$util.getCheckedRole().roleCode !== "R300201") {
       return;
     }
     this.setCustColumns();
@@ -597,7 +498,7 @@ export default class extends Vue {
       condition: JSON.stringify({
         incrType: value + 1,
         sortType: 1,
-        busiType
+        busiType,
       }),
       page: 1,
       size: 5,
@@ -624,7 +525,7 @@ export default class extends Vue {
 
   // 增量排名查看更多
   viewMoreRankFn(item: any) {
-    this.treeRef && this.cancelFn(true);;
+    this.treeRef && this.cancelFn(true);
     var options = {
       title: item.name,
       tabs: ["比上日", "比上月", "比上年"],
@@ -635,7 +536,7 @@ export default class extends Vue {
       typeLookup: [1, 2, 3],
       baseParams: { incrType: item.activeTab + 1, sortType: 1, busiType: item.busiType },
       columns: item.columns,
-      rankKey: 'rankNo'
+      rankKey: "rankNo",
     };
     this.moreVisible = true;
     this.custRankWidth = 700;
@@ -647,11 +548,11 @@ export default class extends Vue {
     var options = {
       title: item.label,
       size: 50,
-      unit: '元',
+      unit: "元",
       url: "/api/acrmcustrank/queryList",
       baseParams: { rankType: this.activeTab },
       columns: this.custColumns,
-      rankKey: 'rankNo'
+      rankKey: "rankNo",
     };
     this.moreVisible = true;
     this.custRankWidth = 1000;
@@ -681,12 +582,7 @@ export default class extends Vue {
 
   // 把config中配置的数据合并到treeData中
   recursion(data: any[], chartIds: string[]) {
-    let curData =
-      config.chart[
-        (this as any).$util.getCheckedRole().roleCode === "R300201"
-          ? "mgr"
-          : "org"
-      ];
+    let curData = config.chart[(this as any).$util.getCheckedRole().roleCode === "R300201" ? "mgr" : "org"];
     let result = [...this.allCardData, ...curData, ...config.rank];
     data.forEach((item) => {
       if (item.chartLevel === "3") {
@@ -709,36 +605,33 @@ export default class extends Vue {
         HomeModule.UPDATE_CHART_CONFIG(res.data);
         // 获取用户自定义的配置
         let chartIds = configData.map((item: any) => item.chartId);
-        let curData =
-          config.chart[
-            (this as any).$util.getCheckedRole().roleCode === "R300201"
-              ? "mgr"
-              : "org"
-          ]; // 客户经理和机构进行判断
+        let curData = config.chart[(this as any).$util.getCheckedRole().roleCode === "R300201" ? "mgr" : "org"]; // 客户经理和机构进行判断
 
         // 趋势数据
-        this.chartData = curData.filter((item: any) =>
-          chartIds.includes(item.chartId)
-        ).map((ele: any) => {
-          return {
-            ...ele,
-            ...this.getConfigItemById(configData, ele.chartId)
-          }
-        }).sort((a: any, b: any) => {
-          return a.chartOrder - b.chartOrder
-        })
+        this.chartData = curData
+          .filter((item: any) => chartIds.includes(item.chartId))
+          .map((ele: any) => {
+            return {
+              ...ele,
+              ...this.getConfigItemById(configData, ele.chartId),
+            };
+          })
+          .sort((a: any, b: any) => {
+            return a.chartOrder - b.chartOrder;
+          });
 
         // 排名数据
-        this.rankData = config.rank.filter((item: any) =>
-          chartIds.includes(item.chartId)
-        ).map((ele: any) => {
-          return {
-            ...ele,
-            ...this.getConfigItemById(configData, ele.chartId)
-          }
-        }).sort((a: any, b: any) => {
-          return a.chartOrder - b.chartOrder
-        })
+        this.rankData = config.rank
+          .filter((item: any) => chartIds.includes(item.chartId))
+          .map((ele: any) => {
+            return {
+              ...ele,
+              ...this.getConfigItemById(configData, ele.chartId),
+            };
+          })
+          .sort((a: any, b: any) => {
+            return a.chartOrder - b.chartOrder;
+          });
 
         this.$nextTick(() => {
           this.queryOrgIndex(chartIds);
@@ -754,9 +647,11 @@ export default class extends Vue {
   }
 
   getConfigItemById(configData: any[], id: string) {
-    return configData.find(item => {
-      return item.chartId === id
-    }) || {}
+    return (
+      configData.find((item) => {
+        return item.chartId === id;
+      }) || {}
+    );
   }
 
   // 查询指标数据
@@ -765,7 +660,7 @@ export default class extends Vue {
       const { data } = res;
       this.allCardData = config.card.map((ele: any) => {
         return {
-          ...this.getConfigItemById(this.configData ,ele.chartId),
+          ...this.getConfigItemById(this.configData, ele.chartId),
           ...ele,
           total: data?.[ele.total],
           lastD: data?.[ele.lastD],
@@ -791,18 +686,18 @@ export default class extends Vue {
         });
         this.allCardData = cardData;
         let chartIds = this.configData.map((item: any) => item.chartId);
-        this.cardData = cardData.filter((item) =>
-          chartIds.includes(item.chartId)
-        ).sort((a: any, b: any) => {
-          return a.chartOrder - b.chartOrder
-        })
+        this.cardData = cardData
+          .filter((item) => chartIds.includes(item.chartId))
+          .sort((a: any, b: any) => {
+            return a.chartOrder - b.chartOrder;
+          });
       }
     });
   }
 
   // 查询小企业中间业务收入
 
-  queryInterBusIncom () {
+  queryInterBusIncom() {
     homeApi.queryInterBusIncom().then((res: any) => {
       if (res.code === 0) {
         let cardData = [...this.allCardData];
@@ -813,15 +708,14 @@ export default class extends Vue {
         });
         this.allCardData = cardData;
         let chartIds = this.configData.map((item: any) => item.chartId);
-        this.cardData = cardData.filter((item) =>
-          chartIds.includes(item.chartId)
-        ).sort((a: any, b: any) => {
-          return a.chartOrder - b.chartOrder
-        })
+        this.cardData = cardData
+          .filter((item) => chartIds.includes(item.chartId))
+          .sort((a: any, b: any) => {
+            return a.chartOrder - b.chartOrder;
+          });
       }
     });
   }
-
 
   showFn() {
     this.drawer = true;
@@ -841,9 +735,7 @@ export default class extends Vue {
     }
 
     // 将删除的回退到tree中
-    this.configData = this.configData.filter(
-      (ele) => ele.chartId !== item.chartId
-    );
+    this.configData = this.configData.filter((ele) => ele.chartId !== item.chartId);
     this.updateTreeData();
   }
 
@@ -867,7 +759,7 @@ export default class extends Vue {
         chartId: item.chartId,
         chartNm: item.name,
         chartOrder: index + 1,
-        busiType: item.busiType
+        busiType: item.busiType,
       };
     });
   }
@@ -908,7 +800,7 @@ export default class extends Vue {
     // border: 1px dashed $blue;
   }
   ::v-deep.el-carousel__item {
-    .el-row>div>span {
+    .el-row > div > span {
       display: inline-block;
       width: 100%;
       height: 352px;
@@ -944,7 +836,6 @@ export default class extends Vue {
         border-bottom-right-radius: 2px;
       }
     }
-  
   }
   &.draging {
     &::before {
@@ -972,16 +863,16 @@ export default class extends Vue {
     border-radius: 5px;
     position: relative;
     &::after {
-      content: '';
+      content: "";
       display: inline-block;
       width: calc(100% - 40px);
       height: 1px;
-      background: #D8D8D8;
+      background: #d8d8d8;
       position: absolute;
       left: 20px;
       bottom: 0;
     }
-   
+
     .section-title {
       padding: 16px 20px 0;
     }
@@ -1015,7 +906,7 @@ export default class extends Vue {
   }
 
   .chart-basic__content {
-    ::v-deep.el-row>div>span {
+    ::v-deep.el-row > div > span {
       .tree-node__wrapper {
         float: left;
         width: calc(50% - 16px);
@@ -1027,10 +918,9 @@ export default class extends Vue {
         border-radius: 5px;
       }
     }
-    
   }
   .chart-rank__content {
-    ::v-deep.el-row>div>span {
+    ::v-deep.el-row > div > span {
       .tree-node__wrapper {
         float: left;
         width: calc(50% - 16px);
@@ -1127,7 +1017,7 @@ export default class extends Vue {
   }
 }
 
-@media screen and (max-width: 1680px) { 
+@media screen and (max-width: 1680px) {
   .chart-container {
     .chart-card {
       padding: 0;
@@ -1136,7 +1026,7 @@ export default class extends Vue {
       }
       ::v-deep.el-carousel__item {
         padding: 12px;
-        .el-row>div>span {
+        .el-row > div > span {
           height: 294px;
           .tree-node__wrapper {
             width: calc(33.33333% - 12px);
@@ -1158,22 +1048,20 @@ export default class extends Vue {
       span {
         font-size: 15px;
       }
-
     }
     .chart-basic {
       padding: 0 12px;
     }
     .chart-basic__content {
-      ::v-deep.el-row>div>span {
+      ::v-deep.el-row > div > span {
         .tree-node__wrapper {
           width: calc(50% - 12px);
           margin: 0 6px 12px;
         }
       }
-      
     }
     .chart-rank__content {
-      ::v-deep.el-row>div>span {
+      ::v-deep.el-row > div > span {
         .tree-node__wrapper {
           width: calc(50% - 12px);
           height: 315px;

@@ -1,24 +1,15 @@
 <template>
   <div class="detail-container">
-    <yu-dialog
-      title="实时大额动账"
-      :visible.sync="dialogVisible"
-      @close="hide"
-      top="5vh"
-      custom-class="remind-dialog"
-    >
+    <yu-dialog title="实时大额动账" :visible.sync="dialogVisible" @close="hide" top="5vh" custom-class="remind-dialog">
       <div class="remind">
         <div class="chgAmt">
-          <span
-            class="num"
-            :style="{color: custInfo.dcFlag === 'D' ? '#0FCB51' : '#f14922'}"
-          >{{custInfo.dcFlag === "D" ? "-" : "+"}}{{ $util.formatMoney(custInfo.tranAmt / 10000) }}</span>
+          <span class="num" :style="{ color: custInfo.dcFlag === 'D' ? '#0FCB51' : '#f14922' }">{{ custInfo.dcFlag === "D" ? "-" : "+" }}{{ $util.formatMoney(custInfo.tranAmt / 10000) }}</span>
           <span class="chgAmt-money f2">万元</span>
         </div>
         <div class="chgAmt-text f2">交易金额</div>
         <div class="format-money f2">
           交易时间 :
-          <i class="num">{{custInfo.tranTime }}</i>
+          <i class="num">{{ custInfo.tranTime }}</i>
         </div>
         <div class="company f2">
           <span class="custName" @click="customerViewFn">
@@ -41,22 +32,20 @@
           </div>
           <div>
             <span>交易机构 :&nbsp;</span>
-            <i>{{custInfo.tranOrgNm }}</i>
+            <i>{{ custInfo.tranOrgNm }}</i>
           </div>
           <div>
             <span>交易码 :&nbsp;</span>
-            <i class="num">{{custInfo.tranCode}}</i>
+            <i class="num">{{ custInfo.tranCode }}</i>
           </div>
           <div>
             <span>交易渠道 :&nbsp;</span>
-            <i>{{ $lookup.convertKey('TRAN_CHNL', custInfo.tranChnlId )}}</i>
+            <i>{{ $lookup.convertKey("TRAN_CHNL", custInfo.tranChnlId) }}</i>
           </div>
           <div>
             <span>借贷标志 :&nbsp;</span>
             <i>
-              {{
-              custInfo.dcFlag === "C" ? "贷" : "借"
-              }}
+              {{ custInfo.dcFlag === "C" ? "贷" : "借" }}
             </i>
           </div>
           <div class="blgMgrNm">
@@ -79,7 +68,7 @@
   </div>
 </template>
 
-<script lang="ts" >
+<script lang="ts">
 import { Component, Vue, Prop, Watch } from "vue-property-decorator";
 import * as homeApi from "@/api/home";
 
@@ -118,7 +107,7 @@ export default class extends Vue {
 
   customerViewFn() {
     let row = this.custInfo;
-    this.$router.push({ path: '/custInfo/custView/' + row.crmCustId, query: { crmCustId: row.crmCustId, custId: row.custId, title: '客户详情-' + row.custName }})
+    this.$router.push({ path: "/custInfo/custView/" + row.crmCustId, query: { crmCustId: row.crmCustId, custId: row.custId, title: "客户详情-" + row.custName } });
     this.hide();
   }
 
@@ -246,7 +235,7 @@ export default class extends Vue {
   margin-top: 15px;
   width: 100%;
   height: 40px;
-  border: 1px solid #D8D8d8;
+  border: 1px solid #d8d8d8;
   text-align: left;
   line-height: 40px;
   background-color: #f4f4f4;

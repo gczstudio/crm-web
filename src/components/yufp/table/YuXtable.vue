@@ -1,42 +1,32 @@
 <template>
   <div class="yu-xtable" v-mloading="loading">
-    <div class="yu-xtable__table" v-if="type==='table'">
-      <el-table ref="table" :height="height || tableHeight" v-bind="$attrs" v-on="$listeners" :data="tableData" highlight-current-row @row-click="rowClickFn" @select="selectChange" @select-all="selectAllChange" @sort-change="sortChangeFn">
-        <el-table-column
-          v-if="selectionType==='checkbox'"
-          type="selection"
-          align="center"
-          width="55"
-          :fixed="isFixedLeft"
-        >
-        </el-table-column>
-        <el-table-column
-          v-if="selectionType==='radio'"
-            type="radio"
-            width="55"
-            align="center"
-            :fixed="isFixedLeft"
-          >
+    <div class="yu-xtable__table" v-if="type === 'table'">
+      <el-table
+        ref="table"
+        :height="height || tableHeight"
+        v-bind="$attrs"
+        v-on="$listeners"
+        :data="tableData"
+        highlight-current-row
+        @row-click="rowClickFn"
+        @select="selectChange"
+        @select-all="selectAllChange"
+        @sort-change="sortChangeFn"
+      >
+        <el-table-column v-if="selectionType === 'checkbox'" type="selection" align="center" width="55" :fixed="isFixedLeft"> </el-table-column>
+        <el-table-column v-if="selectionType === 'radio'" type="radio" width="55" align="center" :fixed="isFixedLeft">
           <template slot-scope="scope">
-            <el-radio @click.native.prevent="radioChangeFn(scope.row, $event)" v-model="radioForm['radio-'+scope.$index]" :label="scope.$index" class="el-radio--table"></el-radio>
+            <el-radio @click.native.prevent="radioChangeFn(scope.row, $event)" v-model="radioForm['radio-' + scope.$index]" :label="scope.$index" class="el-radio--table"></el-radio>
           </template>
         </el-table-column>
-        <el-table-column
-          v-if="rowNumber"
-          class-name="el-table-index"
-          type="index"
-          label="序号"
-          align="center"
-          :fixed="isFixedLeft"
-          width="55">
-        </el-table-column>
+        <el-table-column v-if="rowNumber" class-name="el-table-index" type="index" label="序号" align="center" :fixed="isFixedLeft" width="55"> </el-table-column>
         <slot></slot>
         <div slot="empty">
           <Empty />
         </div>
       </el-table>
     </div>
-    <div v-else class="yu-xtable__custom" ref="customRef" :style="{height: tableHeight ? tableHeight + 'px' : 'auto'}">
+    <div v-else class="yu-xtable__custom" ref="customRef" :style="{ height: tableHeight ? tableHeight + 'px' : 'auto' }">
       <slot :tableData="tableData"></slot>
     </div>
     <div class="yu-pagination" v-if="pageable">
@@ -47,35 +37,37 @@
         :page-sizes="[10, 20, 30, 40, 50, 100]"
         :page-size="size"
         :layout="layout"
-        :total="pageTotal">
+        :total="pageTotal"
+      >
       </el-pagination>
     </div>
   </div>
 </template>
 
 <script>
-import request from '@/utils/request'
+import request from "@/utils/request";
 export default {
-  name: 'YuXtable',
-  componentName: 'YuXtable',
+  name: "YuXtable",
+  componentName: "YuXtable",
   inheritAttrs: false,
   provide: function () {
     return {
-      yuXtable: this
+      yuXtable: this,
     };
   },
   props: {
     type: {
       type: String,
-      default: 'table'   // table custom
+      default: "table", // table custom
     },
     height: {
       type: [Number, String],
-      default: null
+      default: null,
     },
-    dynamicHeight: {   // 是否动态计算表格高度
+    dynamicHeight: {
+      // 是否动态计算表格高度
       type: Boolean,
-      default: false
+      default: false,
     },
     data: Array,
     dataUrl: String,
@@ -83,53 +75,55 @@ export default {
       type: Object,
       default: function () {
         return {};
-      }
+      },
     },
     selectionType: String, // checkbox, radio
     defaultLoad: {
       type: Boolean,
-      default: true
+      default: true,
     },
     requestType: {
       type: String,
-      default: 'GET'
+      default: "GET",
     },
     pageable: {
       type: Boolean,
-      default: true
+      default: true,
     },
     rowNumber: {
       type: Boolean,
-      default: false
+      default: false,
     },
     rowKey: {
       type: String,
       // required: true
-      default: 'rowId'
+      default: "rowId",
     },
-    autoClearChecked: { // 除点击分页查询外，其他情况都清除选中
+    autoClearChecked: {
+      // 除点击分页查询外，其他情况都清除选中
       type: Boolean,
-      default: true
+      default: true,
     },
     total: {
       type: Number,
-      default: 0
+      default: 0,
     },
     pageChange: Function,
     sizeChange: Function,
     loadEnd: Function,
-    initSelection: {   // 一些特殊情况，监听到data改变时，不初始化
+    initSelection: {
+      // 一些特殊情况，监听到data改变时，不初始化
       type: Boolean,
-      default: true
+      default: true,
     },
     layout: {
       type: String,
-      default: 'total, sizes, prev, pager, next, jumper'
+      default: "total, sizes, prev, pager, next, jumper",
     },
     pageSize: {
       type: Number,
-      default: 20
-    }
+      default: 20,
+    },
   },
   data: function () {
     return {
@@ -141,11 +135,11 @@ export default {
       originTableData: [],
       tableData: [],
       searchParams: {},
-      sort: '',
+      sort: "",
       radioForm: {},
       selections: [], // 当前选中的值
       tableHeight: null,
-      dataCodes: []
+      dataCodes: [],
     };
   },
   watch: {
@@ -156,10 +150,10 @@ export default {
       this.pageTotal = total;
     },
     pageSize: {
-      handler (data) {
+      handler(data) {
         this.size = data;
       },
-      immediate: true
+      immediate: true,
     },
     data: {
       handler(data) {
@@ -169,18 +163,18 @@ export default {
           } else {
             // 设置选中，并同步更新this.selections
             this.updateSelections(data);
-            this.toggleSelection(this.selections)
+            this.toggleSelection(this.selections);
           }
           this.originTableData = data;
           this.tableData = this.pageable ? data.slice(0, this.page * this.size) : data;
           this.pageTotal = this.total || data.length;
         }
       },
-      deep: true
+      deep: true,
     },
     selections: function (val) {
-      this.$emit('selections-change', this.selections);
-    }
+      this.$emit("selections-change", this.selections);
+    },
   },
   created: function () {
     // 判断是否将序号固定
@@ -191,9 +185,9 @@ export default {
     }
   },
   mounted: function () {
-    this.$lookup.reg(this.dataCodes.join(','), () => {
+    this.$lookup.reg(this.dataCodes.join(","), () => {
       this.defaultLoad && this.remoteData();
-    })
+    });
     if (this.dynamicHeight) {
       this.setTableHeight();
     }
@@ -202,60 +196,59 @@ export default {
     setTableHeight() {
       // 点击展开的时候，涉及到300ms的动画，获取top值不准确
       setTimeout(() => {
-        const { top } = this.type === 'table' ? this.$refs.table.$el.getBoundingClientRect() : this.$refs.customRef.getBoundingClientRect();
-        let dHeight = document.body.clientHeight - top - (this.pageable ? (this.isMaxScreen ? 70 : 63) : (this.isMaxScreen ? 34 : 24));
+        const { top } = this.type === "table" ? this.$refs.table.$el.getBoundingClientRect() : this.$refs.customRef.getBoundingClientRect();
+        let dHeight = document.body.clientHeight - top - (this.pageable ? (this.isMaxScreen ? 70 : 63) : this.isMaxScreen ? 34 : 24);
         this.tableHeight = dHeight;
-      }, 300)
-     
+      }, 300);
     },
     updateSelections: function (data) {
-      this.selections =  this.selections.map(item => {
+      this.selections = this.selections.map((item) => {
         return {
           ...item,
-          ...data.find(ele => ele[this.rowKey] === item[this.rowKey]) || {}
-        }
-      })
+          ...(data.find((ele) => ele[this.rowKey] === item[this.rowKey]) || {}),
+        };
+      });
     },
     // 重新布局
     doLayout: function () {
       this.$refs.table && this.$refs.table.doLayout();
     },
-    rowClickFn (row, column, event) {
-      this.radioChangeFn(row)
+    rowClickFn(row, column, event) {
+      this.radioChangeFn(row);
     },
     // 单选
-    radioChangeFn (currentRow, event) {
-      if(event) {
-        event.stopPropagation()
-        event.preventDefault()
+    radioChangeFn(currentRow, event) {
+      if (event) {
+        event.stopPropagation();
+        event.preventDefault();
       }
-    
+
       if (!currentRow) {
         return;
       }
-      if (this.selectionType === 'radio') {
-        var curIndex = '';
+      if (this.selectionType === "radio") {
+        var curIndex = "";
         // // 如果重复点击，则取消
         // if (this.selections.length && this.selections[0][this.rowKey] === currentRow[this.rowKey] && !flag) {
         //   this.selections = [];
         //   this.radioForm = {};
         //   return;
         // }
-        this.tableData.map( (item, index) => {
+        this.tableData.map((item, index) => {
           if (item[this.rowKey] === currentRow[this.rowKey]) {
             curIndex = index;
           }
         });
         this.selections = [currentRow];
         this.radioForm = {};
-        this.$set(this.radioForm, 'radio-' + curIndex, curIndex);
+        this.$set(this.radioForm, "radio-" + curIndex, curIndex);
       }
     },
     // 手动删除某个selections
     deleterSelectionFn(selection) {
-      for(var i=this.selections.length-1;i>=0;i--) {
+      for (var i = this.selections.length - 1; i >= 0; i--) {
         let item = this.selections[i];
-        if(item[this.rowKey] === selection[this.rowKey]) {
+        if (item[this.rowKey] === selection[this.rowKey]) {
           this.selections.splice(i, 1);
           this.toggleSelection();
         }
@@ -310,8 +303,8 @@ export default {
     // 设置当前页的选中
     toggleSelection: function (selections) {
       var _this = this;
-      if(selections) {
-        this.selections = selections
+      if (selections) {
+        this.selections = selections;
       }
       this.$nextTick(() => {
         if (this.selections.length) {
@@ -322,7 +315,7 @@ export default {
             _this.$refs.table.toggleRowSelection(item, selectionIds.indexOf(item[_this.rowKey]) !== -1);
           });
         } else {
-          this.clearSelection()
+          this.clearSelection();
         }
       });
     },
@@ -346,9 +339,9 @@ export default {
       params = this.formatParams(params);
       var result = Object.assign({}, baseParams, params);
       // 将空值转换为null
-      var condition = Object.assign({}, baseParams.condition, params.condition)
-      Object.keys(condition).forEach(item => {
-        condition[item] = condition[item] || null
+      var condition = Object.assign({}, baseParams.condition, params.condition);
+      Object.keys(condition).forEach((item) => {
+        condition[item] = condition[item] || null;
       });
       result.condition = JSON.stringify(condition);
       this.searchParams = result;
@@ -356,7 +349,7 @@ export default {
     },
     formatParams: function (data) {
       data = Object.assign({}, data);
-      if (data.condition && typeof data.condition === 'string') {
+      if (data.condition && typeof data.condition === "string") {
         data.condition = JSON.parse(data.condition);
       } else {
         data.condition = data.condition || {};
@@ -371,7 +364,7 @@ export default {
       var _this = this;
       this.page = 1;
       this.$refs.table && this.$refs.table.clearSort();
-      this.sort = '';
+      this.sort = "";
       this.$nextTick(function () {
         _this.getTableData(params, clearSelection, callback);
       });
@@ -383,65 +376,67 @@ export default {
       this.tableData = [];
       this.pageTotal = 0;
     },
-    getTableData (params, clearSelection, callback) {
-      if(!this.dataUrl) return;
-      if ((typeof params === 'boolean' && params) || clearSelection || (params !== false && clearSelection === undefined && this.autoClearChecked)) {
+    getTableData(params, clearSelection, callback) {
+      if (!this.dataUrl) return;
+      if ((typeof params === "boolean" && params) || clearSelection || (params !== false && clearSelection === undefined && this.autoClearChecked)) {
         this.clearSelection();
       }
       this.loading = true;
       var data = this.mergeCondition(params);
       if (this.pageable) {
-          data = Object.assign(data, {
+        data = Object.assign(data, {
           page: this.page,
           size: this.size,
-          sort: params?.customSort || this.sort || null
+          sort: params?.customSort || this.sort || null,
         });
       }
       request({
         method: this.requestType,
         url: this.dataUrl,
-        params: data
-      }).then(response => {
-        this.loading = false;
-        // 会存在没有code的情况，这个时候特殊处理一下
-        if ((response.data && Array.isArray(response.data))) {
-          this.tableData = response.data;
-          this.pageTotal = response.total;
-          callback && callback(response.data);
-          this.$nextTick(function () {
-            if (this.$refs.table && this.$refs.table.bodyWrapper) {
-              // 重新计算一下表格的高度
-              if (this.dynamicHeight) {
-                this.setTableHeight();
-              }
-              this.$refs.table.bodyWrapper.scrollTop = 0; // 数据更新后，滚动条回到顶部
-              this.$refs.table.bodyWrapper.style.zIndex = response.data.length ? 0 : 2; // 解决没有数据时被固定列遮挡滚动条
-              // this.$refs.table.bodyWrapper.scrollLeft = 0;
-            }
-            this.doLayout(); // 重新布局
-            if (this.selectionType === 'checkbox') {
-              this.toggleSelection();
-            }
-            if (this.selectionType === 'radio') {
-              this.setCurrentRow();
-            }
-            this.loadEnd && this.loadEnd(response.data);
-          });
-        } else {
-          this.tableData = [];
-          this.pageTotal = 0;
-        }
-      }).catch(err => {
-        if (this.dynamicHeight) {
-          this.setTableHeight();
-        }
-        this.loading = false;
+        params: data,
       })
+        .then((response) => {
+          this.loading = false;
+          // 会存在没有code的情况，这个时候特殊处理一下
+          if (response.data && Array.isArray(response.data)) {
+            this.tableData = response.data;
+            this.pageTotal = response.total;
+            callback && callback(response.data);
+            this.$nextTick(function () {
+              if (this.$refs.table && this.$refs.table.bodyWrapper) {
+                // 重新计算一下表格的高度
+                if (this.dynamicHeight) {
+                  this.setTableHeight();
+                }
+                this.$refs.table.bodyWrapper.scrollTop = 0; // 数据更新后，滚动条回到顶部
+                this.$refs.table.bodyWrapper.style.zIndex = response.data.length ? 0 : 2; // 解决没有数据时被固定列遮挡滚动条
+                // this.$refs.table.bodyWrapper.scrollLeft = 0;
+              }
+              this.doLayout(); // 重新布局
+              if (this.selectionType === "checkbox") {
+                this.toggleSelection();
+              }
+              if (this.selectionType === "radio") {
+                this.setCurrentRow();
+              }
+              this.loadEnd && this.loadEnd(response.data);
+            });
+          } else {
+            this.tableData = [];
+            this.pageTotal = 0;
+          }
+        })
+        .catch((err) => {
+          if (this.dynamicHeight) {
+            this.setTableHeight();
+          }
+          this.loading = false;
+        });
     },
-    sortChangeFn: function ({column, prop, order}) {
+    sortChangeFn: function ({ column, prop, order }) {
       var _this = this;
-      if(column.sortable === 'custom') {
-        this.sort = order ? prop + " " + (order === "descending" ? "desc" : "asc") : null
+      if (column.sortable === "custom") {
+        this.sort = order ? prop + " " + (order === "descending" ? "desc" : "asc") : null;
         this.$nextTick(function () {
           this.tableData.length && _this.getTableData(this.searchParams);
         });
@@ -476,30 +471,32 @@ export default {
       this.$nextTick(function () {
         _this.getTableData(this.searchParams, false);
       });
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style lang="scss">
-.yu-xtable  {
+.yu-xtable {
   .chart-empty {
     .el-empty__image {
       width: 250px;
     }
   }
-  .yu-pagination { 
-    text-align: right; 
+  .yu-pagination {
+    text-align: right;
     padding: 10px;
     // border-top: 1px solid #D8D8D8;
   }
-  .el-table--border th:first-child .cell { padding: 0 20x;}
+  .el-table--border th:first-child .cell {
+    padding: 0 20x;
+  }
   .el-table {
     th {
       height: 40px;
       padding: 0;
       color: #333;
-      background: #F2F2F2;
+      background: #f2f2f2;
       font-weight: bold;
       .cell {
         padding: 0 20px;
@@ -513,7 +510,7 @@ export default {
     }
 
     // .el-table__body-wrapper { z-index: 2;}
-    
+
     .caret-wrapper {
       position: absolute;
       top: 50%;
@@ -522,37 +519,44 @@ export default {
       display: none;
     }
     .el-table__cell {
-      &:hover, &.ascending, &.descending {
+      &:hover,
+      &.ascending,
+      &.descending {
         .caret-wrapper {
           display: inline-block;
         }
       }
     }
   }
-  
-  
-  .el-table .cell { color: #333;}
+
+  .el-table .cell {
+    color: #333;
+  }
 
   .el-table thead.is-group th {
-    background: #F2F2F2;
+    background: #f2f2f2;
   }
   .el-table--border {
-    border: 1px solid #D8D8D8;
-    td, th, th.is-leaf {
-      border-bottom: 1px solid #D8D8D8;
-      border-right: 1px solid #D8D8D8;
+    border: 1px solid #d8d8d8;
+    td,
+    th,
+    th.is-leaf {
+      border-bottom: 1px solid #d8d8d8;
+      border-right: 1px solid #d8d8d8;
     }
-    th{ background: #F2F2F2; }
+    th {
+      background: #f2f2f2;
+    }
   }
   .el-radio--table {
     .el-radio__label {
       display: none;
     }
   }
-  .el-table__fixed-right::before, .el-table__fixed::before { background-color: transparent; }
-
-  
-  
+  .el-table__fixed-right::before,
+  .el-table__fixed::before {
+    background-color: transparent;
+  }
 }
 
 .yu-xtable__custom {
@@ -560,7 +564,7 @@ export default {
 }
 
 @media screen and (min-width: 1920px) {
-  .yu-xtable  {
+  .yu-xtable {
     .el-table {
       th {
         height: 48px;
@@ -570,11 +574,11 @@ export default {
 }
 
 @media screen and (max-width: 1680px) {
-  .yu-xtable  {
+  .yu-xtable {
     .el-table {
       th {
         height: 30px;
-        &>.cell {
+        & > .cell {
           font-size: 13px;
         }
       }
@@ -590,5 +594,4 @@ export default {
     }
   }
 }
-
 </style>

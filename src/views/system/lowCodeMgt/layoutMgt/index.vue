@@ -13,11 +13,11 @@
           </template>
           <template v-slot:table>
             <yu-xtable ref="refTable" :data-url="dataUrl" :dynamic-height="true" :border="false" layout="total, prev, pager, next" @row-click="rowClickFn">
-              <yu-xtable-column label="布局名称" prop="layoutName"  :show-overflow-tooltip="true"></yu-xtable-column>
+              <yu-xtable-column label="布局名称" prop="layoutName" :show-overflow-tooltip="true"></yu-xtable-column>
               <yu-xtable-column label="状态" prop="layoutSts" width="80" :show-overflow-tooltip="true">
                 <template slot-scope="scoped">
                   <el-tag v-if="scoped.row.status" type="success" size="mini">生效</el-tag>
-                  <el-tag v-else type="danger"  size="mini">未生效</el-tag>
+                  <el-tag v-else type="danger" size="mini">未生效</el-tag>
                 </template>
               </yu-xtable-column>
             </yu-xtable>
@@ -48,8 +48,8 @@
         </yu-xform-group>
       </yu-xform>
       <div slot="footer" align="center">
-        <el-button type="primary"  @click="nextFn()">下一步</el-button>
-        <el-button @click="addVisible=false">取消</el-button>
+        <el-button type="primary" @click="nextFn()">下一步</el-button>
+        <el-button @click="addVisible = false">取消</el-button>
       </div>
     </yu-dialog>
     <content-modal :visible.sync="contentVisible">
@@ -61,63 +61,61 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Ref } from 'vue-property-decorator'
-import { addLayout } from '@/api/lowCode'
-import { backend } from '@/config'
-import Edit from './edit/index.vue'
+import { Component, Vue, Ref } from "vue-property-decorator";
+import { addLayout } from "@/api/lowCode";
+import { backend } from "@/config";
+import Edit from "./edit/index.vue";
 import Draggable from "vuedraggable";
 
-export interface LayoutListItem  {
-  id: string
-  name: string,
-  status: boolean
+export interface LayoutListItem {
+  id: string;
+  name: string;
+  status: boolean;
 }
 
-
 @Component({
-  name: 'LayoutMgt',
+  name: "LayoutMgt",
   components: {
     Edit,
-    Draggable
-  }
+    Draggable,
+  },
 })
 export default class extends Vue {
-  @Ref('refTable') refTable: any;
-  @Ref('layoutFormRef') layoutFormRef: any;
+  @Ref("refTable") refTable: any;
+  @Ref("layoutFormRef") layoutFormRef: any;
 
-  private dataUrl = backend.mockService + '/lowcode/layout/list'
-  private searchForm = {}
-  private addVisible = false
-  private layoutForm = {}
-  private contentVisible = false
-  private currentRow = {}
+  private dataUrl = backend.mockService + "/lowcode/layout/list";
+  private searchForm = {};
+  private addVisible = false;
+  private layoutForm = {};
+  private contentVisible = false;
+  private currentRow = {};
 
   searchFn() {
     this.refTable.remoteData({
-      condition: JSON.stringify(this.searchForm)
-    })
+      condition: JSON.stringify(this.searchForm),
+    });
   }
 
   rowClickFn(row: LayoutListItem) {
-    this.currentRow = row
+    this.currentRow = row;
   }
 
   addFn() {
-    this.addVisible = true
-    this.layoutFormRef && this.layoutFormRef.resetFields()
+    this.addVisible = true;
+    this.layoutFormRef && this.layoutFormRef.resetFields();
   }
 
   nextFn() {
-    this.contentVisible = true
-    this.currentRow = this.layoutForm
+    this.contentVisible = true;
+    this.currentRow = this.layoutForm;
     this.$nextTick(() => {
-      this.addVisible = false
-    })
+      this.addVisible = false;
+    });
     // addLayout(params).then(res => {
 
     // })
   }
-
 }
 </script>
 
@@ -128,12 +126,12 @@ export default class extends Vue {
     z-index: 99;
     background: #fff;
     padding: 10px;
-    box-shadow: 0px 3px 6px rgba($color: #000000, $alpha: .1);
+    box-shadow: 0px 3px 6px rgba($color: #000000, $alpha: 0.1);
   }
   .layout-title {
     font-weight: bold;
   }
-  .layout-btns{
+  .layout-btns {
     position: absolute;
     top: 50%;
     right: 10px;
@@ -146,5 +144,4 @@ export default class extends Vue {
     }
   }
 }
-  
 </style>

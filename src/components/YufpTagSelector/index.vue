@@ -1,63 +1,56 @@
 <template>
   <el-select v-model="selectValue" placeholder="请选择" v-bind="$attrs" v-on="$listeners" @change="changeFn" multiple>
-    <el-option
-      v-for="item in options"
-      :key="item.tagItemCode"
-      :label="item.itemCodeNm"
-      :value="item.tagItemCode">
-    </el-option>
+    <el-option v-for="item in options" :key="item.tagItemCode" :label="item.itemCodeNm" :value="item.tagItemCode"> </el-option>
   </el-select>
 </template>
 
 <script>
-import  * as customerApi from '@/api/customer'
+import * as customerApi from "@/api/customer";
 
 export default {
-  name: 'YufpTagSelector',
+  name: "YufpTagSelector",
   props: {
     value: {
-      required: true
+      required: true,
     },
     params: {
       type: Object,
-      default: () => {}
-    }
+      default: () => {},
+    },
   },
-  
+
   data() {
     return {
       selectValue: [],
-      options: []
+      options: [],
     };
   },
   watch: {
     value: {
       handler: function (val) {
-        if(val != undefined) {
+        if (val != undefined) {
           this.selectValue = val;
         }
       },
-      immediate: true
-    }
+      immediate: true,
+    },
   },
-  created () {
+  created() {
     this.gettagitem();
   },
   methods: {
-    gettagitem () {
+    gettagitem() {
       let params = {
-        tagNo: this.params.colNameE
+        tagNo: this.params.colNameE,
       };
-      customerApi.gettagitem(params).then(res => {
+      customerApi.gettagitem(params).then((res) => {
         this.options = res.data;
-      })
+      });
     },
-    changeFn (value) {
-      this.$emit('input', value);
-    }
-  }
-}
+    changeFn(value) {
+      this.$emit("input", value);
+    },
+  },
+};
 </script>
-<style lang="scss">
-
-</style>
+<style lang="scss"></style>

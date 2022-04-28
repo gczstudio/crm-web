@@ -5,7 +5,7 @@
       <yu-xform ref="searchForm" class="search" :model="queryFormData" form-type="search" :search="searchHandler" :reset="resetHandler">
         <yu-xform-group :column="4">
           <yu-xform-item label="功能名称" placeholder="功能名称" ctype="input" name="functionName" :rules="globalRules.input"></yu-xform-item>
-          <yu-xform-item label="文件生成日期" placeholder="文件生成日期" ctype="date-picker" name="creatDate" :editable="false"  format="yyyy-MM-dd"></yu-xform-item>
+          <yu-xform-item label="文件生成日期" placeholder="文件生成日期" ctype="date-picker" name="creatDate" :editable="false" format="yyyy-MM-dd"></yu-xform-item>
         </yu-xform-group>
       </yu-xform>
     </div>
@@ -40,27 +40,27 @@
   </div>
 </template>
 <script>
-import moment from 'moment'
-import { UserModule } from '@/store/modules/user'
-import { getUserInfo } from '@/utils'
-import { backend } from '@/config'
-import request from "@/utils/request"
+import moment from "moment";
+import { UserModule } from "@/store/modules/user";
+import { getUserInfo } from "@/utils";
+import { backend } from "@/config";
+import request from "@/utils/request";
 import { downFile } from "@/utils";
 
 export default {
-  name: 'DownloadFile',
+  name: "DownloadFile",
   data: function () {
-   let userInfo = getUserInfo()
+    let userInfo = getUserInfo();
     return {
       userInfo: userInfo,
       queryFormData: {},
       rules: {
         functionName: [
-          {validator: this.$validator.speChar, message: '输入字符含有特殊字符'},
-          {max: 50, message: '输入字符不能超过50个字符', trigger: 'blur'}
-        ]
+          { validator: this.$validator.speChar, message: "输入字符含有特殊字符" },
+          { max: 50, message: "输入字符不能超过50个字符", trigger: "blur" },
+        ],
       },
-      dataUrl: backend.fileService + '/api/downloadManage/search'
+      dataUrl: backend.fileService + "/api/downloadManage/search",
     };
   },
   mounted: function () {
@@ -75,8 +75,8 @@ export default {
         condition: JSON.stringify({
           creatUser: this.userInfo.userId,
           functionName: this.queryFormData.functionName,
-          creatDate: this.queryFormData.creatDate
-        })
+          creatDate: this.queryFormData.creatDate,
+        }),
       };
       this.$refs.reftable.remoteData(params);
     },
@@ -96,31 +96,31 @@ export default {
       //   return;
       // }
 
-      if (row.downState !== '3') {
-        _this.$message({ message: '请选择下载完成的记录', type: 'warning' });
+      if (row.downState !== "3") {
+        _this.$message({ message: "请选择下载完成的记录", type: "warning" });
         return;
       }
-      _this.$confirm('是否确认保存到本地?', '提示', {
-        confirmButtonText: '是',
-        cancelButtonText: '否',
-        type: 'warning',
+      _this.$confirm("是否确认保存到本地?", "提示", {
+        confirmButtonText: "是",
+        cancelButtonText: "否",
+        type: "warning",
         callback: function (action) {
-          if (action === 'confirm') {
+          if (action === "confirm") {
             // 直接导出
             var param = {
               fileName: row.fileName,
-              filePath: row.filePath
+              filePath: row.filePath,
             };
 
-            let url =_this.$util.getUrl(backend.fileService + '/api/downloadManage/downloadFile');
+            let url = _this.$util.getUrl(backend.fileService + "/api/downloadManage/downloadFile");
             downFile({
-              method: 'post',
+              method: "post",
               url: url,
               fileName: param.fileName,
               data: {
                 access_token: UserModule.token,
-                condition: JSON.stringify(param)
-              }
+                condition: JSON.stringify(param),
+              },
             });
 
             // _this.$util.downloadByPost(url, {
@@ -128,12 +128,11 @@ export default {
             //   condition: JSON.stringify(param)
             // });
 
-
             setTimeout(function () {
               _this.searchHandler();
             }, 300);
           }
-        }
+        },
       });
     },
     /**
@@ -145,26 +144,26 @@ export default {
       //   _this.$message({ message: '请先选择一条记录', type: 'warning' });
       //   return;
       // }
-      _this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
+      _this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
         callback: function (action) {
-          if (action === 'confirm') {
+          if (action === "confirm") {
             request({
-              method: 'POST',
-              url: backend.fileService + '/api/downloadManage/deleteFile',
+              method: "POST",
+              url: backend.fileService + "/api/downloadManage/deleteFile",
               data: {
-                fileId: row.fileId.toString()
-              }
-            }).then(res => {
-              _this.$message.success({ message: '删除成功！' });
+                fileId: row.fileId.toString(),
+              },
+            }).then((res) => {
+              _this.$message.success({ message: "删除成功！" });
               _this.searchHandler();
-            })
+            });
           }
-        }
+        },
       });
-    }
-  }
-}
+    },
+  },
+};
 </script>

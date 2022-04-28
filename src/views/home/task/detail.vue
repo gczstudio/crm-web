@@ -1,18 +1,9 @@
 <template>
   <div class="detail-container">
-    <yu-dialog
-      title="客户动账提醒"
-      :visible.sync="dialogVisible"
-      @close="hide"
-      top="5vh"
-      custom-class="task-dialog"
-    >
+    <yu-dialog title="客户动账提醒" :visible.sync="dialogVisible" @close="hide" top="5vh" custom-class="task-dialog">
       <div class="remind">
         <div class="chgAmt">
-          <span
-            class="num"
-            :style="{color: custInfo.chgAmt < 0 ? '#0FCB51' : '#f14922'}"
-          >{{ (custInfo.chgAmt > 0 ? '+' : '') + $util.formatMoney(custInfo.chgAmt / 10000) }}</span>
+          <span class="num" :style="{ color: custInfo.chgAmt < 0 ? '#0FCB51' : '#f14922' }">{{ (custInfo.chgAmt > 0 ? "+" : "") + $util.formatMoney(custInfo.chgAmt / 10000) }}</span>
           <span class="chgAmt-money f2">万元</span>
         </div>
         <div class="chgAmt-text f2">变动金额</div>
@@ -41,7 +32,7 @@
         <div class="contents f2">
           <div class="content-item">
             <div class="content-item__label">开户机构：</div>
-            <div class="content-item__value">{{custInfo.openOrgNm}}</div>
+            <div class="content-item__value">{{ custInfo.openOrgNm }}</div>
           </div>
           <!-- <div class="content-item">
             <div class="content-item__label">客户类型：</div>
@@ -62,7 +53,7 @@
           </div>
           <div class="content-item">
             <div class="content-item__label">企业规模：</div>
-            <div class="content-item__value">{{ $lookup.convertKey('ENT_SCALE_MIS', custInfo.entScale) }}</div>
+            <div class="content-item__value">{{ $lookup.convertKey("ENT_SCALE_MIS", custInfo.entScale) }}</div>
           </div>
           <div class="content-item">
             <div class="content-item__label">变动时间：</div>
@@ -73,14 +64,7 @@
       <div class="edit-reason" v-if="type === 2">
         <div class="section-title f2">动账原因</div>
         <div class="reason-content">
-          <el-input
-            type="textarea"
-            :autosize="{ minRows: 4 }"
-            maxlength="20"
-            show-word-limit
-            placeholder="请输入客户动账原因"
-            v-model="reason"
-          ></el-input>
+          <el-input type="textarea" :autosize="{ minRows: 4 }" maxlength="20" show-word-limit placeholder="请输入客户动账原因" v-model="reason"></el-input>
           <div class="reason-btn">
             <el-button type="primary" @click="submitFn" class="f2">填报</el-button>
           </div>
@@ -89,15 +73,12 @@
       <div class="history f2">
         <div class="section-title f2">
           历史记录（
-          <i class="num">{{ historyList.length }}</i>）
+          <i class="num">{{ historyList.length }}</i
+          >）
         </div>
         <div class="history-content f2">
           <el-timeline>
-            <el-timeline-item
-              v-for="(item, index) in historyList"
-              :color="index % 2 ? theme : '#E9E9E9'"
-              :key="index"
-            >
+            <el-timeline-item v-for="(item, index) in historyList" :color="index % 2 ? theme : '#E9E9E9'" :key="index">
               <div class="history-timeline">
                 <div class="date num">{{ item.chgRsnTm }}</div>
                 <div class="info">
@@ -134,8 +115,7 @@ export default class extends Vue {
   @Prop({ default: false }) visible!: boolean;
   @Prop() id!: string;
   @Prop() type!: number;
-  private isMgr: boolean =
-    (this as any).$util.getCheckedRole().roleCode === "R300201";
+  private isMgr: boolean = (this as any).$util.getCheckedRole().roleCode === "R300201";
 
   private dialogVisible = false;
   private reason = "";
@@ -163,22 +143,21 @@ export default class extends Vue {
   }
 
   hide() {
-    this.reason = '';
+    this.reason = "";
     this.$emit("update");
     this.$emit("update:visible", false);
   }
 
   customerViewFn() {
     let row = this.custInfo;
-    this.$router.push({ path: '/custInfo/custView/' + row.crmCustId, query: { crmCustId: row.crmCustId, custId: row.custId, title: '客户详情-' + row.custName }})
+    this.$router.push({ path: "/custInfo/custView/" + row.crmCustId, query: { crmCustId: row.crmCustId, custId: row.custId, title: "客户详情-" + row.custName } });
     this.hide();
   }
 
   largerCustDetail() {
     homeApi.largerCustDetail(this.id).then((res: any) => {
       if (res.code === 0) {
-        const { largerCustomerInfo, blgOrgNmInfo, blgMgrNmInfo, reasonInfo } =
-          res.data;
+        const { largerCustomerInfo, blgOrgNmInfo, blgMgrNmInfo, reasonInfo } = res.data;
         this.custInfo = largerCustomerInfo[0] || {};
         this.orgInfo = blgOrgNmInfo[0] || {};
         this.mgrInfo = blgMgrNmInfo[0] || {};
@@ -387,7 +366,7 @@ export default class extends Vue {
   //height: 150px;
   background-color: #fff;
   &::before {
-    content: '';
+    content: "";
     display: inline-block;
     width: 1px;
     height: calc(100% - 20px);
@@ -408,7 +387,8 @@ export default class extends Vue {
     text-align: left;
     font-weight: bold;
     border-top: 1px solid #d8d8d8;
-    &:nth-child(1), &:nth-child(2) {
+    &:nth-child(1),
+    &:nth-child(2) {
       border-top: 0;
     }
     .content-item__label {

@@ -4,4 +4,3 @@ declare module "*.vue" {
 }
 
 declare module "animate.css";
-

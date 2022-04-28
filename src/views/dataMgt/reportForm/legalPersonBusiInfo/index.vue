@@ -13,15 +13,69 @@
               <yu-xform-item label="核心客户号" placeholder="核心客户号" ctype="input" name="custId" :rules="globalRules.input"></yu-xform-item>
               <yu-xform-item label="数据日期" name="etlDate" ctype="date-picker" placeholder="数据日期"></yu-xform-item>
               <yu-xform-item label="考核机构" placeholder="考核机构" ctype="yufp-org-tree" name="appraiseOrg"></yu-xform-item>
-              <yu-xform-item label="国标行业" placeholder="国标行业" ctype="yufp-org-tree" name="natStdInds" :tree-options="treeOptions" ></yu-xform-item>
+              <yu-xform-item label="国标行业" placeholder="国标行业" ctype="yufp-org-tree" name="natStdInds" :tree-options="treeOptions"></yu-xform-item>
               <yu-xform-item label="客户类型" placeholder="客户类型" ctype="select" name="custType" data-code="CUST_TYPE_MIS"></yu-xform-item>
-              <yu-xform-item label="企业规模" placeholder="企业规模" ctype="select" name="entScale" data-code="ENT_SCALE_MIS" ></yu-xform-item>
-              <yu-xform-item label="存款余额>=" :show-label-suffix="false" suffix-label="元" suffix-label-width="28px" placeholder="存款余额" ctype="input" name="custBal" :rules="globalRules.amountInput"></yu-xform-item>
-              <yu-xform-item label="存款日均>=" :show-label-suffix="false" suffix-label="元" suffix-label-width="28px" placeholder="存款日均" ctype="input" name="custBalAvg" :rules="globalRules.amountInput"></yu-xform-item>
-              <yu-xform-item label="信贷余额>=" :show-label-suffix="false" suffix-label="元" suffix-label-width="28px" placeholder="信贷余额" ctype="input" name="xdLoanBal" :rules="globalRules.amountInput"></yu-xform-item>
-              <yu-xform-item label="信贷日均>=" :show-label-suffix="false" suffix-label="元" suffix-label-width="28px" placeholder="信贷日均" ctype="input" name="xdLoanBalAvg" :rules="globalRules.amountInput"></yu-xform-item>
-              <yu-xform-item label="EVA>=" :show-label-suffix="false" suffix-label="元" suffix-label-width="28px" placeholder="EVA" ctype="input" name="eva" :rules="globalRules.amountInput"></yu-xform-item>
-              <yu-xform-item label="业务利润>=" :show-label-suffix="false" suffix-label="元" suffix-label-width="28px" placeholder="业务利润" ctype="input" name="profitContribution" :rules="globalRules.amountInput"></yu-xform-item>
+              <yu-xform-item label="企业规模" placeholder="企业规模" ctype="select" name="entScale" data-code="ENT_SCALE_MIS"></yu-xform-item>
+              <yu-xform-item
+                label="存款余额>="
+                :show-label-suffix="false"
+                suffix-label="元"
+                suffix-label-width="28px"
+                placeholder="存款余额"
+                ctype="input"
+                name="custBal"
+                :rules="globalRules.amountInput"
+              ></yu-xform-item>
+              <yu-xform-item
+                label="存款日均>="
+                :show-label-suffix="false"
+                suffix-label="元"
+                suffix-label-width="28px"
+                placeholder="存款日均"
+                ctype="input"
+                name="custBalAvg"
+                :rules="globalRules.amountInput"
+              ></yu-xform-item>
+              <yu-xform-item
+                label="信贷余额>="
+                :show-label-suffix="false"
+                suffix-label="元"
+                suffix-label-width="28px"
+                placeholder="信贷余额"
+                ctype="input"
+                name="xdLoanBal"
+                :rules="globalRules.amountInput"
+              ></yu-xform-item>
+              <yu-xform-item
+                label="信贷日均>="
+                :show-label-suffix="false"
+                suffix-label="元"
+                suffix-label-width="28px"
+                placeholder="信贷日均"
+                ctype="input"
+                name="xdLoanBalAvg"
+                :rules="globalRules.amountInput"
+              ></yu-xform-item>
+              <yu-xform-item
+                label="EVA>="
+                :show-label-suffix="false"
+                suffix-label="元"
+                suffix-label-width="28px"
+                placeholder="EVA"
+                ctype="input"
+                name="eva"
+                :rules="globalRules.amountInput"
+              ></yu-xform-item>
+              <yu-xform-item
+                label="业务利润>="
+                :show-label-suffix="false"
+                suffix-label="元"
+                suffix-label-width="28px"
+                placeholder="业务利润"
+                ctype="input"
+                name="profitContribution"
+                :rules="globalRules.amountInput"
+              ></yu-xform-item>
             </yu-xform-group>
           </yu-xform>
         </template>
@@ -31,7 +85,7 @@
             <yu-xtable-column label="考核机构" prop="appraiseOrgNm" width="150" fixed="left" :show-overflow-tooltip="true" sortable="custom"></yu-xtable-column>
             <yu-xtable-column label="客户名称" prop="custNm" width="250" fixed="left" :show-overflow-tooltip="true" sortable="custom">
               <template slot-scope="scope">
-               <div v-if="scope.row.custNm" class="yu-table__company" @click.prevent="customerViewFn(scope.row)"><i class="iconfont icon-qiyelogo"></i>{{scope.row.custNm}}</div>
+                <div v-if="scope.row.custNm" class="yu-table__company" @click.prevent="customerViewFn(scope.row)"><i class="iconfont icon-qiyelogo"></i>{{ scope.row.custNm }}</div>
               </template>
             </yu-xtable-column>
             <yu-xtable-column label="组织机构代码" prop="insCredCode" width="130" :show-overflow-tooltip="true" is-num sortable="custom"></yu-xtable-column>
@@ -145,84 +199,83 @@
 
 <script lang="ts">
 import { Component, Ref, Vue } from "vue-property-decorator";
-import { backend } from '@/config'
+import { backend } from "@/config";
 import moment from "moment";
 
 @Component({
   name: "LegalPersonBusiInfo",
 })
 export default class extends Vue {
-  @Ref('searchForm') searchForm: any;
-  @Ref('refTable') refTable: any;
-  private dataUrl = backend.custService + '/api/custbusiness/querycstbusi'
-  private etlDate = sessionStorage.getItem('dataDt')
+  @Ref("searchForm") searchForm: any;
+  @Ref("refTable") refTable: any;
+  private dataUrl = backend.custService + "/api/custbusiness/querycstbusi";
+  private etlDate = sessionStorage.getItem("dataDt");
   private queryFormData = {
-    etlDate: this.etlDate
-  }
+    etlDate: this.etlDate,
+  };
 
   private baseParams = {
     condition: JSON.stringify({
-      etlDate: this.etlDate
-    })
-  }
+      etlDate: this.etlDate,
+    }),
+  };
 
   private treeOptions = {
     showCheckbox: false,
-    treeKey: 'indstree',
-    dataUrl: backend.custService + '/api/ocrmfcifqdbcol/indstree',
-    dataId: 'indsId',
-    dataLabel: 'indsNm',
-    dataPid: 'parentId',
+    treeKey: "indstree",
+    dataUrl: backend.custService + "/api/ocrmfcifqdbcol/indstree",
+    dataId: "indsId",
+    dataLabel: "indsNm",
+    dataPid: "parentId",
     expandLevel: 1,
-    level: 'level',
-    checkStrictly: true
-  }
+    level: "level",
+    checkStrictly: true,
+  };
 
   private startPickerOptions = {
-    disabledDate:  (time: Date) => {
+    disabledDate: (time: Date) => {
       if ((this.queryFormData as any).endDate) {
         return time.getTime() >= new Date((this.queryFormData as any).endDate).getTime();
       }
-    }
-  }
+    },
+  };
 
   private endPickerOptions = {
     disabledDate: (time: Date) => {
       if ((this.queryFormData as any).startDate) {
         return time.getTime() <= new Date((this.queryFormData as any).startDate).getTime() - 86400000;
       }
-    }
-  }
+    },
+  };
 
-  mounted () {
-    this.$checkCtr('export') && this.$exportQueue.addQueue(this.$route.path, this.exportFn)
+  mounted() {
+    this.$checkCtr("export") && this.$exportQueue.addQueue(this.$route.path, this.exportFn);
   }
 
   customerViewFn(row: any) {
-    this.$router.push({ path: '/custInfo/custView/' + row.crmCustId, query: { crmCustId: row.crmCustId, custId: row.custId, title: '客户详情-' + row.custNm }})
+    this.$router.push({ path: "/custInfo/custView/" + row.crmCustId, query: { crmCustId: row.crmCustId, custId: row.custId, title: "客户详情-" + row.custNm } });
   }
 
-  exportFn (showTipModal?:boolean) {
+  exportFn(showTipModal?: boolean) {
     var searchQuery: any = (this as any)._.assign({}, this.searchForm.searchModel, {
-      fileName: '法人客户业务信息统计表',
-      queryField: this.searchForm.searchQueryField
+      fileName: "法人客户业务信息统计表",
+      queryField: this.searchForm.searchQueryField,
     });
     var apiParams = {
-      url: backend.custService + '/api/custbusiness/exportquerycstbusi',
+      url: backend.custService + "/api/custbusiness/exportquerycstbusi",
       params: searchQuery,
-      sort: this.refTable.sort
+      sort: this.refTable.sort,
     };
     (this as any).$util.exportTable({
       _this: this,
       apiParams,
-      showTipModal
+      showTipModal,
     });
   }
-
 }
 </script>
 <style lang="scss" scoped>
-.table-header{
+.table-header {
   padding-right: 10px;
   height: 25px;
   font-weight: bold;

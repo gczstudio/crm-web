@@ -16,7 +16,7 @@
           <yu-xtable ref="refTable" :data-url="dataUrl" row-number :dynamic-height="true" border :default-load="false">
             <yu-xtable-column label="客户名称" prop="custNm" min-width="250" fixed="left" :show-overflow-tooltip="true" sortable="custom">
               <template slot-scope="scope">
-               <div class="yu-table__company" @click.prevent="customerViewFn(scope.row)"><i class="iconfont icon-qiyelogo"></i>{{scope.row.custNm}}</div>
+                <div class="yu-table__company" @click.prevent="customerViewFn(scope.row)"><i class="iconfont icon-qiyelogo"></i>{{ scope.row.custNm }}</div>
               </template>
             </yu-xtable-column>
             <yu-xtable-column label="核心客户号" prop="custId" min-width="120" :show-overflow-tooltip="true" fixed="left" is-num sortable="custom"></yu-xtable-column>
@@ -43,23 +43,22 @@
 
 <script lang="ts">
 import { Component, Vue, Ref, Watch } from "vue-property-decorator";
-import { backend } from '@/config'
-import lookup from '@/utils/lookup'
-import { CommonModule } from '@/store/modules/common'
+import { backend } from "@/config";
+import lookup from "@/utils/lookup";
+import { CommonModule } from "@/store/modules/common";
 
 @Component({
   name: "CustBank",
 })
 export default class extends Vue {
- 
-  @Ref('refTable') refTable: any;
-  private dataUrl = backend.custService + '/api/custquery/allcustlist'
-  private queryFormData = {}
+  @Ref("refTable") refTable: any;
+  private dataUrl = backend.custService + "/api/custquery/allcustlist";
+  private queryFormData = {};
 
-  beforeRouteEnter (to:any, from:any, next:any) {
-    lookup.bind('YESNO', () => {
-      next()
-    }) 
+  beforeRouteEnter(to: any, from: any, next: any) {
+    lookup.bind("YESNO", () => {
+      next();
+    });
   }
 
   @Watch("$route")
@@ -67,26 +66,26 @@ export default class extends Vue {
     if (this.$route.params.keyword) {
       this.refTable.remoteData({
         condition: JSON.stringify({
-          homeSearch: this.$route.params.keyword
-        })
-      })
+          homeSearch: this.$route.params.keyword,
+        }),
+      });
     }
   }
 
   mounted() {
-    if(this.$route.params.keyword) {
-       this.refTable.remoteData({
+    if (this.$route.params.keyword) {
+      this.refTable.remoteData({
         condition: JSON.stringify({
-          homeSearch: this.$route.params.keyword
-        })
-      })
+          homeSearch: this.$route.params.keyword,
+        }),
+      });
     } else {
-      this.refTable.remoteData()
+      this.refTable.remoteData();
     }
   }
 
   customerViewFn(row: any) {
-    this.$router.push({ path: '/custInfo/custView/' + row.crmCustId, query: { crmCustId: row.crmCustId, custId: row.custId, title: '客户详情-' + row.custNm }})
+    this.$router.push({ path: "/custInfo/custView/" + row.crmCustId, query: { crmCustId: row.crmCustId, custId: row.custId, title: "客户详情-" + row.custNm } });
   }
 }
 </script>

@@ -13,120 +13,34 @@
           <el-button icon="document" @click="infoFn">详情</el-button>-->
         </template>
         <template v-slot:form>
-          <yu-xform
-            ref="announceForm"
-            :model="queryFormData"
-            class="search"
-            related-table-name="refAnnounceTable"
-            form-type="search"
-          >
+          <yu-xform ref="announceForm" :model="queryFormData" class="search" related-table-name="refAnnounceTable" form-type="search">
             <yu-xform-group :column="4">
-              <yu-xform-item
-                label="阅读标记"
-                placeholder="阅读标记"
-                ctype="select"
-                name="readSts"
-                data-code="READS"
-                :rules="globalRules.input"
-              ></yu-xform-item>
+              <yu-xform-item label="阅读标记" placeholder="阅读标记" ctype="select" name="readSts" data-code="READS" :rules="globalRules.input"></yu-xform-item>
               <yu-xform-item label="发布日期从" name="beginTime" ctype="date-picker" placeholder="开始日期" :picker-options="startPickerOptions"></yu-xform-item>
               <yu-xform-item label="至" name="endTime" ctype="date-picker" placeholder="结束日期" :picker-options="endPickerOptions"></yu-xform-item>
-              <yu-xform-item
-                label="公告标题"
-                placeholder="公告标题"
-                ctype="input"
-                name="noticeTitle"
-                :rules="globalRules.input500"
-              ></yu-xform-item>
-              <yu-xform-item
-                label="发布人"
-                placeholder="发布人"
-                ctype="input"
-                name="pubUserName"
-                :rules="globalRules.input"
-              ></yu-xform-item>
+              <yu-xform-item label="公告标题" placeholder="公告标题" ctype="input" name="noticeTitle" :rules="globalRules.input500"></yu-xform-item>
+              <yu-xform-item label="发布人" placeholder="发布人" ctype="input" name="pubUserName" :rules="globalRules.input"></yu-xform-item>
             </yu-xform-group>
           </yu-xform>
         </template>
         <template v-slot:table>
-          <yu-xtable
-            ref="refAnnounceTable"
-            :dynamic-height="true"
-            border
-            row-number
-            :data-url="announceDataUrl"
-            :base-params="initTableParams"
-            selection-type="checkbox"
-          >
-            <yu-xtable-column label="阅读标记" prop="readSts" min-width="100" fixed="left" is-num  sortable="custom"></yu-xtable-column>
-            <yu-xtable-column
-              label="公告标题"
-              prop="noticeTitle"
-              :show-overflow-tooltip="true"
-              min-width="170"
-              fixed="left"
-              rules="required"
-              is-num
-              sortable="custom"
-            ></yu-xtable-column>
+          <yu-xtable ref="refAnnounceTable" :dynamic-height="true" border row-number :data-url="announceDataUrl" :base-params="initTableParams" selection-type="checkbox">
+            <yu-xtable-column label="阅读标记" prop="readSts" min-width="100" fixed="left" is-num sortable="custom"></yu-xtable-column>
+            <yu-xtable-column label="公告标题" prop="noticeTitle" :show-overflow-tooltip="true" min-width="170" fixed="left" rules="required" is-num sortable="custom"></yu-xtable-column>
             <!-- <yu-xtable-column label="公告类型" prop="noticeId" width="200"> -->
             <!-- </yu-xtable-column> -->
-            <yu-xtable-column
-              label="发布机构"
-              prop="pubOrgName"
-              :show-overflow-tooltip="true"
-              min-width="160"
-              is-num
-              sortable="custom"
-            ></yu-xtable-column>
-            <yu-xtable-column label="发布人" prop="pubUserName" min-width="130" is-num  sortable="custom"></yu-xtable-column>
-            <yu-xtable-column
-              label="发布时间"
-              prop="pubTime"
-              min-width="170"
-              :show-overflow-tooltip="true"
-              is-num
-              sortable="custom"
-            ></yu-xtable-column>
-            <yu-xtable-column
-              label="有效期"
-              min-width="130"
-              prop="activeDate"
-              :show-overflow-tooltip="true"
-              is-num
-              sortable="custom"
-            ></yu-xtable-column>
-            <yu-xtable-column label="发布状态" prop="pubSts"  min-width="120" data-code="PUB_STS" fixed="left"  sortable="custom"></yu-xtable-column>
-            <yu-xtable-column label="重要程度" prop="noticeLevel" min-width="120" data-code="NOTICE_LEVEL"  sortable="custom"></yu-xtable-column>
-            <yu-xtable-column
-              label="是否置顶"
-              data-code="YES_NO"
-              prop="isTop"
-              :show-overflow-tooltip="true"
-              sortable="custom"
-              min-width="100"
-            ></yu-xtable-column>
-            <yu-xtable-column
-              label="置顶期"
-              is-num
-              min-width="130"
-              prop="topActiveDate"
-              :show-overflow-tooltip="true"
-              sortable="custom"
-            ></yu-xtable-column>
+            <yu-xtable-column label="发布机构" prop="pubOrgName" :show-overflow-tooltip="true" min-width="160" is-num sortable="custom"></yu-xtable-column>
+            <yu-xtable-column label="发布人" prop="pubUserName" min-width="130" is-num sortable="custom"></yu-xtable-column>
+            <yu-xtable-column label="发布时间" prop="pubTime" min-width="170" :show-overflow-tooltip="true" is-num sortable="custom"></yu-xtable-column>
+            <yu-xtable-column label="有效期" min-width="130" prop="activeDate" :show-overflow-tooltip="true" is-num sortable="custom"></yu-xtable-column>
+            <yu-xtable-column label="发布状态" prop="pubSts" min-width="120" data-code="PUB_STS" fixed="left" sortable="custom"></yu-xtable-column>
+            <yu-xtable-column label="重要程度" prop="noticeLevel" min-width="120" data-code="NOTICE_LEVEL" sortable="custom"></yu-xtable-column>
+            <yu-xtable-column label="是否置顶" data-code="YES_NO" prop="isTop" :show-overflow-tooltip="true" sortable="custom" min-width="100"></yu-xtable-column>
+            <yu-xtable-column label="置顶期" is-num min-width="130" prop="topActiveDate" :show-overflow-tooltip="true" sortable="custom"></yu-xtable-column>
             <yu-xtable-column label="操作" fixed="right" align="center" min-width="120" is-num>
               <template slot-scope="scope">
-                <el-button
-                  class="yu-action-btn"
-                  @click.native.prevent="modifyFn(scope.row)"
-                  type="text"
-                  v-permission="'update'"
-                >修改</el-button>
-                <el-button
-                  class="yu-action-btn"
-                  type="text"
-                  @click.native.prevent="detailFn(scope.row)"
-                >详情</el-button>
+                <el-button class="yu-action-btn" @click.native.prevent="modifyFn(scope.row)" type="text" v-permission="'update'">修改</el-button>
+                <el-button class="yu-action-btn" type="text" @click.native.prevent="detailFn(scope.row)">详情</el-button>
               </template>
             </yu-xtable-column>
           </yu-xtable>
@@ -134,77 +48,19 @@
       </MainLayout>
       <!-- 说明dialog可配置宽高属性，若不配置则宽度默认为屏幕50%，高度自适应
       width="650px" height="380px"-->
-      <yu-dialog
-        :title="viewTitle[viewType]"
-        :visible.sync="dialogVisible"
-        width="800px"
-        @close="cancelFn"
-      >
+      <yu-dialog :title="viewTitle[viewType]" :visible.sync="dialogVisible" width="800px" @close="cancelFn">
         <yu-xform :model="refFormdata" ref="refForm" label-width="105px" :disabled="formDisabled">
           <yu-xform-group>
-            <yu-xform-item
-              label="公告标题"
-              ctype="input"
-              :rules="globalRules.required500"
-              name="noticeTitle"
-            ></yu-xform-item>
+            <yu-xform-item label="公告标题" ctype="input" :rules="globalRules.required500" name="noticeTitle"></yu-xform-item>
             <yu-xform-item label="重要程度" ctype="select" name="noticeLevel" data-code="NOTICE_LEVEL"></yu-xform-item>
-            <yu-xform-item
-              label="有效期"
-              ctype="date-picker"
-              name="activeDate"
-              :picker-options="pickerOptions"
-            ></yu-xform-item>
-            <yu-xform-item
-              label="是否置顶"
-              @change="isTopSelect"
-              :rules="globalRules.required"
-              ctype="select"
-              data-code="YES_NO"
-              name="isTop"
-            ></yu-xform-item>
-            <yu-xform-item
-              label="置顶期至"
-              :picker-options="pickerOptions"
-              @change="ischange"
-              :disabled="isTopDisabled"
-              ctype="date-picker"
-              name="topActiveDate"
-            ></yu-xform-item>
-            <yu-xform-item
-              label="接收机构"
-              placeholder="请选择机构(不选默认发布全行)"
-              name="reciveOrgId"
-              ctype="yufp-org-tree"
-              :tree-options="treeOptions"
-            ></yu-xform-item>
-            <yu-xform-item
-              v-if="viewTitle[viewType] =='详情'"
-              label="发布人"
-              ctype="input"
-              name="pubUserName"
-            ></yu-xform-item>
-            <yu-xform-item
-              v-if="viewTitle[viewType] =='详情'"
-              label="发布日期"
-              name="pubTime"
-              ctype="date-picker"
-              :show-overflow-tooltip="true"
-            ></yu-xform-item>
-            <yu-xform-item
-              v-if="viewTitle[viewType] =='详情'"
-              label="创建人"
-              name="creatorName"
-              ctype="input"
-              :show-overflow-tooltip="true"
-            ></yu-xform-item>
-            <yu-xform-item
-              v-if="viewTitle[viewType] =='详情'"
-              label="发布机构"
-              name="pubOrgName"
-              ctype="input"
-              :show-overflow-tooltip="true"
-            ></yu-xform-item>
+            <yu-xform-item label="有效期" ctype="date-picker" name="activeDate" :picker-options="pickerOptions"></yu-xform-item>
+            <yu-xform-item label="是否置顶" @change="isTopSelect" :rules="globalRules.required" ctype="select" data-code="YES_NO" name="isTop"></yu-xform-item>
+            <yu-xform-item label="置顶期至" :picker-options="pickerOptions" @change="ischange" :disabled="isTopDisabled" ctype="date-picker" name="topActiveDate"></yu-xform-item>
+            <yu-xform-item label="接收机构" placeholder="请选择机构(不选默认发布全行)" name="reciveOrgId" ctype="yufp-org-tree" :tree-options="treeOptions"></yu-xform-item>
+            <yu-xform-item v-if="viewTitle[viewType] == '详情'" label="发布人" ctype="input" name="pubUserName"></yu-xform-item>
+            <yu-xform-item v-if="viewTitle[viewType] == '详情'" label="发布日期" name="pubTime" ctype="date-picker" :show-overflow-tooltip="true"></yu-xform-item>
+            <yu-xform-item v-if="viewTitle[viewType] == '详情'" label="创建人" name="creatorName" ctype="input" :show-overflow-tooltip="true"></yu-xform-item>
+            <yu-xform-item v-if="viewTitle[viewType] == '详情'" label="发布机构" name="pubOrgName" ctype="input" :show-overflow-tooltip="true"></yu-xform-item>
           </yu-xform-group>
         </yu-xform>
         <div style="padding: 5px 23px 15px">公告内容 :</div>
@@ -215,12 +71,7 @@
         </div>
       </yu-dialog>
     </div>
-    <Details
-      class="Details"
-      :Visible="dialogVisibles"
-      :noticeDetail="noticeDetail"
-      @close="closeHandler"
-    ></Details>
+    <Details class="Details" :Visible="dialogVisibles" :noticeDetail="noticeDetail" @close="closeHandler"></Details>
   </div>
 </template>
 
@@ -266,24 +117,15 @@ export default {
         topActiveDate: "",
         activeDate: "",
       },
-      treeUrl:
-        backend.appOcaService +
-        "/api/adminsmorg/orgtreequery?orgId=" +
-        _this.userInfo.org.code +
-        "&orgSts=A",
+      treeUrl: backend.appOcaService + "/api/adminsmorg/orgtreequery?orgId=" + _this.userInfo.org.code + "&orgSts=A",
       orgParams: {
-        dataUrl:
-          backend.appOcaService +
-          "/api/adminsmorg/orgtreequery?orgId=" +
-          _this.userInfo.org.code +
-          "&orgSts=A",
+        dataUrl: backend.appOcaService + "/api/adminsmorg/orgtreequery?orgId=" + _this.userInfo.org.code + "&orgSts=A",
         dataId: "orgCode",
       },
       formModel: {
         // orgId: userInfo.org.code,
       },
-      announceDataUrl:
-        backend.noticeService + "/api/adminsmnotice/queryByCondition", // 公告表dataUrl
+      announceDataUrl: backend.noticeService + "/api/adminsmnotice/queryByCondition", // 公告表dataUrl
       // dataUrl: '/trade/example/list',
       // 附件表格dataUrl
       // attachmentDataUrl: backend.appOcaService + "/trade/example/list",
@@ -296,10 +138,7 @@ export default {
       contrUrl: backend.appOcaService + "/api/provider/findrolelist", //角色列表请求地址
       initTableParams: {
         condition: JSON.stringify({
-          reciveOrg: [
-            { id: _this.userInfo.org.code },
-            { id: roleInfo.orgCode },
-          ],
+          reciveOrg: [{ id: _this.userInfo.org.code }, { id: roleInfo.orgCode }],
           // reciveOrgId: _this.userInfo.org.code,
           belongOrgId: _this.userInfo.details.userBelongOrg,
           // pubSts: "O",
@@ -334,11 +173,7 @@ export default {
         needCheckbox: true, // 机构树多选参数
       },
       orgParams: {
-        dataUrl:
-          backend.appOcaService +
-          "/api/adminsmorg/orgtreequery?orgId=" +
-          _this.userInfo.org.code +
-          "&orgSts=A",
+        dataUrl: backend.appOcaService + "/api/adminsmorg/orgtreequery?orgId=" + _this.userInfo.org.code + "&orgSts=A",
         dataId: "orgCode",
       },
       queryFormData: {},
@@ -347,15 +182,15 @@ export default {
           if (this.queryFormData.endTime) {
             return time.getTime() >= new Date(this.queryFormData.endTime).getTime();
           }
-        }
+        },
       },
       endPickerOptions: {
         disabledDate: (time) => {
           if (this.queryFormData.beginTime) {
             return time.getTime() <= new Date(this.queryFormData.beginTime).getTime() - 86400000;
           }
-        }
-      }
+        },
+      },
     };
   },
   computed: {
@@ -635,19 +470,12 @@ export default {
           // 调用后台接口，发布记录
           console.log(action);
           if (action === "confirm") {
-            for (
-              var i = 0;
-              i < _this.$refs.refAnnounceTable.selections.length;
-              i++
-            ) {
+            for (var i = 0; i < _this.$refs.refAnnounceTable.selections.length; i++) {
               _this.$refs.refAnnounceTable.selections[i].pubSts = "O";
               _this.$refs.refAnnounceTable.selections[i].pubOrgId = _this.orgId;
-              _this.$refs.refAnnounceTable.selections[i].pubOrgName =
-                _this.orgName;
-              _this.$refs.refAnnounceTable.selections[i].pubUserId =
-                _this.userId;
-              _this.$refs.refAnnounceTable.selections[i].pubUserName =
-                _this.userName;
+              _this.$refs.refAnnounceTable.selections[i].pubOrgName = _this.orgName;
+              _this.$refs.refAnnounceTable.selections[i].pubUserId = _this.userId;
+              _this.$refs.refAnnounceTable.selections[i].pubUserName = _this.userName;
             }
             request({
               method: "POST",
@@ -698,11 +526,7 @@ export default {
         // console.log("已阅");
         if (response.code == "0") {
           _this.$message({ message: "已阅成功", type: "success" });
-          for (
-            var i = 0;
-            i < _this.$refs.refAnnounceTable.selections.length;
-            i++
-          ) {
+          for (var i = 0; i < _this.$refs.refAnnounceTable.selections.length; i++) {
             _this.$refs.refAnnounceTable.selections[i].readSts = "Y";
           }
           // vm.$refs.noticeTable.remoteData();

@@ -25,7 +25,7 @@
               <template slot-scope="scope">
                 <div class="yu-table__company" @click.prevent="customerViewFn(scope.row)">
                   <i class="iconfont icon-qiyelogo"></i>
-                  {{scope.row.custName}}
+                  {{ scope.row.custName }}
                 </div>
               </template>
             </yu-xtable-column>
@@ -34,7 +34,7 @@
             <yu-xtable-column label="交易时间" prop="tranTime" min-width="160" :show-overflow-tooltip="true" is-num sortable="custom"></yu-xtable-column>
             <yu-xtable-column label="交易金额（万元）" prop="tranAmt" min-width="180" sortable="custom" format-money align="right" :show-overflow-tooltip="true">
               <template slot-scope="scope">
-                <span class="num">{{$util.formatMoney(scope.row.tranAmt / 10000)}}</span>
+                <span class="num">{{ $util.formatMoney(scope.row.tranAmt / 10000) }}</span>
               </template>
             </yu-xtable-column>
             <yu-xtable-column label="借贷标志" prop="dcFlag" width="120" :show-overflow-tooltip="true" data-code="DC_FLAG" sortable="custom"></yu-xtable-column>
@@ -60,93 +60,97 @@
 
 <script lang="ts">
 import { Component, Ref, Vue, Watch } from "vue-property-decorator";
-import { backend } from '@/config'
+import { backend } from "@/config";
 import moment from "moment";
 import { ServiceModule } from "@/store/modules/service";
-import ParamsSet from '../paramsSet/index.vue'
+import ParamsSet from "../paramsSet/index.vue";
 
 @Component({
   name: "AcctLevel",
   components: {
-    ParamsSet
-  }
+    ParamsSet,
+  },
 })
 export default class extends Vue {
-  @Ref('searchForm') searchForm: any;
-  @Ref('refTable') refTable: any;
+  @Ref("searchForm") searchForm: any;
+  @Ref("refTable") refTable: any;
   private dataUrl = backend.workService + "/api/actrmdmng/actrmdlist";
-  private dataDt = sessionStorage.getItem('dataDt');
+  private dataDt = sessionStorage.getItem("dataDt");
   private contentVisible = false;
 
-  private queryFormData:any = {
-    remindType: '01',
-    remindSType: '0101'
-  }
+  private queryFormData: any = {
+    remindType: "01",
+    remindSType: "0101",
+  };
 
   private baseParams = {
     condition: JSON.stringify({
-      remindType: '01',
-      remindSType: '0101',
-      isMark: '1'
-    })
-  }
+      remindType: "01",
+      remindSType: "0101",
+      isMark: "1",
+    }),
+  };
 
   private startPickerOptions = {
     disabledDate: (time: Date) => {
       if ((this.queryFormData as any).dateEnd) {
         return time.getTime() >= new Date((this.queryFormData as any).dateEnd).getTime();
       }
-    }
-  }
+    },
+  };
 
   private endPickerOptions = {
     disabledDate: (time: Date) => {
       if ((this.queryFormData as any).dateStart) {
         return time.getTime() <= new Date((this.queryFormData as any).dateStart).getTime() - 86400000;
       }
-    }
-  }
+    },
+  };
 
   get remindTypeOptions() {
     return ServiceModule.remindOptions.map((item: any) => {
       return {
         key: item.remindCategoryId,
-        value: item.remindCategoryNm
-      }
-    })
+        value: item.remindCategoryNm,
+      };
+    });
   }
 
   get remindSTypeOptions() {
-    return (ServiceModule.remindOptions.find((item:any) => item.remindCategoryId==='01') as any)?.childList.map((item: any) => {
+    return (ServiceModule.remindOptions.find((item: any) => item.remindCategoryId === "01") as any)?.childList.map((item: any) => {
       return {
         key: item.remindSubclassId,
-        value: item.remindSubclassNm
-      }
-    })
+        value: item.remindSubclassNm,
+      };
+    });
   }
 
   get isMark() {
     return ServiceModule.isMark;
   }
 
-  @Watch('isMark')
+  @Watch("isMark")
   onIsMarkChange() {
-    this.isMark === '2' && this.searchFn()
+    this.isMark === "2" && this.searchFn();
   }
 
   mounted() {
-    this.searchFn()
-    this.$checkCtr('export') && this.$exportQueue.addQueue(this.$route.path, this.exportFn)
+    this.searchFn();
+    this.$checkCtr("export") && this.$exportQueue.addQueue(this.$route.path, this.exportFn);
   }
 
   searchFn() {
-    this.refTable.remoteData({
-      condition:JSON.stringify({
-        isMark: this.isMark
-      })
-    }, true, () => {
-      ServiceModule.SET_IS_MARK('1')
-    })
+    this.refTable.remoteData(
+      {
+        condition: JSON.stringify({
+          isMark: this.isMark,
+        }),
+      },
+      true,
+      () => {
+        ServiceModule.SET_IS_MARK("1");
+      }
+    );
   }
 
   // 参数设置
@@ -167,34 +171,32 @@ export default class extends Vue {
 
   // 大类变化
   remindTypeChange(value: string) {
-    ServiceModule.SET_REMIND_TYPE(value)
-    let remindSType = (ServiceModule.remindOptions.find((item:any) => item.remindCategoryId===value) as any)?.childList[0].remindSubclassId
-    ServiceModule.SET_REMIND_S_TYPE(remindSType)
+    ServiceModule.SET_REMIND_TYPE(value);
+    let remindSType = (ServiceModule.remindOptions.find((item: any) => item.remindCategoryId === value) as any)?.childList[0].remindSubclassId;
+    ServiceModule.SET_REMIND_S_TYPE(remindSType);
   }
 
   // 小类变化
   remindSTypeChange(value: string) {
-    ServiceModule.SET_REMIND_S_TYPE(value)
+    ServiceModule.SET_REMIND_S_TYPE(value);
   }
 
-
-  exportFn (showTipModal?:boolean) {
+  exportFn(showTipModal?: boolean) {
     var searchQuery: any = (this as any)._.assign({}, this.searchForm.searchModel, {
-      fileName: '动账提醒-大额动账提醒',
+      fileName: "动账提醒-大额动账提醒",
       queryField: this.searchForm.searchQueryField,
-      isMark: this.isMark
+      isMark: this.isMark,
     });
     var apiParams = {
-      url: backend.workService + '/api/actrmdmng/exportactrmdlist',
+      url: backend.workService + "/api/actrmdmng/exportactrmdlist",
       params: searchQuery,
-      sort: this.refTable.sort
+      sort: this.refTable.sort,
     };
     (this as any).$util.exportTable({
       _this: this,
       apiParams,
-      showTipModal
+      showTipModal,
     });
   }
-
 }
 </script>

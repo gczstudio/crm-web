@@ -32,7 +32,7 @@ import CommonFuns from "./commonFuns/index.vue";
 import Task from "./task/index.vue";
 import Remind from "./remind/index.vue";
 import { HomeModule } from "@/store/modules/home";
-import FixedRightTool from '@/layout/components/FixedRightTool/index.vue'
+import FixedRightTool from "@/layout/components/FixedRightTool/index.vue";
 
 @Component({
   name: "Home",
@@ -42,14 +42,13 @@ import FixedRightTool from '@/layout/components/FixedRightTool/index.vue'
     CommonFuns,
     Task,
     Remind,
-    FixedRightTool
+    FixedRightTool,
   },
 })
 export default class extends Vue {
   get needAlignUpdate(): boolean {
     return HomeModule.needAlignUpdate;
   }
-
 }
 </script>
 

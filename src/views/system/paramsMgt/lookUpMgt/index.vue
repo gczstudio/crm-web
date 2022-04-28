@@ -35,35 +35,16 @@
           <div class="yu-main-form">
             <yu-xform class="search" :model="query" :search="queryMainGridFn" form-type="search">
               <yu-xform-group :column="1">
-                <yu-xform-item
-                  label="类别别名或名称"
-                  name="lookupName"
-                  ctype="input"
-                  :rules="globalRules.input"
-                ></yu-xform-item>
+                <yu-xform-item label="类别别名或名称" name="lookupName" ctype="input" :rules="globalRules.input"></yu-xform-item>
               </yu-xform-group>
             </yu-xform>
           </div>
           <div class="yu-main-content">
             <!-- 查询结果表格 -->
             <div class="yu-main-table">
-              <yu-xtable
-                ref="filterTable"
-                @row-click="rowClickFn"
-                :data-url="typetableUrl"
-                :default-load="true"
-                :dynamic-height="true"
-                border
-                layout='total, prev, pager, next'
-              >
-                <yu-xtable-column
-                  label="字典类别英文别名"
-                  prop="lookupCode"
-                ></yu-xtable-column>
-                <yu-xtable-column
-                  label="字典类别名称"
-                  prop="lookupName"
-                ></yu-xtable-column>
+              <yu-xtable ref="filterTable" @row-click="rowClickFn" :data-url="typetableUrl" :default-load="true" :dynamic-height="true" border layout="total, prev, pager, next">
+                <yu-xtable-column label="字典类别英文别名" prop="lookupCode"></yu-xtable-column>
+                <yu-xtable-column label="字典类别名称" prop="lookupName"></yu-xtable-column>
               </yu-xtable>
             </div>
           </div>
@@ -71,210 +52,77 @@
       </el-col>
       <el-col :span="10">
         <div class="yu-main-wrapper">
-           <!-- 表格工具栏 -->
+          <!-- 表格工具栏 -->
           <div class="yu-main__header clearfix">
-             <div class="yu-main__header--title fl">数据字典内容</div>
-              <div class="yu-main-toolbar fr">
-                <el-button icon="el-icon-plus" @click="createLkItem">新增</el-button>
-                <el-button icon="el-icon-edit" @click="updateLkItem">修改</el-button>
-                <el-button icon="el-icon-delete" @click="deleteLkItem">删除</el-button>
-                <el-button icon="el-icon-delete" @click="refreshLkItem">刷新缓存</el-button>
-              </div>
+            <div class="yu-main__header--title fl">数据字典内容</div>
+            <div class="yu-main-toolbar fr">
+              <el-button icon="el-icon-plus" @click="createLkItem">新增</el-button>
+              <el-button icon="el-icon-edit" @click="updateLkItem">修改</el-button>
+              <el-button icon="el-icon-delete" @click="deleteLkItem">删除</el-button>
+              <el-button icon="el-icon-delete" @click="refreshLkItem">刷新缓存</el-button>
             </div>
+          </div>
           <div class="yu-main-form">
-            <yu-xform
-              class="search"
-              :model="itemQuery"
-              :search="itemQueryMainGridFn"
-              form-type="search"
-            >
+            <yu-xform class="search" :model="itemQuery" :search="itemQueryMainGridFn" form-type="search">
               <yu-xform-group :column="1">
-                <yu-xform-item
-                  label="字典代码或名称"
-                  name="lookupItemName"
-                  ctype="input"
-                  :rules="globalRules.input"
-                ></yu-xform-item>
+                <yu-xform-item label="字典代码或名称" name="lookupItemName" ctype="input" :rules="globalRules.input"></yu-xform-item>
               </yu-xform-group>
             </yu-xform>
           </div>
           <div class="yu-main-content">
             <!-- 查询结果表格 -->
             <div class="yu-main-table">
-              <yu-xtable
-                ref="itemTable"
-                @row-click="itemClickFn"
-                :data-url="itemUrl"
-                :default-load="true"
-                :dynamic-height="true"
-                border
-                layout='total, prev, pager, next'
-              >
-                <yu-xtable-column
-                  label="字典代码"
-                  prop="lookupItemCode"
-                  :sortable="true"
-                  :resizable="true"
-                ></yu-xtable-column>
-                <yu-xtable-column
-                  label="字典名称"
-                  prop="lookupItemName"
-                ></yu-xtable-column>
-                <yu-xtable-column
-                  label="字典排序"
-                  prop="lookupItemOrder"
-                  :width="100"
-                ></yu-xtable-column>
-                <yu-xtable-column
-                  label="字典备注说明"
-                  prop="lookupItemComment"
-                ></yu-xtable-column>
+              <yu-xtable ref="itemTable" @row-click="itemClickFn" :data-url="itemUrl" :default-load="true" :dynamic-height="true" border layout="total, prev, pager, next">
+                <yu-xtable-column label="字典代码" prop="lookupItemCode" :sortable="true" :resizable="true"></yu-xtable-column>
+                <yu-xtable-column label="字典名称" prop="lookupItemName"></yu-xtable-column>
+                <yu-xtable-column label="字典排序" prop="lookupItemOrder" :width="100"></yu-xtable-column>
+                <yu-xtable-column label="字典备注说明" prop="lookupItemComment"></yu-xtable-column>
               </yu-xtable>
             </div>
           </div>
         </div>
       </el-col>
     </el-row>
-    <yu-dialog
-      title="类别目录"
-      :visible.sync="lkTypeDialogVisible"
-      width="500px"
-    >
-      <yu-xform
-        :model="lookupType"
-        ref="lookupTypeForm"
-        :disabled="lookupTypeFormDisabled"
-        label-width="120px"
-      >
+    <yu-dialog title="类别目录" :visible.sync="lkTypeDialogVisible" width="500px">
+      <yu-xform :model="lookupType" ref="lookupTypeForm" :disabled="lookupTypeFormDisabled" label-width="120px">
         <yu-xform-group :column="1">
-          <yu-xform-item
-            label="目录名称"
-            name="lookupTypeName"
-            :rules="globalRules.requiredInput"
-            ctype="input"
-          ></yu-xform-item>
-          <yu-xform-item
-            label="上级目录"
-            name="upLookupTypeName"
-            :rules="globalRules.required"
-            ctype="input"
-          ></yu-xform-item>
+          <yu-xform-item label="目录名称" name="lookupTypeName" :rules="globalRules.requiredInput" ctype="input"></yu-xform-item>
+          <yu-xform-item label="上级目录" name="upLookupTypeName" :rules="globalRules.required" ctype="input"></yu-xform-item>
         </yu-xform-group>
       </yu-xform>
       <div slot="footer" align="center">
-        <el-button
-          v-if="lktypeviewType == 'ADD'"
-          type="primary"
-          @click="saveLookUpType()"
-          >保 存</el-button
-        >
-        <el-button
-          v-if="lktypeviewType == 'UPDATE'"
-          type="primary"
-          @click="updateLookUpType()"
-          >保 存</el-button
-        >
-        <el-button @click="lkTypeDialogVisible = false"
-          >取消</el-button
-        >
+        <el-button v-if="lktypeviewType == 'ADD'" type="primary" @click="saveLookUpType()">保 存</el-button>
+        <el-button v-if="lktypeviewType == 'UPDATE'" type="primary" @click="updateLookUpType()">保 存</el-button>
+        <el-button @click="lkTypeDialogVisible = false">取消</el-button>
       </div>
     </yu-dialog>
     <yu-dialog title="字典内容" :visible.sync="lkItemDialogVisible" width="500px">
-      <yu-xform
-        :model="lookupItem"
-        ref="lookupItemForm"
-        :disabled="lookupItemFormDisabled"
-        label-width="140px"
-      >
+      <yu-xform :model="lookupItem" ref="lookupItemForm" :disabled="lookupItemFormDisabled" label-width="140px">
         <yu-xform-group :column="1">
-          <yu-xform-item
-            label="字典代码"
-            name="lookupItemCode"
-            :rules="globalRules.required"
-            ctype="input"
-          ></yu-xform-item>
-          <yu-xform-item
-            label="字典名称"
-            name="lookupItemName"
-            :rules="globalRules.required"
-            ctype="input"
-          ></yu-xform-item>
-          <yu-xform-item
-            label="类别英文别名"
-            name="lookupCode"
-            :readonly="true"
-            :rules="globalRules.required"
-            ctype="input"
-          ></yu-xform-item>
-          <yu-xform-item
-            label="字典排序"
-            :rules="$validator.orderNumber"
-            name="lookupItemOrder"
-            ctype="input"
-          ></yu-xform-item>
-          <yu-xform-item
-            label="字典备注说明"
-            name="lookupItemComment"
-            ctype="input"
-          ></yu-xform-item>
+          <yu-xform-item label="字典代码" name="lookupItemCode" :rules="globalRules.required" ctype="input"></yu-xform-item>
+          <yu-xform-item label="字典名称" name="lookupItemName" :rules="globalRules.required" ctype="input"></yu-xform-item>
+          <yu-xform-item label="类别英文别名" name="lookupCode" :readonly="true" :rules="globalRules.required" ctype="input"></yu-xform-item>
+          <yu-xform-item label="字典排序" :rules="$validator.orderNumber" name="lookupItemOrder" ctype="input"></yu-xform-item>
+          <yu-xform-item label="字典备注说明" name="lookupItemComment" ctype="input"></yu-xform-item>
         </yu-xform-group>
       </yu-xform>
       <div slot="footer" align="center">
-        <el-button
-          v-if="lkItemviewType == 'ADD'"
-          type="primary"
-          @click="saveLookUpItem()"
-          >保 存</el-button
-        >
-        <el-button
-          v-if="lkItemviewType == 'UPDATE'"
-          type="primary"
-          @click="updateLookUpItem()"
-          >保 存</el-button
-        >
-        <el-button @click="lkItemDialogVisible = false"
-          >取消</el-button
-        >
+        <el-button v-if="lkItemviewType == 'ADD'" type="primary" @click="saveLookUpItem()">保 存</el-button>
+        <el-button v-if="lkItemviewType == 'UPDATE'" type="primary" @click="updateLookUpItem()">保 存</el-button>
+        <el-button @click="lkItemDialogVisible = false">取消</el-button>
       </div>
     </yu-dialog>
     <yu-dialog title="数据字典类别" :visible.sync="dialogVisible" width="500px">
-      <yu-xform
-        :model="datafilter"
-        ref="datafilterForm"
-        :disabled="formDisabled"
-        label-width="140px"
-      >
+      <yu-xform :model="datafilter" ref="datafilterForm" :disabled="formDisabled" label-width="140px">
         <yu-xform-group :column="1">
-          <yu-xform-item
-            label="类别英文别名"
-            name="lookupCode"
-            :rules="globalRules.requiredInput"
-            ctype="input"
-          ></yu-xform-item>
-          <yu-xform-item
-            label="字典类别名称"
-            name="lookupName"
-            :rules="globalRules.required"
-            ctype="input"
-          ></yu-xform-item>
+          <yu-xform-item label="类别英文别名" name="lookupCode" :rules="globalRules.requiredInput" ctype="input"></yu-xform-item>
+          <yu-xform-item label="字典类别名称" name="lookupName" :rules="globalRules.required" ctype="input"></yu-xform-item>
         </yu-xform-group>
       </yu-xform>
       <div slot="footer" align="center">
-        <el-button
-          v-if="viewType == 'ADD'"
-          type="primary"
-          @click="createFilter()"
-          >保 存</el-button
-        >
-        <el-button
-          v-if="viewType == 'UPDATE'"
-          type="primary"
-          @click="lookuptableUpdateFn()"
-          >保 存</el-button
-        >
-        <el-button @click="dialogVisible = false"
-          >取消</el-button
-        >
+        <el-button v-if="viewType == 'ADD'" type="primary" @click="createFilter()">保 存</el-button>
+        <el-button v-if="viewType == 'UPDATE'" type="primary" @click="lookuptableUpdateFn()">保 存</el-button>
+        <el-button @click="dialogVisible = false">取消</el-button>
       </div>
     </yu-dialog>
   </div>
@@ -425,44 +273,44 @@ export default {
     };
   },
   methods: {
-    queryMainGridFn () {
+    queryMainGridFn() {
       var param = { condition: JSON.stringify(this.query) };
       this.$refs.filterTable.remoteData(param);
     },
-    itemQueryMainGridFn () {
+    itemQueryMainGridFn() {
       var param = { condition: JSON.stringify(this.itemQuery) };
       this.$refs.itemTable.remoteData(param);
     },
-    startChangeFn (val) {
+    startChangeFn(val) {
       this.filterGrid.paging.page = val;
       this.queryInitFn();
     },
-    limitChangeFn (val) {
+    limitChangeFn(val) {
       this.filterGrid.paging.page = 1;
       this.filterGrid.paging.pageSize = val;
       this.queryInitFn();
     },
     // 类别目录过滤搜索
-    filterNode (value, data) {
+    filterNode(value, data) {
       if (!value) {
         return true;
       }
       return data.label.indexOf(value) !== -1;
     },
     // 内容目录过滤搜索
-    itemNode (value, data) {
+    itemNode(value, data) {
       if (!value) {
         return true;
       }
       return data.label.indexOf(value) !== -1;
     },
     // 点击内容目录
-    itemClickFn (row, event, column) {
+    itemClickFn(row, event, column) {
       // 用于单个修改
       this.filterGrid.currentItemRow = row;
     },
     // 点击类别目录
-    nodeClickFn (obj, node, nodeComp) {
+    nodeClickFn(obj, node, nodeComp) {
       this.currentTypeId = node.data.id;
       this.currentTypeName = node.data.label;
       this.currentTypeData = node.data;
@@ -482,7 +330,7 @@ export default {
     },
 
     // 新增类别目录按钮
-    createLkType () {
+    createLkType() {
       if (this.currentTypeId == null) {
         this.$message({ message: "请选择目录节点!", type: "warning" });
         return false;
@@ -499,7 +347,7 @@ export default {
       });
     },
     // 修改类别目录按钮
-    updateLkType () {
+    updateLkType() {
       var lkTypeId = this.currentTypeId;
       if (lkTypeId == null) {
         this.$message({ message: "请选择目录节点!", type: "warning" });
@@ -516,7 +364,7 @@ export default {
       this.lkTypeDialogVisible = true;
     },
     // 新增内容目录按钮
-    createLkItem () {
+    createLkItem() {
       // 挂在当前选中目录下面
       if (this.filterGrid.currentRow == null) {
         this.$message({ message: "请选择类别!", type: "warning" });
@@ -531,7 +379,7 @@ export default {
       });
     },
     // 修改内容目录按钮
-    updateLkItem () {
+    updateLkItem() {
       if (this.filterGrid.currentItemRow == null) {
         this.$message({ message: "请选择数据字典内容!", type: "warning" });
         return false;
@@ -545,7 +393,7 @@ export default {
       this.lkItemDialogVisible = true;
     },
     // 新增目录保存
-    saveLookUpType () {
+    saveLookUpType() {
       // this.lookupType = model;
       this.lookupType.lastChgUsr = this.userId;
       this.lookupType.instuId = this.defaultInstuId;
@@ -553,39 +401,39 @@ export default {
       request({
         url: backend.appCommonService + "/api/adminsmlookuptype/",
         method: "post",
-        data: this.lookupType
-      }).then(res => {
+        data: this.lookupType,
+      }).then((res) => {
         this.$message({ message: "保存成功!", type: "success" });
         this.lkTypeDialogVisible = false;
         // 刷新树
         this.$refs.lookuptypetree.remoteData();
-      })
+      });
     },
     // 修改目录保存
-    updateLookUpType () {
+    updateLookUpType() {
       this.lookupType.lastChgUsr = this.userId;
       this.lookupType.instuId = this.defaultInstuId;
       request({
         url: backend.appCommonService + "/api/adminsmlookuptype/updates",
         method: "post",
-        data: this.lookupType
-      }).then(res => {
+        data: this.lookupType,
+      }).then((res) => {
         this.$message({ message: "保存成功!", type: "success" });
         this.lkTypeDialogVisible = false;
         // 刷新树
         this.$refs.lookuptypetree.remoteData();
-      })
+      });
     },
     // 新增内容目录保存
-    saveLookUpItem () {
+    saveLookUpItem() {
       this.lookupItem.lastChgUsr = this.userId;
       this.lookupItem.upLookupItemId = "";
       delete this.lookupItem.lookupItemId;
       request({
         url: backend.appCommonService + "/api/adminsmlookupitem/createitem",
         method: "post",
-        data: this.lookupItem
-      }).then(res => {
+        data: this.lookupItem,
+      }).then((res) => {
         this.$message({ message: "保存成功!", type: "success" });
         this.lkItemDialogVisible = false;
         var param = {
@@ -597,17 +445,16 @@ export default {
         };
         // 刷新树
         this.$refs.itemTable.remoteData(param);
-      })
+      });
     },
     // 修改内容目录保存
-    updateLookUpItem () {
+    updateLookUpItem() {
       this.lookupItem.lastChgUsr = this.userId;
       request({
         url: backend.appCommonService + "/api/adminsmlookupitem/updates",
         method: "post",
         data: this.lookupItem,
-        
-      }).then(res => {
+      }).then((res) => {
         this.$message({ message: "保存成功!", type: "success" });
         this.lkItemDialogVisible = false;
         var param = {
@@ -619,10 +466,10 @@ export default {
         };
         // 刷新树
         this.$refs.itemTable.remoteData(param);
-      })
+      });
     },
     // 删除类别目录
-    deleteLkType () {
+    deleteLkType() {
       var lookupTypeId = this.currentTypeId;
       if (lookupTypeId == null) {
         this.$message({ message: "请选择目录节点!", type: "warning" });
@@ -632,28 +479,26 @@ export default {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
-        callback:  (action) => {
+        callback: (action) => {
           if (action === "confirm") {
             request({
-              url:
-                backend.appCommonService +
-                "/api/adminsmlookuptype/deletes/",
+              url: backend.appCommonService + "/api/adminsmlookuptype/deletes/",
               method: "post",
-              data: [lookupTypeId]
-            }).then(res => {
+              data: [lookupTypeId],
+            }).then((res) => {
               this.$message({ message: "删除成功!", type: "success" });
               // 刷新树
               this.$refs.lookuptypetree.remoteData();
               this.$refs.filterTable.remoteData();
               this.$refs.itemTable.remoteData();
               this.currentTypeId = null;
-            })
+            });
           }
         },
       });
     },
     // 删除内容目录
-    deleteLkItem () {
+    deleteLkItem() {
       if (this.filterGrid.currentItemRow == null) {
         this.$message({ message: "请选择数据字典内容!", type: "warning" });
         return false;
@@ -671,8 +516,8 @@ export default {
             request({
               url: backend.appCommonService + "/api/adminsmlookupitem/delete",
               method: "POST",
-              data: lookupItem
-            }).then(res => {
+              data: lookupItem,
+            }).then((res) => {
               this.$message({ message: "删除成功!", type: "success" });
               // 刷新树
               var param = {
@@ -685,13 +530,13 @@ export default {
               // 刷新树
               this.$refs.itemTable.remoteData(param);
               this.currentTypeId = null;
-            })
+            });
           }
         },
       });
     },
     //    ---------------------------------字典类别表格操作 start------------------------------------------
-    rowClickFn (row, event, column) {
+    rowClickFn(row, event, column) {
       // 用于单个修改
       this.filterGrid.currentRow = row;
       // 获取内容目录 start
@@ -707,7 +552,7 @@ export default {
     },
 
     // 通过typeId初始化查询类别TABLE
-    queryInitFn () {
+    queryInitFn() {
       var me = this;
       me.filterGrid.loading = true;
       var param = {
@@ -721,7 +566,7 @@ export default {
       me.$refs.filterTable.remoteData(param);
     },
     // 编辑按钮
-    lookuptableEditFn () {
+    lookuptableEditFn() {
       if (this.filterGrid.currentRow == null) {
         this.$message({ message: "请选择一条字典类别记录!", type: "warning" });
         return false;
@@ -735,7 +580,7 @@ export default {
       });
     },
     // 修改字典类别
-    lookuptableUpdateFn () {
+    lookuptableUpdateFn() {
       this.datafilter.lastChgUsr = this.userId;
       this.datafilter.instuId = this.defaultInstuId;
       this.dialogVisible = false;
@@ -745,13 +590,13 @@ export default {
         url: backend.appCommonService + "/api/adminsmLookup/updates",
         method: "post",
         data: this.filterGrid.currentRow,
-      }).then(res => {
-          this.$message({ message: "保存成功!", type: "success" });
-          this.queryInitFn();
-      })
+      }).then((res) => {
+        this.$message({ message: "保存成功!", type: "success" });
+        this.queryInitFn();
+      });
     },
     // 增加字典类别
-    addFilterRecord () {
+    addFilterRecord() {
       if (this.currentTypeId === null) {
         this.$message({ message: "请选择目录!", type: "warning" });
         return false;
@@ -768,7 +613,7 @@ export default {
     },
 
     // 保存新增字典类别
-    createFilter () {
+    createFilter() {
       this.datafilter.lastChgUsr = this.userId;
       this.datafilter.instuId = this.defaultInstuId;
       this.filterGrid.currentRow = this.datafilter;
@@ -779,38 +624,35 @@ export default {
         url: backend.appCommonService + "/api/adminsmLookup/createvalidate",
         method: "post",
         data: this.filterGrid.currentRow,
-      }).then(res => {
+      }).then((res) => {
         this.$message({ message: "保存成功!", type: "success" });
         this.queryInitFn();
-      })
+      });
     },
     // 删除数据字典类别
-    dataFilterDeleteFn (row) {
+    dataFilterDeleteFn(row) {
       this.filterGrid.currentRow = row;
       this.$confirm("确认删除该数据字典类别?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
-        callback:  (action) => {
+        callback: (action) => {
           if (action === "confirm") {
             request({
-              url:
-                backend.appCommonService +
-                "/api/adminsmLookup/delete/" +
-                this.filterGrid.currentRow.lookupId,
+              url: backend.appCommonService + "/api/adminsmLookup/delete/" + this.filterGrid.currentRow.lookupId,
               method: "post",
               data: null,
-            }).then(res => {
+            }).then((res) => {
               this.$message({ message: "删除成功!", type: "success" });
               this.queryInitFn();
               this.$refs.itemTable.remoteData();
-            })
+            });
           }
         },
       });
     },
     // 批量删除数据字典类别
-    dataFiltermultDeleteFn () {
+    dataFiltermultDeleteFn() {
       if (this.filterGrid.currentRow == null) {
         this.$message({ message: "请选择一条字典类别记录!", type: "warning" });
         return false;
@@ -822,19 +664,16 @@ export default {
         callback: (action) => {
           if (action === "confirm") {
             request({
-              url:
-                backend.appCommonService +
-                "/api/adminsmLookup/deletes/" +
-                this.filterGrid.currentRow.lookupId,
+              url: backend.appCommonService + "/api/adminsmLookup/deletes/" + this.filterGrid.currentRow.lookupId,
               method: "post",
               data: {
                 lookupId: this.filterGrid.currentRow.lookupId,
-              }
-            }).then(res => {
+              },
+            }).then((res) => {
               this.$message({ message: "删除成功!", type: "success" });
               this.queryInitFn();
               this.$refs.itemTable.remoteData();
-            })
+            });
           }
         },
       });
@@ -844,14 +683,14 @@ export default {
      * 仅用于非页面操作时更新Redis缓存。可能较慢。
      * 当某个字典更新失败会提示对应code信息，请尝试手动更新。
      */
-    refreshLkItem () {
+    refreshLkItem() {
       request({
-        method: 'GET',
-        url: backend.appCommonService + '/api/adminsmlookupitem/refreshitem'
-      }).then(res => {
-        this.$message.success('刷新成功');
-      })
-    }
+        method: "GET",
+        url: backend.appCommonService + "/api/adminsmlookupitem/refreshitem",
+      }).then((res) => {
+        this.$message.success("刷新成功");
+      });
+    },
   },
   mounted: function () {
     // this.getTableHeight();

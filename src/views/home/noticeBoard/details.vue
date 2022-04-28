@@ -1,49 +1,32 @@
 <template>
   <div class="detail-container">
-    <yu-dialog
-      :visible.sync="dialogVisible"
-      @close="close"
-      custom-class="home-notice-detail-dialog"
-      top="10vh"
-    >
+    <yu-dialog :visible.sync="dialogVisible" @close="close" custom-class="home-notice-detail-dialog" top="10vh">
       <template slot="title">
         <span class="el-dropdown-link">
           <img class="avatar" src="../../../assets/images/notice/man.png" alt />
           <div class="user-info">
-            <div class="username f3">{{noticeDetail.pubUserName}}</div>
+            <div class="username f3">{{ noticeDetail.pubUserName }}</div>
           </div>
         </span>
-        <span class="bank" v-show="noticeDetail.isTop == 'Y' ">{{"置顶"}}</span>
-        <span class="xinxin">{{noticeDetail.noticeLevel == 'I' ? "重要" :"一般"}}</span>
+        <span class="bank" v-show="noticeDetail.isTop == 'Y'">{{ "置顶" }}</span>
+        <span class="xinxin">{{ noticeDetail.noticeLevel == "I" ? "重要" : "一般" }}</span>
         <!-- <div class="fengexian"></div> -->
       </template>
       <div class="base-info f3">
-        <div class="section-title">{{noticeDetail.noticeTitle}}</div>
+        <div class="section-title">{{ noticeDetail.noticeTitle }}</div>
         <div class="content" v-html="noticeDetail.detailcontent"></div>
       </div>
       <el-divider></el-divider>
       <div class="jigou f2">
         <div class="pubOrgName">
           <span class="left">发布机构</span>
-          <span>&nbsp;: {{noticeDetail.pubOrgName}}</span>
+          <span>&nbsp;: {{ noticeDetail.pubOrgName }}</span>
         </div>
         <div>
-          <img
-            v-show="noticeDetail.pubTime"
-            title="发布时间"
-            class="pubtime"
-            src="../../../assets/images/notice/pubtime1.png"
-            alt
-          />
-          <span class="span">{{noticeDetail.pubTime}}</span>
-          <img
-            v-show="noticeDetail.activeDate"
-            title="有效时间"
-            class="activetime"
-            src="../../../assets/images/notice/activetime1.png"
-            alt
-          />
-          <span class="span">{{noticeDetail.activeDate}}</span>
+          <img v-show="noticeDetail.pubTime" title="发布时间" class="pubtime" src="../../../assets/images/notice/pubtime1.png" alt />
+          <span class="span">{{ noticeDetail.pubTime }}</span>
+          <img v-show="noticeDetail.activeDate" title="有效时间" class="activetime" src="../../../assets/images/notice/activetime1.png" alt />
+          <span class="span">{{ noticeDetail.activeDate }}</span>
         </div>
       </div>
       <!-- <el-divider style="margin-top : 20px"></el-divider> -->
@@ -81,7 +64,7 @@ export default {
     font-weight: bold;
     font-size: 16px;
   }
-  .el-button{
+  .el-button {
     font-size: 14px;
   }
   .section-title {

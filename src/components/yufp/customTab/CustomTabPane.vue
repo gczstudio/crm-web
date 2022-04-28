@@ -6,15 +6,15 @@
 
 <script>
 export default {
-  name: 'CustomTabPane',
+  name: "CustomTabPane",
   props: {
     label: String,
-    name: String
+    name: String,
   },
   data: function () {
     return {
-      show: true
+      show: true,
     };
-  }
-}
+  },
+};
 </script>

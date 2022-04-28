@@ -1,61 +1,21 @@
 <template>
-  <draggable
-    class="tree-node"
-    tag="ul"
-    :list="treeData"
-    :options="opionts"
-    :group="groupName"
-    animation="300"
-    @start="dragStartFn"
-    @end="dragEndFn"
-  >
-    <li
-      v-for="(el, index) in treeData"
-      :key="el.chartNm"
-      class="tree-node__wrapper"
-      :data-type="el.chartBCgory"
-    >
+  <draggable class="tree-node" tag="ul" :list="treeData" :options="opionts" :group="groupName" animation="300" @start="dragStartFn" @end="dragEndFn">
+    <li v-for="(el, index) in treeData" :key="el.chartNm" class="tree-node__wrapper" :data-type="el.chartBCgory">
       <template v-if="(el.checked || el.checked === undefined) && !el.selected">
         <template v-if="el.chartLevel !== '3'">
           <div class="tree-node__content forbid" @click="toggleFn(el, index)">
-            <span
-              :class="[
-                'tree-node__expand-icon',
-                el.expand ? 'el-icon-caret-bottom' : 'el-icon-caret-right',
-              ]"
-            ></span>
-            <span class="tree-node__label"
-              ><i
-                v-if="el.chartLevel === '3'"
-                :class="[
-                  'iconfont',
-                  chartTyeps[el.chartBCgory][el.chartSCgroy],
-                ]"
-              ></i
-              >{{ el.chartNm }}</span
-            >
+            <span :class="['tree-node__expand-icon', el.expand ? 'el-icon-caret-bottom' : 'el-icon-caret-right']"></span>
+            <span class="tree-node__label"><i v-if="el.chartLevel === '3'" :class="['iconfont', chartTyeps[el.chartBCgory][el.chartSCgroy]]"></i>{{ el.chartNm }}</span>
           </div>
         </template>
         <template v-else>
           <div class="tree-node__content">
-            <span class="tree-node__label"
-              ><i
-                v-if="el.chartLevel === '3'"
-                :class="[
-                  'iconfont',
-                  chartTyeps[el.chartBCgory][el.chartSCgroy],
-                ]"
-              ></i
-              >{{ el.chartNm }}</span
-            >
+            <span class="tree-node__label"><i v-if="el.chartLevel === '3'" :class="['iconfont', chartTyeps[el.chartBCgory][el.chartSCgroy]]"></i>{{ el.chartNm }}</span>
           </div>
         </template>
 
         <!-- <transition name="fade" mode="out-in"> -->
-        <div
-          class="tree-node__children"
-          v-if="el.expand && el.childList && el.childList.length"
-        >
+        <div class="tree-node__children" v-if="el.expand && el.childList && el.childList.length">
           <nested-draggable :data="el.childList" />
         </div>
         <!-- </transition> -->
@@ -116,8 +76,8 @@ export default class extends Vue {
     this.setTreeData();
   }
 
-  get customTreeData () {
-    return HomeModule.customTreeData
+  get customTreeData() {
+    return HomeModule.customTreeData;
   }
 
   mounted() {
@@ -128,7 +88,7 @@ export default class extends Vue {
     this.treeData = this.data.map((item) => {
       return {
         ...item,
-        expand: item.expand === false ? false : true
+        expand: item.expand === false ? false : true,
       };
     });
   }
@@ -141,8 +101,8 @@ export default class extends Vue {
 
   recursion(data: any[], chartId: string[], bool: boolean) {
     data.forEach((item) => {
-      if(item.chartId === chartId) {
-        item.expand = bool
+      if (item.chartId === chartId) {
+        item.expand = bool;
       }
       if (item.childList?.length) {
         this.recursion(item.childList, chartId, bool);
@@ -150,24 +110,21 @@ export default class extends Vue {
     });
   }
 
-
-
-
   dragStartFn(e: any) {
     this.drag = true;
     let chartBCgory = e.item.dataset.type;
-    if(chartBCgory === '1' && HomeModule.cardData.length === 18) {
-      this.$message.warning('指标最多展示18个，请删除后再添加！');
+    if (chartBCgory === "1" && HomeModule.cardData.length === 18) {
+      this.$message.warning("指标最多展示18个，请删除后再添加！");
       this.groupName = "";
       return;
     }
-    if(chartBCgory === '2' && HomeModule.chartData.length === 12) {
-      this.$message.warning('趋势最多展示12个，请删除后再添加！');
+    if (chartBCgory === "2" && HomeModule.chartData.length === 12) {
+      this.$message.warning("趋势最多展示12个，请删除后再添加！");
       this.groupName = "";
       return;
     }
-    if(chartBCgory === '3' && HomeModule.rankData.length === 12) {
-      this.$message.warning('排名最多展示12个，请删除后再添加！');
+    if (chartBCgory === "3" && HomeModule.rankData.length === 12) {
+      this.$message.warning("排名最多展示12个，请删除后再添加！");
       this.groupName = "";
       return;
     }
