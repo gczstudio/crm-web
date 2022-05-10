@@ -45,6 +45,14 @@
 import { Component, Vue, Prop, Ref } from "vue-property-decorator";
 import { backend } from "@/config";
 import AddComp from "../addComp/index.vue";
+
+export interface IChartItem {
+  modName: string;
+  modType: string;
+  modSts: boolean;
+  modConfig: string;
+}
+
 @Component({
   name: "ChartList",
   components: {
@@ -55,7 +63,7 @@ export default class extends Vue {
   @Ref("compFormRef") compFormRef: any;
   @Ref("propFormRef") propFormRef: any;
 
-  private dataUrl = backend.mockService + "/lowcode/comp/list";
+  private dataUrl = backend.mockService + "/lowcode/custcomp/list";
   private compForm = {};
   private addCompVisible = false;
   private compStatus = "add";

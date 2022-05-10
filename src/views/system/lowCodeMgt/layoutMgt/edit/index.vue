@@ -55,14 +55,14 @@ import { addLayout } from "@/api/lowCode";
 import { backend } from "@/config";
 import Draggable from "vuedraggable";
 
-export interface Mode {
+export interface IMode {
   type: string;
   name: string;
   row: number;
   col: number;
 }
 
-export let mode: Mode[] = [
+export let mode: IMode[] = [
   { type: "1", name: "1*1模式", col: 1, row: 1 },
   { type: "2", name: "1*2模式", col: 1, row: 2 },
   { type: "3", name: "2*1模式", col: 2, row: 1 },
@@ -87,7 +87,7 @@ export default class extends Vue {
   private dragItem = {};
 
   private isEditName = false;
-  private mode: Mode[] = mode;
+  private mode: IMode[] = mode;
 
   private layoutArr = [];
 
@@ -97,7 +97,7 @@ export default class extends Vue {
   onRowChange() {
     let layoutConfig = this.row.layoutConfig;
     this.layoutArr = layoutConfig.split(",").map((item: string) => {
-      return this.mode.find((ele: Mode) => ele.type == item);
+      return this.mode.find((ele: IMode) => ele.type == item);
     });
   }
 
@@ -118,14 +118,14 @@ export default class extends Vue {
     this.drag = false;
   }
 
-  getModeChunkStyle(item: Mode) {
+  getModeChunkStyle(item: IMode) {
     return {
       width: 0.6 * item.col + "rem",
       height: 0.4 * item.row + "rem",
     };
   }
 
-  getChunkStyle(item: Mode) {
+  getChunkStyle(item: IMode) {
     if (!this.chunkHeight) return;
     return {
       width: `calc(${25 * item.col}% - 16px)`,

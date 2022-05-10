@@ -6,6 +6,69 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "7626536",
+      "name": "组件信息",
+      "font_class": "zujianxinxi",
+      "unicode": "e65f",
+      "unicode_decimal": 58975
+    },
+    {
+      "icon_id": "29291866",
+      "name": "导出",
+      "font_class": "daochu",
+      "unicode": "e658",
+      "unicode_decimal": 58968
+    },
+    {
+      "icon_id": "29291867",
+      "name": "导入",
+      "font_class": "daoru",
+      "unicode": "e659",
+      "unicode_decimal": 58969
+    },
+    {
+      "icon_id": "29291868",
+      "name": "回收",
+      "font_class": "huishou",
+      "unicode": "e65a",
+      "unicode_decimal": 58970
+    },
+    {
+      "icon_id": "29291869",
+      "name": "联合 87",
+      "font_class": "a-lianhe87",
+      "unicode": "e65b",
+      "unicode_decimal": 58971
+    },
+    {
+      "icon_id": "29291870",
+      "name": "机构",
+      "font_class": "jigou1",
+      "unicode": "e65c",
+      "unicode_decimal": 58972
+    },
+    {
+      "icon_id": "29291871",
+      "name": "客户经理",
+      "font_class": "kehujingli",
+      "unicode": "e65d",
+      "unicode_decimal": 58973
+    },
+    {
+      "icon_id": "29291872",
+      "name": "移除",
+      "font_class": "yichu",
+      "unicode": "e65e",
+      "unicode_decimal": 58974
+    },
+    {
+      "icon_id": "29249201",
+      "name": "组 7216",
+      "font_class": "a-zu7216",
+      "unicode": "e657",
+      "unicode_decimal": 58967
+    },
+    {
       "icon_id": "6337453",
       "name": "分栏",
       "font_class": "fenlan",

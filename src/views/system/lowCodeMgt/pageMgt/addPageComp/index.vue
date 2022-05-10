@@ -20,13 +20,13 @@
             </div>
           </el-col>
           <el-col :span="19">
-            <LayoutList v-show="curTab == 'layout'" />
+            <LayoutList v-show="curTab == 'layout'" @select-layout="selectLayoutFn" />
             <CompList v-show="curTab == 'comp'" />
           </el-col>
         </el-row>
       </div>
       <div class="center-box">
-        <tool-bar />
+        <RenderTool />
       </div>
       <div class="right-box"></div>
     </div>
@@ -39,13 +39,16 @@ import { backend } from "@/config";
 import { getUserInfo } from "@/utils";
 import LayoutList from "../layoutList/index.vue";
 import CompList from "../compList/index.vue";
-import ToolBar from "../toolBar/index.vue";
+import RenderTool from "../renderTool/index.vue";
+import { ILayoutListItem } from "../../layoutMgt/index.vue";
+import { IMode, mode } from "../../layoutMgt/edit/index.vue";
+import { LowCodeModule } from "@/store/modules/lowCode";
 @Component({
   name: "AddPageComp",
   components: {
     LayoutList,
     CompList,
-    ToolBar,
+    RenderTool,
   },
 })
 export default class extends Vue {
@@ -57,12 +60,19 @@ export default class extends Vue {
     // { key: 'code', name: '代码', icon: 'daimashili' },
   ];
 
+  private pageConfig = {
+    type: "page",
+    title: "页面名称",
+    body: [],
+  };
+
   // let data = {
   //   type: 'page',
   //   title: '页面名称',
   //   body: [
   //     {
   //       type: 'fixed-layout',
+  // layout;
   //       title: '布局名称',
   //       body: [
   //         {
@@ -78,6 +88,29 @@ export default class extends Vue {
 
   tabClickFn(key: string) {
     this.curTab = key;
+  }
+
+  // 选择布局
+  selectLayoutFn(layout: { type: string; name: string; data: ILayoutListItem }) {
+    const { type, name, data } = layout;
+    // 布局格式转换
+    let bodyConfig: any = [];
+    bodyConfig[0] = {
+      layout: type,
+      title: name,
+      body: [],
+    };
+    if (layout.type === "fixed") {
+      bodyConfig[0].body = data.layoutConfig.split(",").map((item: string) => {
+        let curMode = mode.find((ele: IMode) => ele.type === item) as IMode;
+        return {
+          row: curMode.row,
+          col: curMode.col,
+        };
+      });
+    }
+    this.pageConfig.body = bodyConfig;
+    LowCodeModule.SET_PAGE_CONFIG(this.pageConfig);
   }
 }
 </script>
@@ -96,7 +129,8 @@ export default class extends Vue {
   .content {
     height: calc(100% - 36px);
     display: grid;
-    grid-template-columns: 314px auto 300px;
+    // grid-template-columns: 314px auto 300px;
+    grid-template-columns: 314px auto 0;
     grid-template-rows: 100%;
     .left-box {
       width: 314px;
@@ -141,7 +175,8 @@ export default class extends Vue {
       background: #f2f2f4;
     }
     .right-box {
-      width: 300px;
+      // width: 300px;
+      width: 0;
       height: 100%;
     }
   }

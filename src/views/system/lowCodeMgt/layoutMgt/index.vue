@@ -67,10 +67,11 @@ import { backend } from "@/config";
 import Edit from "./edit/index.vue";
 import Draggable from "vuedraggable";
 
-export interface LayoutListItem {
+export interface ILayoutListItem {
   id: string;
-  name: string;
-  status: boolean;
+  layoutName: string;
+  layoutSts: boolean;
+  layoutConfig: string;
 }
 
 @Component({
@@ -97,7 +98,7 @@ export default class extends Vue {
     });
   }
 
-  rowClickFn(row: LayoutListItem) {
+  rowClickFn(row: ILayoutListItem) {
     this.currentRow = row;
   }
 

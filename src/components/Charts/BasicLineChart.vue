@@ -1,3 +1,11 @@
+<!--
+ * @Descripttion: 
+ * @Author: gaocz
+ * @Date: 2022-04-21 08:31:44
+ * @LastEditors: gaocz
+ * @LastEditTime: 2022-05-10 08:34:18
+ * @FilePath: /edmp-web/src/components/charts/BasicLineChart.vue
+-->
 <!-- 基础折线图 -->
 <!-- 柱线混合图 -->
 <template>
@@ -8,7 +16,7 @@
 import * as echarts from "echarts";
 import { Component, Prop, Watch } from "vue-property-decorator";
 import { mixins } from "vue-class-component";
-import ResizeMixin from "@/components/Charts/mixins/resize";
+import ResizeMixin from "./mixins/resize";
 
 export interface ILineChartData {
   title: string;
@@ -57,6 +65,12 @@ export default class extends mixins(ResizeMixin) {
   private setOptions(chartData: ILineChartData) {
     if (this.chart) {
       this.chart.setOption({
+        grid: {
+          top: 20,
+          left: 40,
+          right: 20,
+          bottom: 30,
+        },
         xAxis: {
           type: "category",
           data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],

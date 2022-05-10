@@ -1,3 +1,11 @@
+/*
+ * @Descripttion:
+ * @Author: gaocz
+ * @Date: 2022-03-03 15:43:54
+ * @LastEditors: gaocz
+ * @LastEditTime: 2022-05-10 08:40:33
+ * @FilePath: /edmp-web/src/components/index.js
+ */
 import Vue from "vue";
 import YuXform from "./yufp/form/YuXform.vue";
 import YuXformItem from "./yufp/form/YuXformItem.vue";
@@ -29,8 +37,8 @@ import YufpTreeSelect from "./YufpTreeSelect/index.vue";
 import YufpTagSelector from "./YufpTagSelector/index.vue";
 import CstgroupModal from "./CstgroupModal/index.vue";
 import YufpCstgroupModal from "./CstgroupModal/YufpCstgroupModal.vue";
-import Charts from "./Charts/index.vue";
-
+import Charts from "./charts/index.vue";
+import DetailPanel from "./DetailPanel.vue";
 const components = [
   YuXform,
   YuXformItem,
@@ -63,6 +71,7 @@ const components = [
   CstgroupModal,
   YufpCstgroupModal,
   Charts,
+  DetailPanel,
 ];
 
 components.forEach((component) => {

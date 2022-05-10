@@ -8,13 +8,15 @@
         </div>
       </div>
     </div>
+    <FixedLayoutDialog :visible.sync="fixedVisible" @sure="fixedSureFn" />
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Prop, Ref } from "vue-property-decorator";
-
-export interface LayoutItem {
+import FixedLayoutDialog from "@/components/dialogs/FixedLayoutDialog.vue";
+import { LowCodeModule } from "@/store/modules/lowCode";
+export interface ILayoutItem {
   type: string;
   name: string;
   icon: string;
@@ -22,17 +24,39 @@ export interface LayoutItem {
 
 @Component({
   name: "LayoutList",
-  components: {},
+  components: {
+    FixedLayoutDialog,
+  },
 })
 export default class extends Vue {
-  private active = "";
+  private active = "none";
   private layoutList = [
     { type: "none", name: "无布局", icon: "nothing" },
     { type: "fixed", name: "固定布局", icon: "zidingyibuju" },
   ];
+  private fixedVisible = false;
+  private selectItem = {};
 
-  clickFn(item: LayoutItem) {
+  clickFn(item: ILayoutItem) {
+    LowCodeModule.SET_LAYOUT(item.type);
     this.active = item.type;
+    this.selectItem = item;
+    if (item.type === "fixed") {
+      this.fixedVisible = true;
+    } else if (item.type === "none") {
+      this.$emit("select-layout", item);
+    }
+  }
+
+  fixedSureFn(selections: string[]) {
+    LowCodeModule.SET_HOVER_WIDGETS("");
+    LowCodeModule.SET_ACTIVE_WIDGETS("");
+    LowCodeModule.SET_HOVER_EDITOR_ID("");
+    LowCodeModule.SET_ACTIVE_EDITOR_ID("");
+    this.$emit("select-layout", {
+      ...this.selectItem,
+      data: selections[0],
+    });
   }
 }
 </script>

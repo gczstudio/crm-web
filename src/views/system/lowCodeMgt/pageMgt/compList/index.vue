@@ -15,13 +15,18 @@
         </el-collapse-item>
       </el-collapse>
     </div>
+    <SelectChartDialog :visible.sync="selectChartVisible" @sure="selectChartFn" />
+    <CurdDialog :visible.sync="selectCurdVisible" @sure="selectCurdFn" />
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Prop, Ref } from "vue-property-decorator";
-
-export interface CompItem {
+import SelectChartDialog from "@/components/dialogs/SelectChartDialog.vue";
+import CurdDialog from "@/components/dialogs/CurdDialog.vue";
+import { IChartItem } from "@/views/system/lowCodeMgt/componentConfig/chartList/index.vue";
+import { LowCodeModule } from "@/store/modules/lowCode";
+export interface ICompItem {
   type: string;
   name: string;
   icon: string;
@@ -29,7 +34,10 @@ export interface CompItem {
 
 @Component({
   name: "CompList",
-  components: {},
+  components: {
+    SelectChartDialog,
+    CurdDialog,
+  },
 })
 export default class extends Vue {
   private activeNames = ["1", "2", "3", "4"];
@@ -55,9 +63,55 @@ export default class extends Vue {
       ],
     },
   ];
+  private selectChartVisible = false;
+  private selectCurdVisible = false;
 
-  clickFn(item: CompItem) {
+  get layout() {
+    return LowCodeModule.layout;
+  }
+
+  get activeFixedLayoutItem() {
+    return LowCodeModule.activeFixedLayoutItem;
+  }
+
+  get pageConfig() {
+    return LowCodeModule.pageConfig;
+  }
+
+  clickFn(item: ICompItem) {
     this.active = item.type;
+    switch (item.type) {
+      case "chart":
+        this.selectChartVisible = true;
+        break;
+      case "curd":
+        this.selectCurdVisible = true;
+        break;
+    }
+  }
+
+  // 选择某个图表
+  selectChartFn(chart: IChartItem) {
+    if (this.layout === "fixed") {
+      let curLayoutItem = (this.pageConfig.body[0] as any).body[this.activeFixedLayoutItem];
+      curLayoutItem = {
+        ...curLayoutItem,
+        type: "chart",
+        id: "11111",
+      };
+      (this.pageConfig.body[0] as any).body[this.activeFixedLayoutItem] = curLayoutItem;
+      LowCodeModule.SET_PAGE_CONFIG({ ...this.pageConfig });
+    }
+  }
+
+  //选择增删改查配置
+  selectCurdFn() {
+    (this.pageConfig.body[0] as any).body[0] = {
+      type: "curd",
+    };
+
+    console.log(this.pageConfig, 111);
+    LowCodeModule.SET_PAGE_CONFIG({ ...this.pageConfig });
   }
 }
 </script>

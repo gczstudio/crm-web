@@ -94,7 +94,7 @@ export const toggleClass = (ele: HTMLElement, className: string) => {
 };
 
 // 生成唯一识别号
-export const genUUID = (len: number, radix: number) => {
+export const genUUID = (len?: number, radix?: number) => {
   const chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".split("");
   let uuid = [],
     i;
@@ -123,6 +123,10 @@ export const genUUID = (len: number, radix: number) => {
 // 获取加密的公钥
 export const getRSAPublicKey = () => {
   return "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCrDUHc85ADQVxXRP4M90nqttWoZctV6JJVVdPjIle5vd9G2/4kgIhNc78Jd+ENxg+n4Gj9UMwNhJmb2jnMaW3zyGB+qi/ZrMO5dEUhW8salirzRgGg/4Arz4ObPmCWlZsws3Ij/3IEsFD3vMdIZD2j8b33DAbj47PjcCcMbtHYuQIDAQAB";
+};
+
+export const guid = (length = 12) => {
+  return Number(Math.random().toString().substr(3, length) + Date.now()).toString(36);
 };
 
 export const debounce = (func: Function, wait: number, immediate: boolean) => {
