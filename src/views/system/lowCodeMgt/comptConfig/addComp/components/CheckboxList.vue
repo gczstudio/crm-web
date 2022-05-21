@@ -1,3 +1,11 @@
+<!--
+ * @Descripttion: 
+ * @Author: gaocz
+ * @Date: 2022-04-21 10:27:39
+ * @LastEditors: gaocz
+ * @LastEditTime: 2022-05-20 16:38:37
+ * @FilePath: /edmp-web/src/views/system/lowCodeMgt/comptConfig/addComp/components/CheckboxList.vue
+-->
 <script lang="tsx">
 import { Component, Vue, Prop, Ref, Watch } from "vue-property-decorator";
 import { CreateElement } from "vue";
@@ -16,14 +24,18 @@ export default class extends Vue {
   @Prop({ default: true }) multiple!: boolean;
   @Prop() title!: string;
   @Prop() data!: Options[];
-  @Prop() value!: string[];
+  @Prop() value!: string[] | string;
 
   private checkList: string[] = [];
   private radioValue = "";
 
-  @Watch("value")
+  @Watch("value", { immediate: true })
   onValueChange() {
-    this.checkList = this.value;
+    if (this.multiple) {
+      this.checkList = this.value as string[];
+    } else {
+      this.radioValue = this.value as string;
+    }
   }
 
   onChange(value: string[] | string) {
@@ -33,6 +45,7 @@ export default class extends Vue {
       this.radioValue = value as string;
     }
     this.$emit("input", value);
+    this.$emit("change", value);
   }
 
   render() {
@@ -45,7 +58,7 @@ export default class extends Vue {
             <el-checkbox-group value={this.checkList} onInput={this.onChange}>
               {this.data.map((item: Options) => {
                 return (
-                  <el-checkbox label={item.value} key={item.key}>
+                  <el-checkbox label={item.key} key={item.key}>
                     {item.value}
                   </el-checkbox>
                 );
@@ -87,6 +100,9 @@ export default class extends Vue {
   .el-checkbox__label {
     font-size: 12px;
     font-weight: normal;
+  }
+  .el-radio {
+    display: block;
   }
 }
 </style>

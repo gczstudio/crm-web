@@ -3,10 +3,10 @@
  * @Author: gaocz
  * @Date: 2022-04-21 08:31:44
  * @LastEditors: gaocz
- * @LastEditTime: 2022-05-19 20:19:06
- * @FilePath: /edmp-web/src/components/charts/BasicLineChart.vue
+ * @LastEditTime: 2022-05-19 20:08:47
+ * @FilePath: /edmp-web/src/components/charts/BasicBarChart.vue
 -->
-<!-- 基础折线图 -->
+<!-- 基础柱状图 -->
 <template>
   <div :style="{ height: height, width: width }" />
 </template>
@@ -25,7 +25,7 @@ export interface IChartData {
 }
 
 @Component({
-  name: "BasicLineChart",
+  name: "BasicBarChart",
 })
 export default class extends mixins(ResizeMixin) {
   @Prop({ required: true }) private chartData!: IChartData;
@@ -66,7 +66,7 @@ export default class extends mixins(ResizeMixin) {
     if (this.chart) {
       let series = this.chartData.yAxis.map((item) => {
         return {
-          type: "line",
+          type: "bar",
           name: item.value,
           data: this.chartData.data.map((ele) => ele[item.key]),
         };

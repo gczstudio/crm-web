@@ -3,7 +3,7 @@
  * @Author: gaocz
  * @Date: 2022-04-20 09:02:46
  * @LastEditors: gaocz
- * @LastEditTime: 2022-04-28 11:29:52
+ * @LastEditTime: 2022-05-13 08:59:02
  * @FilePath: /edmp-web/server/mock/lowcode.js
  */
 var Mock = require("mockjs");
@@ -35,10 +35,20 @@ var custCompList = Mock.mock({
   "list|1-10": [
     {
       "id|+1": 1,
-      modName: "@first",
+      modName: "@ctitle",
       modType: "@first",
       modSts: "@boolean",
       modConfig: "1",
+    },
+  ],
+});
+
+var columnsList = Mock.mock({
+  "list|1-10": [
+    {
+      "id|+1": 1,
+      label: "@first",
+      prop: '@string("lower", 5)',
     },
   ],
 });
@@ -64,6 +74,14 @@ module.exports = function (router) {
     res.send({
       code: 0,
       data: custCompList.list,
+      total: 10,
+    });
+  });
+
+  router.get("/lowcode/columns/list", (req, res, nexy) => {
+    res.send({
+      code: 0,
+      data: columnsList.list,
       total: 10,
     });
   });

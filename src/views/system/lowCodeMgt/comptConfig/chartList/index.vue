@@ -1,12 +1,12 @@
 <template>
   <div class="chartList-container">
-    <yu-xform-item-part class="search-input" placeholder="输入组件名称/创建人" ctype="input" suffix-icon="el-icon-search" name="name2"></yu-xform-item-part>
+    <yu-xform-item-part class="search-input" placeholder="输入组件名称/创建人" ctype="input" suffix-icon="el-icon-search" name="searchText"></yu-xform-item-part>
     <MainLayout is-tab>
       <template v-slot:header>
         <el-button icon="el-icon-plus" @click="addCompFn">新增</el-button>
       </template>
       <template v-slot:table>
-        <yu-xtable ref="refTable" :data-url="dataUrl" type="custom" :dynamic-height="true">
+        <yu-xtable ref="refTable" :data-url="dataUrl" type="custom" :dynamic-height="true" :default-load="false">
           <div class="custom-container" slot-scope="scope">
             <el-row :gutter="16">
               <el-col :span="8" v-for="item in scope.tableData" :key="item.rowId">
@@ -16,15 +16,17 @@
                       <img src="https://t7.baidu.com/it/u=3180010982,1201664165&fm=74&app=80&size=f256,256&n=0&f=JPEG&fmt=auto?sec=1650560400&t=bd9ca514e4a0343cb1ab8d1dd62d594c" alt="" />
                     </div>
                     <div class="card-item__info">
-                      <p class="card-item__title">测试11</p>
-                      <p class="c2"><i class="el-icon-user"></i>创建人：1</p>
-                      <p class="c2"><i class="el-icon-time"></i>创建时间：1</p>
+                      <p class="card-item__title">{{ item.modName }}</p>
+                      <p class="c2"><i class="el-icon-user"></i>创建人：{{ item.createUser }}</p>
+                      <p class="c2"><i class="el-icon-time"></i>创建时间：{{ item.createTime }}</p>
                     </div>
                   </div>
                   <div class="card-bts">
-                    <el-button>编辑</el-button>
-                    <el-button>删除</el-button>
-                    <el-button>停用</el-button>
+                    <template v-if="item.modSts === '0'">
+                      <el-button @click="editFn(item)">编辑</el-button>
+                      <el-button @click="deleteFn(item)">删除</el-button>
+                    </template>
+                    <el-button @click="startOrStopFn(item)">{{ item.modSts === "0" ? "启用" : "停用" }}</el-button>
                   </div>
                 </div>
               </el-col>
@@ -33,9 +35,9 @@
         </yu-xtable>
       </template>
     </MainLayout>
-    <content-modal :visible.sync="contentVisible">
+    <content-modal :visible.sync="contentVisible" @close="searchFn">
       <template slot-scope="scope">
-        <add-comp :instance="scope" />
+        <add-comp :instance="scope" :data="curItem" />
       </template>
     </content-modal>
   </div>
@@ -45,11 +47,13 @@
 import { Component, Vue, Prop, Ref } from "vue-property-decorator";
 import { backend } from "@/config";
 import AddComp from "../addComp/index.vue";
+import { saveBusiModule, deleteBusiModule, updateStsBusiModule } from "@/api/lowCode";
 
 export interface IChartItem {
+  id: string;
   modName: string;
   modType: string;
-  modSts: boolean;
+  modSts: string;
   modConfig: string;
 }
 
@@ -62,8 +66,10 @@ export interface IChartItem {
 export default class extends Vue {
   @Ref("compFormRef") compFormRef: any;
   @Ref("propFormRef") propFormRef: any;
+  @Ref("refTable") refTable: any;
+  @Prop() type!: string;
 
-  private dataUrl = backend.mockService + "/lowcode/custcomp/list";
+  private dataUrl = backend.comptMgrService + "/api/busimodule/list";
   private compForm = {};
   private addCompVisible = false;
   private compStatus = "add";
@@ -73,6 +79,19 @@ export default class extends Vue {
   private propStatus = "add";
 
   private contentVisible = false;
+  private curItem = {};
+
+  mounted() {
+    this.searchFn({
+      condition: JSON.stringify({
+        modType: this.type,
+      }),
+    });
+  }
+
+  searchFn(params?: any) {
+    this.refTable.remoteData(params);
+  }
 
   addCompFn() {
     // this.$message.warning('请先选择左侧目录');
@@ -90,6 +109,42 @@ export default class extends Vue {
 
   savePropFn() {
     console.log(1);
+  }
+
+  // 编辑组件
+  editFn(item: IChartItem) {
+    this.curItem = item;
+    this.contentVisible = true;
+  }
+
+  deleteFn(item: IChartItem) {
+    this.$confirm("此操作将删除该数据, 是否继续?", "提示", {
+      confirmButtonText: "确定",
+      cancelButtonText: "取消",
+      type: "warning",
+      callback: (action) => {
+        if (action === "confirm") {
+          deleteBusiModule({
+            condition: JSON.stringify({
+              id: item.id,
+            }),
+          }).then((res) => {
+            this.$message.success("删除成功");
+            this.searchFn();
+          });
+        }
+      },
+    });
+  }
+
+  startOrStopFn(item: IChartItem) {
+    updateStsBusiModule({
+      id: item.id,
+      modSts: item.modSts === "0" ? "1" : "0",
+    }).then((res) => {
+      this.$message.success("操作成功");
+      this.searchFn();
+    });
   }
 }
 </script>

@@ -3,7 +3,7 @@
  * @Author: gaocz
  * @Date: 2022-03-03 15:43:54
  * @LastEditors: gaocz
- * @LastEditTime: 2022-05-10 08:40:33
+ * @LastEditTime: 2022-05-17 14:42:45
  * @FilePath: /edmp-web/src/components/index.js
  */
 import Vue from "vue";
@@ -39,6 +39,7 @@ import CstgroupModal from "./CstgroupModal/index.vue";
 import YufpCstgroupModal from "./CstgroupModal/YufpCstgroupModal.vue";
 import Charts from "./charts/index.vue";
 import DetailPanel from "./DetailPanel.vue";
+import RenderType from "@/views/system/lowCodeMgt/pageMgt/renderTool/components/RenderType.vue";
 const components = [
   YuXform,
   YuXformItem,
@@ -72,6 +73,7 @@ const components = [
   YufpCstgroupModal,
   Charts,
   DetailPanel,
+  RenderType,
 ];
 
 components.forEach((component) => {

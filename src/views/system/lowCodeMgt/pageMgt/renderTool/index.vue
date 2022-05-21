@@ -3,28 +3,36 @@
  * @Author: gaocz
  * @Date: 2022-04-28 09:12:04
  * @LastEditors: gaocz
- * @LastEditTime: 2022-05-09 11:04:09
+ * @LastEditTime: 2022-05-18 18:04:51
  * @FilePath: /edmp-web/src/views/system/lowCodeMgt/pageMgt/renderTool/index.vue
 -->
 <script lang="tsx">
-import { Component, Vue, Prop, Ref } from "vue-property-decorator";
+import { Component, Vue, Prop, Ref, Watch } from "vue-property-decorator";
 import { LowCodeModule } from "@/store/modules/lowCode";
 import { guid } from "@/utils";
+import PreviewWidgets from "./components/PreviewWidgets.vue";
+import RenderType from "./components/RenderType.vue";
 import RenderChartById from "./components/RenderChartById.vue";
 import RenderCurd from "./components/RenderCurd.vue";
-import PreviewWidgets from "./components/PreviewWidgets.vue";
+import RenderDialog from "./components/RenderDialog.vue";
+import RenderForm from "./components/RenderForm.vue";
+
 @Component({
   name: "RenderTool",
   components: {
+    PreviewWidgets,
+    RenderType,
     RenderChartById,
     RenderCurd,
-    PreviewWidgets,
+    RenderDialog,
+    RenderForm,
   },
 })
 export default class extends Vue {
   @Ref("chunkRef") chunkRef: any;
   private chunkHeight = 0;
   private activeFixedLayoutItem = -1;
+  private pageConfigData: any = {};
 
   get layout() {
     return LowCodeModule.layout;
@@ -44,6 +52,13 @@ export default class extends Vue {
 
   get widgetsMap() {
     return LowCodeModule.widgetsMap;
+  }
+
+  @Watch("pagConfig", { immediate: true })
+  onPageConfigChange(val: any) {
+    console.log(val, 999);
+    this.pageConfigData = val;
+    LowCodeModule.SET_LAYOUT(val.body[0].layout);
   }
 
   mounted() {
@@ -76,8 +91,8 @@ export default class extends Vue {
   clickFn() {
     LowCodeModule.SET_ACTIVE_EDITOR_ID(this.hoverEditorId);
     LowCodeModule.SET_ACTIVE_WIDGETS(this.hoverWidgets);
-    console.log(this.widgetsMap, 888);
-    LowCodeModule.SET_ACTIVE_WIDGETS_AUTH((this.widgetsMap as any)[this.hoverEditorId]);
+    LowCodeModule.SET_ACTIVE_WIDGETS_AUTH((this.widgetsMap as any)[this.hoverEditorId]?.actions);
+    LowCodeModule.SET_SHOW_RIGHT_PANEL(true);
   }
 
   findEditorDomUp(target: HTMLElement) {
@@ -113,54 +128,43 @@ export default class extends Vue {
     LowCodeModule.SET_ACTIVE_FIXED_LAYOUT_ITEM(index);
   }
 
-  renderType(ele: any) {
-    console.log(ele, 12121);
-    switch (ele.type) {
-      case "chart":
-        return <render-chart-by-id id="1111"></render-chart-by-id>;
-      case "curd":
-        return <render-curd></render-curd>;
-    }
-  }
-
   render() {
     return (
       <div class={{ "renderTool-container": true, fixed: this.layout === "fixed" }} ref="chunkRef">
         <div class="content">
-          {this.pagConfig.body.map((item: any) => {
-            return (
-              <div class="editor-main" data-editor-id={guid()}>
-                {item.layout === "fixed" && (
-                  <div class="fixed-layout clearfix">
-                    {(item.body as any[]).map((ele: any, index: number) => {
-                      return (
-                        <div
-                          class={{ "layout-item": true, active: this.activeFixedLayoutItem === index }}
-                          key={index}
-                          style={this.getChunkStyle(ele)}
-                          onClick={() => this.selectFixedLayoutItem(index)}
-                        >
-                          {this.renderType(ele)}
-                          {!ele.type && (
-                            <div class="tip">
-                              <i class="iconfont icon-zujianxinxi"></i>从左侧选择组件
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-                {item.layout === "none" && (
-                  <div class="none-layout">
-                    {(item.body as any[]).map((ele: any, index: number) => {
-                      return this.renderType(ele);
-                    })}
-                  </div>
-                )}
-              </div>
-            );
-          })}
+          {this.pageConfigData.body &&
+            this.pageConfigData.body.map((item: any) => {
+              return (
+                <div class="editor-main" data-editor-id={guid()}>
+                  {item.layout === "fixed" && (
+                    <div class="fixed-layout clearfix">
+                      {(item.body as any[]).map((ele: any, index: number) => {
+                        return (
+                          <div
+                            class={{ "layout-item": true, active: this.activeFixedLayoutItem === index }}
+                            key={index}
+                            style={this.getChunkStyle(ele)}
+                            onClick={() => this.selectFixedLayoutItem(index)}
+                          >
+                            <render-type data={[ele]}></render-type>
+                            {!ele.type && (
+                              <div class="tip">
+                                <i class="iconfont icon-zujianxinxi"></i>从左侧选择组件
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                  {item.layout === "none" && (
+                    <div class="none-layout">
+                      <render-type data={item.body}></render-type>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
         </div>
         <preview-widgets></preview-widgets>
       </div>

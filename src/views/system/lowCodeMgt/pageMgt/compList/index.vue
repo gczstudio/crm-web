@@ -17,15 +17,26 @@
     </div>
     <SelectChartDialog :visible.sync="selectChartVisible" @sure="selectChartFn" />
     <CurdDialog :visible.sync="selectCurdVisible" @sure="selectCurdFn" />
+    <FormDialog :visible.sync="selectFormVisible" @sure="selectFormFn" />
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop, Ref } from "vue-property-decorator";
+import { Component, Vue, Prop, Ref, Watch } from "vue-property-decorator";
 import SelectChartDialog from "@/components/dialogs/SelectChartDialog.vue";
 import CurdDialog from "@/components/dialogs/CurdDialog.vue";
-import { IChartItem } from "@/views/system/lowCodeMgt/componentConfig/chartList/index.vue";
+import FormDialog from "@/components/dialogs/FormDialog.vue";
 import { LowCodeModule } from "@/store/modules/lowCode";
+import { appendToPageById } from "@/utils/lowCode";
+
+export interface IChartItem {
+  id: string;
+  modName: string;
+  modType: string;
+  modSts: string;
+  modConfig: string;
+}
+
 export interface ICompItem {
   type: string;
   name: string;
@@ -37,6 +48,7 @@ export interface ICompItem {
   components: {
     SelectChartDialog,
     CurdDialog,
+    FormDialog,
   },
 })
 export default class extends Vue {
@@ -60,11 +72,13 @@ export default class extends Vue {
       children: [
         { type: "tab", name: "选项卡", icon: "xuanxiangqia" },
         { type: "grid", name: "分栏", icon: "fenlan" },
+        { type: "dialog", name: "弹出框", icon: "danchuceng" },
       ],
     },
   ];
   private selectChartVisible = false;
   private selectCurdVisible = false;
+  private selectFormVisible = false;
 
   get layout() {
     return LowCodeModule.layout;
@@ -78,6 +92,10 @@ export default class extends Vue {
     return LowCodeModule.pageConfig;
   }
 
+  get dataId() {
+    return (LowCodeModule.widgetsMap as any)[LowCodeModule.activeEditorId]?.dataId;
+  }
+
   clickFn(item: ICompItem) {
     this.active = item.type;
     switch (item.type) {
@@ -87,31 +105,60 @@ export default class extends Vue {
       case "curd":
         this.selectCurdVisible = true;
         break;
+      case "dialog":
+        this.setDialogFn();
+        break;
+      case "form":
+        this.selectFormVisible = true;
+        break;
     }
   }
 
   // 选择某个图表
   selectChartFn(chart: IChartItem) {
+    let curLayoutItem = (this.pageConfig.body[0] as any).body[this.activeFixedLayoutItem];
+    curLayoutItem = {
+      ...curLayoutItem,
+      type: "chart",
+      id: this.$util.guid(),
+      ...chart,
+    };
     if (this.layout === "fixed") {
-      let curLayoutItem = (this.pageConfig.body[0] as any).body[this.activeFixedLayoutItem];
-      curLayoutItem = {
-        ...curLayoutItem,
-        type: "chart",
-        id: "11111",
-      };
       (this.pageConfig.body[0] as any).body[this.activeFixedLayoutItem] = curLayoutItem;
       LowCodeModule.SET_PAGE_CONFIG({ ...this.pageConfig });
+    } else {
+      appendToPageById(this.dataId, curLayoutItem);
     }
   }
 
   //选择增删改查配置
-  selectCurdFn() {
-    (this.pageConfig.body[0] as any).body[0] = {
+  selectCurdFn(result: any) {
+    appendToPageById(this.dataId, {
+      id: this.$util.guid(),
       type: "curd",
-    };
+      ...result,
+    });
+  }
 
-    console.log(this.pageConfig, 111);
+  // 选择弹出框
+  setDialogFn() {
+    (this.pageConfig.body[0] as any).body = [
+      {
+        id: this.$util.guid(),
+        type: "dialog",
+        body: [],
+      },
+    ];
     LowCodeModule.SET_PAGE_CONFIG({ ...this.pageConfig });
+  }
+
+  // 选择表单配置
+  selectFormFn(result: any) {
+    appendToPageById(this.dataId, {
+      id: this.$util.guid(),
+      type: "form",
+      items: result,
+    });
   }
 }
 </script>

@@ -4,17 +4,18 @@
       <el-col :span="5">
         <yu-left-tree
           class="box-shadow"
-          title="页面目录"
+          title="业务组件目录"
           ref="menuTree"
           :show-checkbox="false"
           :height="bHeight - (isMaxScreen ? 232 : 202)"
-          :data-url="menuTreeUrl"
-          data-id="menuId"
-          data-label="menuName"
+          :data-url="treeUrl"
+          data-id="id"
+          data-label="catalogName"
           @node-xclick="nodeClickFn"
-          data-pid="upMenuId"
+          data-pid="upId"
           :expand-level="2"
           :highlight-current="true"
+          :operates="treeOperates"
           :show-create="true"
           :create-fn="createFn"
         >
@@ -23,27 +24,27 @@
       <el-col :span="19">
         <MainLayout class="yu-main-wrapper">
           <template v-slot:header>
-            <el-button icon="el-icon-plus" @click="addFn">新增</el-button>
+            <el-button icon="el-icon-plus" @click="addPageFn">新增</el-button>
             <el-button icon="el-icon-share">发布</el-button>
           </template>
           <template v-slot:form>
             <yu-xform ref="searchForm" :model="queryFormData" related-table-name="refTable" form-type="search">
               <yu-xform-group :column="4">
-                <yu-xform-item label="页面名称" placeholder="页面名称" ctype="input" name="name" :rules="globalRules.input"></yu-xform-item>
-                <yu-xform-item label="创建人" placeholder="创建人" ctype="input" name="creator" :rules="globalRules.input"></yu-xform-item>
+                <yu-xform-item label="页面名称" placeholder="页面名称" ctype="input" name="pageName" :rules="globalRules.input"></yu-xform-item>
+                <yu-xform-item label="创建人" placeholder="创建人" ctype="input" name="createUserName" :rules="globalRules.input"></yu-xform-item>
               </yu-xform-group>
             </yu-xform>
           </template>
           <template v-slot:table>
             <yu-xtable ref="refTable" :data-url="dataUrl" row-number :dynamic-height="true" border>
-              <yu-xtable-column label="页面名称" prop="name" :show-overflow-tooltip="true" sortable="custom"></yu-xtable-column>
-              <yu-xtable-column label="状态" prop="status" data-code="BUINESS_LINE" :show-overflow-tooltip="true" sortable="custom"></yu-xtable-column>
-              <yu-xtable-column label="创建人" prop="creator" :show-overflow-tooltip="true" sortable="custom"></yu-xtable-column>
-              <yu-xtable-column label="创建时间" prop="busiLine" :show-overflow-tooltip="true" sortable="custom"></yu-xtable-column>
+              <yu-xtable-column label="页面名称" prop="pageName" :show-overflow-tooltip="true" sortable="custom"></yu-xtable-column>
+              <yu-xtable-column label="状态" prop="pageSts" data-code="LC_STATUS" :show-overflow-tooltip="true" sortable="custom"></yu-xtable-column>
+              <yu-xtable-column label="创建人" prop="createUserName" :show-overflow-tooltip="true" sortable="custom"></yu-xtable-column>
+              <yu-xtable-column label="创建时间" prop="createTime" :show-overflow-tooltip="true" sortable="custom"></yu-xtable-column>
               <yu-xtable-column label="操作" width="100" align="center">
                 <template slot-scope="scope">
-                  <el-button class="yu-action-btn" @click.native.prevent="editFn(scope.row)" type="text">修改</el-button>
-                  <el-button class="yu-action-btn" @click.native.prevent="deleteFn(scope.row)" type="text">删除</el-button>
+                  <el-button class="yu-action-btn" @click.native.prevent="editPageFn(scope.row)" type="text">修改</el-button>
+                  <el-button class="yu-action-btn" @click.native.prevent="deletePageFn(scope.row)" type="text">删除</el-button>
                 </template>
               </yu-xtable-column>
             </yu-xtable>
@@ -53,9 +54,22 @@
     </el-row>
     <content-modal :visible.sync="contentVisible">
       <template slot-scope="scope">
-        <add-page-comp :instance="scope" />
+        <add-page-comp :instance="scope" :data="curPageRow" />
       </template>
     </content-modal>
+    <yu-dialog :title="viewType === 'add' ? '新增目录' : '修改目录'" :visible.sync="visible" width="400px">
+      <yu-xform ref="formRef" :model="addForm" label-width="100px">
+        <yu-xform-group :column="1">
+          <yu-xform-item v-if="viewType === 'add'" label="上级目录" placeholder="上级目录" name="upName" ctype="input" disabled></yu-xform-item>
+          <yu-xform-item label="目录名称" placeholder="目录名称" name="catalogName" ctype="input" :rules="globalRules.requiredInput50"></yu-xform-item>
+          <yu-xform-item label="排序" placeholder="排序" name="orderBy" ctype="input" :rules="$validator.orderNumber"></yu-xform-item>
+        </yu-xform-group>
+      </yu-xform>
+      <div slot="footer" align="center">
+        <el-button type="primary" @click="saveFn">保存</el-button>
+        <el-button @click="visible = false">取消</el-button>
+      </div>
+    </yu-dialog>
   </div>
 </template>
 
@@ -64,6 +78,23 @@ import { Component, Vue, Prop, Ref } from "vue-property-decorator";
 import { backend } from "@/config";
 import { getUserInfo } from "@/utils";
 import AddPageComp from "./addPageComp/index.vue";
+import { savePageCataLog, deletePageCataLog, deletePage } from "@/api/lowCode";
+import { LowCodeModule } from "../../../../store/modules/lowCode";
+
+export interface IMenuItem {
+  id: string;
+  upId: string;
+  catalogName: string;
+  orderBy: number;
+}
+
+export interface IPageItem {
+  id: string;
+  pageName: string;
+  pageSts: string;
+  pageConfig: string;
+}
+
 @Component({
   name: "PageMgt",
   components: {
@@ -73,29 +104,118 @@ import AddPageComp from "./addPageComp/index.vue";
 export default class extends Vue {
   @Ref("searchForm") searchForm: any;
   @Ref("refTable") refTable: any;
-  private dataUrl = backend.mockService + "/lowcode/layout/list";
+  @Ref("menuTree") menuTree: any;
+  @Ref("formRef") formRef: any;
+
+  // 页面目录
+  private treeUrl = backend.comptMgrService + "/api/page/catalog/info";
+  private viewType = "add";
+  private visible = false;
+  private addForm = {};
+  private treeOperates = [
+    { label: "修改", func: this.editFn, disabled: true },
+    { label: "删除", func: this.deleteFn, disabled: true },
+  ];
+  private clickNode = {};
+
+  // 页面列表
+  private dataUrl = backend.comptMgrService + "/api/page/list";
   private queryFormData = {};
-
-  private menuTreeUrl = backend.appOcaService + "/api/adminsmmenu/menutreequery?sysId=" + getUserInfo().logicSys.id;
-
   private activeName = "1";
   private contentVisible = false;
+  private curPageRow = {};
 
-  createFn() {
-    console.log(1);
+  async createFn() {
+    this.viewType = "add";
+    await this.$nextTick();
+    this.addForm = {
+      upName: (this.clickNode as IMenuItem).catalogName,
+    };
+    this.visible = true;
+    this.formRef && this.formRef.resetFields();
   }
 
-  nodeClickFn() {
-    console.log(2);
+  // 新增目录
+  saveFn() {
+    savePageCataLog({
+      upId: (this.clickNode as IMenuItem).id || "",
+      ...this.addForm,
+    }).then((res) => {
+      this.$message.success((this.addForm as IMenuItem).id ? "修改成功" : "新增成功");
+      this.visible = false;
+      this.menuTree.remoteData();
+      this.clickNode = {};
+    });
   }
 
-  addFn() {
+  editFn() {
+    this.viewType = "edit";
+    this.addForm = {
+      ...this.clickNode,
+    };
+    this.visible = true;
+  }
+
+  deleteFn() {
+    deletePageCataLog({
+      condition: JSON.stringify({
+        id: (this.clickNode as IMenuItem).id,
+      }),
+    }).then((res) => {
+      this.$message.success("删除成功");
+      this.clickNode = {};
+      this.menuTree.remoteData();
+    });
+  }
+
+  nodeClickFn(node: IMenuItem) {
+    this.clickNode = node;
+    this.refTable.remoteData({
+      condition: JSON.stringify({
+        catalogId: node.id,
+      }),
+    });
+  }
+
+  addPageFn() {
+    if (!(this.clickNode as IMenuItem).id) {
+      this.$message.warning("请先选择目录");
+      return;
+    }
+    this.contentVisible = true;
+    let initPageConfig = {
+      type: "page",
+      body: [
+        {
+          layout: "none",
+          body: [],
+        },
+      ],
+    };
+    LowCodeModule.SET_PAGE_CONFIG(initPageConfig);
+    this.curPageRow = {
+      ...this.clickNode,
+      catalogId: (this.clickNode as IMenuItem).id,
+    };
+  }
+
+  editPageFn(row: IPageItem) {
+    this.curPageRow = row;
+    let pageConfig = JSON.parse(row.pageConfig);
+    LowCodeModule.SET_PAGE_CONFIG(pageConfig);
     this.contentVisible = true;
   }
 
-  editFn() {}
-
-  deleteFn() {}
+  deletePageFn(row: IPageItem) {
+    deletePage({
+      condition: JSON.stringify({
+        id: row.id,
+      }),
+    }).then((res) => {
+      this.$message.success("删除成功");
+      this.refTable.remoteData();
+    });
+  }
 }
 </script>
 

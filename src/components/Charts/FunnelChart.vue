@@ -3,10 +3,10 @@
  * @Author: gaocz
  * @Date: 2022-04-21 08:31:44
  * @LastEditors: gaocz
- * @LastEditTime: 2022-05-19 20:19:06
- * @FilePath: /edmp-web/src/components/charts/BasicLineChart.vue
+ * @LastEditTime: 2022-05-19 20:18:57
+ * @FilePath: /edmp-web/src/components/charts/FunnelChart.vue
 -->
-<!-- 基础折线图 -->
+<!-- 漏斗图 -->
 <template>
   <div :style="{ height: height, width: width }" />
 </template>
@@ -25,7 +25,7 @@ export interface IChartData {
 }
 
 @Component({
-  name: "BasicLineChart",
+  name: "FunnelChart",
 })
 export default class extends mixins(ResizeMixin) {
   @Prop({ required: true }) private chartData!: IChartData;
@@ -73,56 +73,66 @@ export default class extends mixins(ResizeMixin) {
       });
       console.log(series);
       this.chart.setOption({
-        grid: {
-          top: 20,
-          left: 40,
-          right: 20,
-          bottom: 30,
-          containLabel: true,
+        title: {
+          text: "Funnel",
         },
         tooltip: {
-          trigger: "axis",
-          axisPointer: {
-            type: "cross",
+          trigger: "item",
+          formatter: "{a} <br/>{b} : {c}%",
+        },
+        toolbox: {
+          feature: {
+            dataView: { readOnly: false },
+            restore: {},
+            saveAsImage: {},
           },
-          position: function (point: any, params: any, dom: any, rect: any, size: any) {
-            // 提示框位置
-            let x = 0,
-              y = 0;
-            // 鼠标位置 特殊情况，去除左边菜单栏的宽度
-            let pointX = point[0],
-              pointY = point[1];
-            // 外面div大小
-            let viweWdith = size.viewSize[0],
-              viewHeight = size.viewSize[1];
-            //提示框大小
-            let boxWdith = size.contentSize[0],
-              boxHeight = size.contentSize[1];
-
-            if (boxWdith > pointX) {
-              x = 5;
-            } else {
-              x = pointX - boxWdith - 10;
-            }
-
-            if (boxHeight > pointY) {
-              y = 5;
-            } else {
-              y = pointY - boxHeight - 10;
-            }
-
-            return [x, y];
+        },
+        legend: {
+          data: ["Show", "Click", "Visit", "Inquiry", "Order"],
+        },
+        series: [
+          {
+            name: "Funnel",
+            type: "funnel",
+            left: "10%",
+            top: 60,
+            bottom: 60,
+            width: "80%",
+            min: 0,
+            max: 100,
+            minSize: "0%",
+            maxSize: "100%",
+            sort: "descending",
+            gap: 2,
+            label: {
+              show: true,
+              position: "inside",
+            },
+            labelLine: {
+              length: 10,
+              lineStyle: {
+                width: 1,
+                type: "solid",
+              },
+            },
+            itemStyle: {
+              borderColor: "#fff",
+              borderWidth: 1,
+            },
+            emphasis: {
+              label: {
+                fontSize: 20,
+              },
+            },
+            data: [
+              { value: 60, name: "Visit" },
+              { value: 40, name: "Inquiry" },
+              { value: 20, name: "Order" },
+              { value: 80, name: "Click" },
+              { value: 100, name: "Show" },
+            ],
           },
-          padding: 8,
-        },
-        xAxis: {
-          type: "category",
-          data: this.chartData.data.map((item) => item[this.chartData.xAxis[0].key]),
-        },
-        yAxis: {
-          type: "value",
-        },
-        series,
+        ],
       });
     }
   }

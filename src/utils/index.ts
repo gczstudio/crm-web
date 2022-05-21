@@ -460,3 +460,14 @@ export const formPost = (options: any) => {
   form.submit();
   document.body.removeChild(form);
 };
+
+/**
+ * 短横线命名转驼峰
+ * @param str
+ */
+export const dashToCamel = (str: string) => {
+  str = str.toLowerCase();
+  return str.replace(/_\w/g, (x) => {
+    return x.slice(1).toUpperCase();
+  });
+};

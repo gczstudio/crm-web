@@ -3,7 +3,7 @@
  * @Author: gaocz
  * @Date: 2022-04-24 08:45:49
  * @LastEditors: gaocz
- * @LastEditTime: 2022-04-28 09:15:55
+ * @LastEditTime: 2022-05-18 15:27:25
  * @FilePath: /edmp-web/src/components/dialogs/FixedLayoutDialog.vue
 -->
 <template>
@@ -13,9 +13,14 @@
         <yu-xform-item placeholder="布局名称" name="layoutName" ctype="input" :rules="globalRules.input"></yu-xform-item>
       </yu-xform-group>
     </yu-xform>
-    <yu-xtable ref="tableRef" v-if="visible" border :data-url="dataUrl" :height="bHeight - 380" @selections-change="selectionChangeFn" selection-type="radio">
+    <yu-xtable ref="tableRef" v-if="visible" border row-key="id" :data-url="dataUrl" :height="bHeight - 380" @selections-change="selectionChangeFn" selection-type="radio">
       <yu-xtable-column label="布局名称" prop="layoutName" :show-overflow-tooltip="true"></yu-xtable-column>
-      <yu-xtable-column label="状态" prop="layoutSts" :show-overflow-tooltip="true"></yu-xtable-column>
+      <yu-xtable-column label="状态" prop="layoutSts" :show-overflow-tooltip="true">
+        <template slot-scope="scoped">
+          <el-tag v-if="scoped.row.layoutSts === '1'" type="success" size="mini">生效</el-tag>
+          <el-tag v-else type="danger" size="mini">未生效</el-tag>
+        </template>
+      </yu-xtable-column>
     </yu-xtable>
     <div slot="footer" class="operate-btns tc">
       <el-button type="primary" @click="sureFn">确定</el-button>
@@ -46,7 +51,7 @@ export default {
   data() {
     return {
       dialogVisible: false,
-      dataUrl: backend.mockService + "/lowcode/layout/list",
+      dataUrl: backend.comptMgrService + "/api/layoutinfo/list",
       queryFormData: {},
       nowNode: {},
       selections: [],

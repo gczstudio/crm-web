@@ -16,7 +16,7 @@
               <yu-xtable-column label="布局名称" prop="layoutName" :show-overflow-tooltip="true"></yu-xtable-column>
               <yu-xtable-column label="状态" prop="layoutSts" width="80" :show-overflow-tooltip="true">
                 <template slot-scope="scoped">
-                  <el-tag v-if="scoped.row.status" type="success" size="mini">生效</el-tag>
+                  <el-tag v-if="scoped.row.layoutSts === '1'" type="success" size="mini">生效</el-tag>
                   <el-tag v-else type="danger" size="mini">未生效</el-tag>
                 </template>
               </yu-xtable-column>
@@ -25,13 +25,13 @@
         </MainLayout>
       </el-col>
       <el-col :span="19">
-        <div class="layout-box">
+        <div class="layout-box" v-if="this.currentRow.layoutName">
           <div class="layout-header">
-            <div class="layout-title">xxx</div>
+            <div class="layout-title">{{ this.currentRow.layoutName }}</div>
             <div class="layout-btns fr">
-              <el-button class="yu-button-text" icon="el-icon-edit">编辑</el-button>
-              <el-button class="yu-button-text" icon="el-icon-delete">删除</el-button>
-              <el-button class="yu-button-text" icon="el-icon-folder-add">下架</el-button>
+              <el-button class="yu-button-text" icon="el-icon-edit" @click="editFn">编辑</el-button>
+              <el-button class="yu-button-text" icon="el-icon-delete" @click="deleteFn">删除</el-button>
+              <el-button class="yu-button-text" icon="el-icon-folder-add" @click="updateFn">{{ this.currentRow.layoutSts === "1" ? "下架" : "上架" }}</el-button>
             </div>
           </div>
           <div class="layout-content">
@@ -52,7 +52,7 @@
         <el-button @click="addVisible = false">取消</el-button>
       </div>
     </yu-dialog>
-    <content-modal :visible.sync="contentVisible">
+    <content-modal :visible.sync="contentVisible" @close="searchFn">
       <template slot-scope="scope">
         <edit :instance="scope" :row="currentRow" />
       </template>
@@ -62,7 +62,7 @@
 
 <script lang="ts">
 import { Component, Vue, Ref } from "vue-property-decorator";
-import { addLayout } from "@/api/lowCode";
+import { saveLayoutInfo, deleteLayoutInfo, updateLayoutSts } from "@/api/lowCode";
 import { backend } from "@/config";
 import Edit from "./edit/index.vue";
 import Draggable from "vuedraggable";
@@ -70,7 +70,7 @@ import Draggable from "vuedraggable";
 export interface ILayoutListItem {
   id: string;
   layoutName: string;
-  layoutSts: boolean;
+  layoutSts: string;
   layoutConfig: string;
 }
 
@@ -85,7 +85,7 @@ export default class extends Vue {
   @Ref("refTable") refTable: any;
   @Ref("layoutFormRef") layoutFormRef: any;
 
-  private dataUrl = backend.mockService + "/lowcode/layout/list";
+  private dataUrl = backend.comptMgrService + "/api/layoutinfo/list";
   private searchForm = {};
   private addVisible = false;
   private layoutForm = {};
@@ -96,6 +96,7 @@ export default class extends Vue {
     this.refTable.remoteData({
       condition: JSON.stringify(this.searchForm),
     });
+    this.currentRow = {};
   }
 
   rowClickFn(row: ILayoutListItem) {
@@ -107,15 +108,39 @@ export default class extends Vue {
     this.layoutFormRef && this.layoutFormRef.resetFields();
   }
 
+  editFn() {
+    this.contentVisible = true;
+  }
+
+  deleteFn() {
+    deleteLayoutInfo({
+      condition: JSON.stringify({
+        id: (this.currentRow as ILayoutListItem).id,
+      }),
+    }).then((res) => {
+      this.$message.success("删除成功");
+      this.searchFn();
+    });
+  }
+
+  updateFn() {
+    updateLayoutSts({
+      condition: JSON.stringify({
+        id: (this.currentRow as ILayoutListItem).id,
+        layoutSts: (this.currentRow as ILayoutListItem).layoutSts === "1" ? "0" : "1",
+      }),
+    }).then((res) => {
+      this.$message.success("操作成功");
+      this.searchFn();
+    });
+  }
+
   nextFn() {
     this.contentVisible = true;
     this.currentRow = this.layoutForm;
     this.$nextTick(() => {
       this.addVisible = false;
     });
-    // addLayout(params).then(res => {
-
-    // })
   }
 }
 </script>

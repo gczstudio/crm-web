@@ -3,7 +3,7 @@
  * @Author: gaocz
  * @Date: 2022-04-28 09:56:56
  * @LastEditors: gaocz
- * @LastEditTime: 2022-05-05 09:11:43
+ * @LastEditTime: 2022-05-20 17:09:18
  * @FilePath: /edmp-web/src/store/modules/lowCode.ts
  */
 import { VuexModule, Module, Mutation, Action, getModule } from "vuex-module-decorators";
@@ -32,6 +32,7 @@ export interface ILowCodeState {
   activeEditorId: string;
   activeWidgetsAuth: string[];
   widgetsMap: object;
+  showRightPanel: boolean;
 }
 
 @Module({ dynamic: true, store, name: "lowCode" })
@@ -53,6 +54,7 @@ class LowCode extends VuexModule implements ILowCodeState {
   activeEditorId = "";
   activeWidgetsAuth = [];
   widgetsMap = {};
+  showRightPanel = false;
 
   @Mutation
   SET_LAYOUT(payload: any) {
@@ -97,6 +99,11 @@ class LowCode extends VuexModule implements ILowCodeState {
   @Mutation
   SET_WIDGETS_MAP(payload: any) {
     this.widgetsMap = { ...this.widgetsMap, ...payload };
+  }
+
+  @Mutation
+  SET_SHOW_RIGHT_PANEL(payload: any) {
+    this.showRightPanel = payload;
   }
 }
 

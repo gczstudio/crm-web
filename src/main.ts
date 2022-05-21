@@ -1,3 +1,11 @@
+/*
+ * @Descripttion:
+ * @Author: gaocz
+ * @Date: 2022-03-03 15:43:54
+ * @LastEditors: gaocz
+ * @LastEditTime: 2022-05-20 10:52:56
+ * @FilePath: /edmp-web/src/main.ts
+ */
 import Vue, { DirectiveOptions } from "vue";
 
 // ie兼容
@@ -40,6 +48,8 @@ import mixin from "@/mixin";
 
 import Component from "vue-class-component";
 
+import VueFullscreen from "vue-fullscreen";
+
 //import VueClipboard from 'vue-clipboard2'
 
 // ts注册vue-router钩子函数
@@ -57,6 +67,8 @@ document.body.ondrop = (event) => {
 
 Vue.use(ElementUI);
 Vue.use(animated);
+
+Vue.use(VueFullscreen);
 
 // Register global directives
 Object.keys(directives).forEach((key) => {

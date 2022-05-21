@@ -3,8 +3,8 @@
  * @Author: gaocz
  * @Date: 2022-04-21 08:33:29
  * @LastEditors: gaocz
- * @LastEditTime: 2022-04-28 15:27:53
- * @FilePath: /edmp-web/src/components/Charts/index.vue
+ * @LastEditTime: 2022-05-19 20:23:00
+ * @FilePath: /edmp-web/src/components/charts/index.vue
 -->
 <template>
   <div class="Charts-component">
@@ -13,13 +13,29 @@
 </template>
 
 <script>
+import TableChart from "./TableChart";
 import BasicLineChart from "./BasicLineChart";
 import MixedLineAndBar from "./MixedLineAndBar";
+import BasicBarChart from "./BasicBarChart";
+import BasicPieChart from "./BasicPieChart";
+import DoughnutChart from "./DoughnutChart";
+import BasicRadarChart from "./BasicRadarChart";
+import BasicCandlestick from "./BasicCandlestick";
+import FunnelChart from "./FunnelChart";
+import BasicGaugechart from "./BasicGaugechart";
 export default {
   name: "Charts",
   components: {
     BasicLineChart,
     MixedLineAndBar,
+    TableChart,
+    BasicBarChart,
+    BasicPieChart,
+    DoughnutChart,
+    BasicRadarChart,
+    BasicCandlestick,
+    FunnelChart,
+    BasicGaugechart,
   },
   props: {
     type: {

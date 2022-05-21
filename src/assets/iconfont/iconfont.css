@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 2767658 */
-  src: url('iconfont.woff2?t=1651115465062') format('woff2'),
-       url('iconfont.woff?t=1651115465062') format('woff'),
-       url('iconfont.ttf?t=1651115465062') format('truetype');
+  src: url('iconfont.woff2?t=1652953133292') format('woff2'),
+       url('iconfont.woff?t=1652953133292') format('woff'),
+       url('iconfont.ttf?t=1652953133292') format('truetype');
 }
 
 .iconfont {
@@ -11,6 +11,50 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-loudoutu:before {
+  content: "\e663";
+}
+
+.icon-yibiaopan:before {
+  content: "\e662";
+}
+
+.icon-zhuzhuangtu:before {
+  content: "\e661";
+}
+
+.icon-biaoge1:before {
+  content: "\e664";
+}
+
+.icon-zhexiantu:before {
+  content: "\e665";
+}
+
+.icon-leidatu:before {
+  content: "\e667";
+}
+
+.icon-huanxingtusvg:before {
+  content: "\e668";
+}
+
+.icon-kxiantu:before {
+  content: "\e669";
+}
+
+.icon-bingtu:before {
+  content: "\e66a";
+}
+
+.icon-danchuceng:before {
+  content: "\e7d4";
+}
+
+.icon-mingdanguanli:before {
+  content: "\e660";
 }
 
 .icon-zujianxinxi:before {

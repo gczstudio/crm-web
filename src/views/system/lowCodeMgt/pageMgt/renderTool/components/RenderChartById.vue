@@ -3,33 +3,58 @@
  * @Author: gaocz
  * @Date: 2022-04-28 15:08:11
  * @LastEditors: gaocz
- * @LastEditTime: 2022-05-10 08:33:54
+ * @LastEditTime: 2022-05-20 10:41:27
  * @FilePath: /edmp-web/src/views/system/lowCodeMgt/pageMgt/renderTool/components/RenderChartById.vue
 -->
 <template>
-  <charts :type="type" :chart-data="chartData" />
+  <charts v-editor.chart="{ id: data.id }" :type="type" :chart-data="chartData" />
 </template>
 
 <script>
 import Chart from "@/components/charts/index.vue";
+import { queryDsData } from "@/api/lowCode";
 export default {
   name: "RenderChartById",
   props: {
-    id: String,
+    data: {
+      type: Object,
+      default: () => ({}),
+    },
   },
   data() {
     return {
+      dsId: "",
       type: "",
       chartData: {},
     };
   },
-  mounted() {
-    this.type = "BasicLineChart";
-    this.chartData = {
-      title: "xxx",
-      xData: [1, 12, 321, 12, 43],
-      yData: [1, 32, 43, 45, 6],
-    };
+  watch: {
+    data: {
+      handler(val) {
+        if (Object.keys(val).length) {
+          this.chartData = JSON.parse(val.modConfig);
+          this.type = this.chartData.compName;
+          this.dsId = this.chartData.dsId;
+          this.getDsData();
+        }
+      },
+      immediate: true,
+    },
+  },
+  methods: {
+    // 请求数据模型数据
+    getDsData() {
+      queryDsData({
+        condition: JSON.stringify({
+          dsId: this.dsId,
+        }),
+      }).then((res) => {
+        this.chartData = {
+          ...this.chartData,
+          data: res.data,
+        };
+      });
+    },
   },
 };
 </script>

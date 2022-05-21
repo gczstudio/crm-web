@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop, Ref } from "vue-property-decorator";
+import { Component, Vue, Prop, Ref, InjectReactive, Watch } from "vue-property-decorator";
 import FixedLayoutDialog from "@/components/dialogs/FixedLayoutDialog.vue";
 import { LowCodeModule } from "@/store/modules/lowCode";
 export interface ILayoutItem {
@@ -36,6 +36,15 @@ export default class extends Vue {
   ];
   private fixedVisible = false;
   private selectItem = {};
+
+  get pageConfig() {
+    return LowCodeModule.pageConfig;
+  }
+
+  @Watch("pageConfig", { immediate: true })
+  onPageConfigChange() {
+    this.active = this.pageConfig.body[0].layout;
+  }
 
   clickFn(item: ILayoutItem) {
     LowCodeModule.SET_LAYOUT(item.type);

@@ -1,5 +1,5 @@
 <template>
-  <components
+  <component
     ref="ctypeRef"
     :class="{ num: elFormItem.isNum || elFormItem.formatMoney }"
     v-model="conponentValue"
@@ -15,7 +15,7 @@
     <template v-if="elFormItem.ctype === 'radio'">
       <el-radio v-for="item in optionData" :key="item.key" :label="item.key">{{ item.value }}</el-radio>
     </template>
-  </components>
+  </component>
 </template>
 
 <script>
@@ -48,7 +48,7 @@ export default {
       if (this.elForm.needExport) {
         let fieldVal = val;
         // select
-        if (this.elFormItem.ctype === "select") {
+        if (["select", "radio-group"].includes(this.elFormItem.ctype)) {
           fieldVal = this.$lookup.convertKey(this.optionData, val);
         }
         this.$nextTick(() => {

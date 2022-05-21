@@ -1,48 +1,39 @@
 <template>
-  <el-row>
-    <el-col :span="4">
-      <div class="data-section">
-        <div style="padding: 0 16px; margin-bottom: 10px">
-          <div class="data-title">数据模型</div>
-          <yu-xform-item-part placeholder="请选择" ctype="select" data-code="YES_NO"></yu-xform-item-part>
-          <yu-xform-item-part placeholder="请输入维度/指标" ctype="input" suffix-icon="el-icon-search"></yu-xform-item-part>
-        </div>
-        <CheckboxList title="维度项" v-model="dimension" :data="dimensionOptions" height="calc(50% - 51px)" />
-        <CheckboxList title="指标" v-model="quota" :data="quotaOptions" height="calc(50% - 51px)" />
+  <div class="addChartComp-container">
+    <div class="comp-header">
+      <el-tabs v-model="activeName">
+        <el-tab-pane label="图表组件" name="1"></el-tab-pane>
+        <el-tab-pane label="指标卡" name="2"></el-tab-pane>
+      </el-tabs>
+      <div class="comp-btns">
+        <el-button class="yu-button-text" icon="el-icon-circle-close" @click="closeFn">取消</el-button>
+        <el-button type="primary" @click="nextFn">下一步</el-button>
       </div>
-    </el-col>
-    <el-col :span="20">
-      <div class="config-section">
-        <div class="config-section__title">配置区域</div>
-        <el-row>
-          <el-col :span="20">
-            <div class="center-section">
-              <charts type="BasicLineChart" :chart-data="chartData" height="5rem" />
-            </div>
-          </el-col>
-          <el-col :span="4">
-            <common-section title="图表切换" style="height: 1.6rem">
-              <ul class="chart-type">
-                <li class="chart-type__item" v-for="item in chartTypes" :key="item.name">
-                  <img :title="item.name" :src="require(`@/assets/images/lowCode/chartType/${item.disabled ? item.greyIcon : item.icon}.png`)" alt="" />
-                </li>
-              </ul>
-            </common-section>
-            <common-section title="查询条件" style="height: 1.8rem">222</common-section>
-            <common-section title="图表数据过滤条件" style="height: calc(100% - 3.4rem)">222</common-section>
-          </el-col>
-        </el-row>
+    </div>
+    <ChartSet ref="chartSet" :data="modConfig" v-if="activeName === '1'" />
+    <CardSet v-else :data="modConfig" />
+    <yu-dialog title="新增组件" :visible.sync="addChartCompVisible" width="500px">
+      <yu-xform ref="compFormRef" :model="compForm" label-width="100px">
+        <yu-xform-group :column="1">
+          <yu-xform-item label="组件名称" placeholder="组件名称" name="modName" ctype="input" :rules="globalRules.requiredInput50"></yu-xform-item>
+          <yu-xform-item label="目录" placeholder="目录" name="catalogId" ctype="yufp-org-tree" :tree-options="treeOptions" :rules="globalRules.required"></yu-xform-item>
+        </yu-xform-group>
+      </yu-xform>
+      <div slot="footer" align="center">
+        <el-button type="primary" @click="saveCompFn">保存</el-button>
+        <el-button @click="addChartCompVisible = false">取消</el-button>
       </div>
-    </el-col>
-  </el-row>
+    </yu-dialog>
+  </div>
 </template>
 
 <script lang="tsx">
 import { Component, Vue, Prop, Ref, Watch } from "vue-property-decorator";
 import { backend } from "@/config";
 import { CreateElement } from "vue";
-import CheckboxList from "../components/CheckboxList.vue";
-import CommonSection from "../components/CommonSection.vue";
+import ChartSet from "./chartSet/index.vue";
+import CardSet from "./cardSet/index.vue";
+import { saveBusiModule, deleteBusiModule } from "@/api/lowCode";
 
 export interface Options {
   key: string;
@@ -50,17 +41,29 @@ export interface Options {
 }
 
 @Component({
-  name: "ChartSet",
+  name: "AddChartComp",
   components: {
-    CheckboxList,
-    CommonSection,
+    ChartSet,
+    CardSet,
   },
 })
 export default class extends Vue {
   @Prop() private instance!: any;
+  @Prop() private data!: any;
   @Ref("compFormRef") compFormRef: any;
+  @Ref("chartSet") chartSet: any;
   private activeName = "1";
   private modelValue = "";
+
+  // 目录配置
+  private treeOptions = {
+    showCheckbox: false,
+    dataUrl: backend.comptMgrService + "/api/busimodule/catalog/info",
+    dataId: "id",
+    dataLabel: "catalogName",
+    dataPid: "upId",
+    expandLevel: 1,
+  };
 
   private dimension = [];
   private quota = [];
@@ -117,17 +120,45 @@ export default class extends Vue {
   private addChartCompVisible = false;
   private compForm = {};
 
-  createFn() {
-    console.log(1);
+  private modConfig = {};
+
+  @Watch("data", { immediate: true })
+  onDataChange() {
+    this.modConfig = this.data?.modConfig?.includes("{") ? JSON.parse(this.data.modConfig) : {};
   }
+
+  createFn() {}
 
   nextFn() {
     this.addChartCompVisible = true;
-    this.compFormRef && this.compFormRef.resetFields();
+    if (this.data.modName) {
+      const { modName, catalogId } = this.data;
+      this.compForm = { ...this.data };
+    } else {
+      this.compFormRef && this.compFormRef.resetFields();
+    }
   }
 
   saveCompFn() {
-    console.log(1);
+    let params = {
+      ...this.compForm,
+      modType: this.activeName === "1" ? "chart" : "card",
+      modSts: "0",
+      modConfig: "",
+    };
+    if (this.activeName === "1") {
+      let chartConfig = this.chartSet.getConfig();
+      params.modConfig = JSON.stringify(chartConfig);
+    }
+
+    saveBusiModule(params).then((res) => {
+      this.$message.success("保存成功");
+      this.closeFn();
+    });
+  }
+
+  closeFn() {
+    this.instance.hide();
   }
 }
 </script>

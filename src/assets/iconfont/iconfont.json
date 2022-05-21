@@ -6,6 +6,83 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "29842325",
+      "name": "漏斗图",
+      "font_class": "loudoutu",
+      "unicode": "e663",
+      "unicode_decimal": 58979
+    },
+    {
+      "icon_id": "29842039",
+      "name": "仪表盘",
+      "font_class": "yibiaopan",
+      "unicode": "e662",
+      "unicode_decimal": 58978
+    },
+    {
+      "icon_id": "29833735",
+      "name": "柱状图",
+      "font_class": "zhuzhuangtu",
+      "unicode": "e661",
+      "unicode_decimal": 58977
+    },
+    {
+      "icon_id": "29833738",
+      "name": "表格",
+      "font_class": "biaoge1",
+      "unicode": "e664",
+      "unicode_decimal": 58980
+    },
+    {
+      "icon_id": "29833739",
+      "name": "折线图",
+      "font_class": "zhexiantu",
+      "unicode": "e665",
+      "unicode_decimal": 58981
+    },
+    {
+      "icon_id": "29833740",
+      "name": "雷达图",
+      "font_class": "leidatu",
+      "unicode": "e667",
+      "unicode_decimal": 58983
+    },
+    {
+      "icon_id": "29833741",
+      "name": "环形图svg",
+      "font_class": "huanxingtusvg",
+      "unicode": "e668",
+      "unicode_decimal": 58984
+    },
+    {
+      "icon_id": "29833742",
+      "name": "k线图",
+      "font_class": "kxiantu",
+      "unicode": "e669",
+      "unicode_decimal": 58985
+    },
+    {
+      "icon_id": "29833743",
+      "name": "饼图",
+      "font_class": "bingtu",
+      "unicode": "e66a",
+      "unicode_decimal": 58986
+    },
+    {
+      "icon_id": "21027301",
+      "name": "m-弹出层",
+      "font_class": "danchuceng",
+      "unicode": "e7d4",
+      "unicode_decimal": 59348
+    },
+    {
+      "icon_id": "29467137",
+      "name": "名单管理",
+      "font_class": "mingdanguanli",
+      "unicode": "e660",
+      "unicode_decimal": 58976
+    },
+    {
       "icon_id": "7626536",
       "name": "组件信息",
       "font_class": "zujianxinxi",

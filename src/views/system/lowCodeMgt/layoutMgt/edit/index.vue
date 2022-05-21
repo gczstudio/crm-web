@@ -2,13 +2,13 @@
   <div class="edit-container yu-main-wrapper">
     <div class="layout-box">
       <div class="layout-header" v-if="type === 'edit'">
-        <div class="layout-title" v-if="isEditName"><input type="text" v-model="row.name" /><el-button type="text" icon="el-icon-mobile" @click="saveNameFn"></el-button></div>
-        <div class="layout-title" v-else>{{ row.name }}<el-button type="text" icon="el-icon-edit" @click="editNameFn"></el-button></div>
+        <div class="layout-title" v-if="isEditName"><input type="text" v-model="row.layoutName" /><el-button type="text" icon="el-icon-mobile" @click="saveNameFn"></el-button></div>
+        <div class="layout-title" v-else>{{ row.layoutName }}<el-button type="text" icon="el-icon-edit" @click="editNameFn"></el-button></div>
         <div class="layout-btns fr">
           <el-button class="yu-button-text" icon="el-icon-edit" @click="closeFn">返回</el-button>
-          <el-button class="yu-button-text" icon="el-icon-edit">清空</el-button>
+          <el-button class="yu-button-text" icon="el-icon-edit" @click="clearFn">清空</el-button>
           <el-button class="yu-button-text" icon="el-icon-delete" @click="saveFn">保存</el-button>
-          <el-button class="yu-button-text" icon="el-icon-folder-add">保存并上架</el-button>
+          <el-button class="yu-button-text" icon="el-icon-folder-add" @click="saveAndUpFn">保存并上架</el-button>
         </div>
       </div>
     </div>
@@ -51,7 +51,7 @@
 
 <script lang="ts">
 import { Component, Vue, Ref, Prop, Watch } from "vue-property-decorator";
-import { addLayout } from "@/api/lowCode";
+import { saveLayoutInfo, deleteLayoutInfo, updateLayoutSts } from "@/api/lowCode";
 import { backend } from "@/config";
 import Draggable from "vuedraggable";
 
@@ -66,7 +66,8 @@ export let mode: IMode[] = [
   { type: "1", name: "1*1模式", col: 1, row: 1 },
   { type: "2", name: "1*2模式", col: 1, row: 2 },
   { type: "3", name: "2*1模式", col: 2, row: 1 },
-  { type: "4", name: "2*2模式", col: 2, row: 2 },
+  { type: "4", name: "4*1模式", col: 4, row: 1 },
+  { type: "5", name: "2*2模式", col: 2, row: 2 },
 ];
 
 @Component({
@@ -149,8 +150,41 @@ export default class extends Vue {
     this.isEditName = false;
   }
 
-  saveFn() {
-    console.log(JSON.stringify(this.layoutArr), 888);
+  // 清空
+  clearFn() {
+    this.layoutArr = [];
+  }
+
+  // 保存
+  saveFn(callback?: Function) {
+    let params = {
+      id: this.row.id || undefined,
+      layoutName: this.row.layoutName,
+      layoutConfig: this.layoutArr.map((item: IMode) => item.type).join(","),
+    };
+    saveLayoutInfo(params).then((res) => {
+      if (typeof callback === "function") {
+        callback(res.data);
+      } else {
+        this.$message.success("保存成功");
+        this.closeFn();
+      }
+    });
+  }
+
+  // 保存并上架
+  saveAndUpFn() {
+    this.saveFn((id: string) => {
+      let params = {
+        condition: JSON.stringify({
+          id,
+          layoutSts: "1",
+        }),
+      };
+      updateLayoutSts(params).then((res) => {
+        this.$message.success("保存并上架成功");
+      });
+    });
   }
 }
 </script>

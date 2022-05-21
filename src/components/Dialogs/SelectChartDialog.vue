@@ -3,7 +3,7 @@
  * @Author: gaocz
  * @Date: 2022-04-24 08:45:49
  * @LastEditors: gaocz
- * @LastEditTime: 2022-04-28 14:37:29
+ * @LastEditTime: 2022-05-20 10:05:51
  * @FilePath: /edmp-web/src/components/dialogs/SelectChartDialog.vue
 -->
 <template>
@@ -14,11 +14,11 @@
           ref="menuTree"
           :show-checkbox="false"
           :height="bHeight - (isMaxScreen ? 232 : 202)"
-          :data-url="menuTreeUrl"
-          data-id="menuId"
-          data-label="menuName"
+          :data-url="treeUrl"
+          data-id="id"
+          data-label="catalogName"
           @node-xclick="nodeClickFn"
-          data-pid="upMenuId"
+          data-pid="upId"
           :expand-level="2"
           :highlight-current="true"
         >
@@ -28,10 +28,10 @@
         <div class="left-container">
           <yu-xform :model="queryFormData" ref="searchForm" related-table-name="refTable" form-type="search">
             <yu-xform-group :column="2">
-              <yu-xform-item label="组件名称" placeholder="组件名称" name="userInfo" ctype="input" :rules="globalRules.input"></yu-xform-item>
+              <yu-xform-item label="组件名称" placeholder="组件名称" name="searchText" ctype="input" :rules="globalRules.input"></yu-xform-item>
             </yu-xform-group>
           </yu-xform>
-          <yu-xtable ref="refTable" :data-url="dataUrl" type="custom" :dynamic-height="true">
+          <yu-xtable ref="refTable" :data-url="dataUrl" :base-params="baseParams" type="custom" :dynamic-height="true">
             <div class="custom-container" slot-scope="scope">
               <el-row :gutter="16">
                 <el-col :span="12" v-for="item in scope.tableData" :key="item.rowId">
@@ -41,9 +41,9 @@
                         <img src="https://t7.baidu.com/it/u=3180010982,1201664165&fm=74&app=80&size=f256,256&n=0&f=JPEG&fmt=auto?sec=1650560400&t=bd9ca514e4a0343cb1ab8d1dd62d594c" alt="" />
                       </div>
                       <div class="card-item__info">
-                        <p class="card-item__title">测试11</p>
-                        <p class="c2"><i class="el-icon-user"></i>创建人：1</p>
-                        <p class="c2"><i class="el-icon-time"></i>创建时间：1</p>
+                        <p class="card-item__title">{{ item.modName }}</p>
+                        <p class="c2"><i class="el-icon-user"></i>创建人：{{ item.createUser }}</p>
+                        <p class="c2"><i class="el-icon-time"></i>创建时间：{{ item.createTime }}</p>
                       </div>
                     </div>
                   </div>
@@ -84,9 +84,14 @@ export default {
   data() {
     return {
       dialogVisible: false,
-      menuTreeUrl: backend.appOcaService + "/api/adminsmmenu/menutreequery?sysId=" + getUserInfo().logicSys.id,
-      dataUrl: backend.mockService + "/lowcode/custcomp/list",
+      treeUrl: backend.comptMgrService + "/api/busimodule/catalog/info",
+      dataUrl: backend.comptMgrService + "/api/busimodule/list",
       queryFormData: {},
+      baseParams: {
+        condition: JSON.stringify({
+          modType: "chart",
+        }),
+      },
       nowNode: {},
       selections: [],
     };
@@ -101,8 +106,12 @@ export default {
     this.dialogVisible = this.visible;
   },
   methods: {
-    nodeClickFn() {
-      console.log(2);
+    nodeClickFn(node) {
+      this.$refTable.remoteData({
+        condition: {
+          catalogId: node.id,
+        },
+      });
     },
     show() {
       this.$emit("update:visible", true);

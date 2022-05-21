@@ -3,33 +3,34 @@
  * @Author: gaocz
  * @Date: 2022-04-28 15:08:11
  * @LastEditors: gaocz
- * @LastEditTime: 2022-05-05 08:37:02
+ * @LastEditTime: 2022-05-17 09:53:24
  * @FilePath: /edmp-web/src/views/system/lowCodeMgt/pageMgt/renderTool/components/RenderCurd.vue
 -->
 <template>
   <div class="curd-editor">
-    <div class="curd-toolbar" v-editor="['delete', 'drag']">
-      <div class="curd-title">1111</div>
+    <div class="curd-toolbar" v-editor.curd-action="{ id: data.id }">
+      <div class="curd-title">{{ data.title }}</div>
       <div class="yu-button-group tr">
-        <el-button class="yu-button-text" icon="el-icon-download">导出</el-button>
-        <el-button class="yu-button-text" icon="el-icon-download">导出</el-button>
+        <el-button v-for="item in data.bulkActions" :key="item.key" class="yu-button-text" :icon="item.icon">{{ item.value }}</el-button>
       </div>
     </div>
-    <div class="curd-form" v-editor>
+    <div class="curd-form" v-editor.curd-form="{ id: data.id }">
       <yu-xform ref="searchForm" class="search" :model="queryFormData" form-type="search">
         <yu-xform-group :column="4">
-          <yu-xform-item label="客户名称" placeholder="客户名称" ctype="input" name="custNm" :rules="globalRules.input"></yu-xform-item>
-          <yu-xform-item label="核心客户号" placeholder="核心客户号" ctype="input" name="custId" :rules="globalRules.input"></yu-xform-item>
-          <yu-xform-item label="组织机构代码" placeholder="组织机构代码" ctype="input" name="insCredCode" :rules="globalRules.input"></yu-xform-item>
-          <yu-xform-item label="含同业科目" ctype="checkbox" name="isTy"></yu-xform-item>
+          <yu-xform-item v-for="item in data.formItems" :key="item.prop" :placeholder="item.label" v-bind="item"></yu-xform-item>
         </yu-xform-group>
       </yu-xform>
     </div>
-    <div class="curd-table" v-editor>
-      <yu-xtable ref="refTable" row-number border>
-        <yu-xtable-column v-if="queryFormData.type === '1'" label="主管机构" prop="blgOrgNm" width="150" :show-overflow-tooltip="true" sortable="custom"></yu-xtable-column>
-        <yu-xtable-column v-else label="考核机构" prop="orgNm" width="150" :show-overflow-tooltip="true" sortable="custom"></yu-xtable-column>
-        <yu-xtable-column label="主管客户经理" prop="blgMgrNm" min-width="160" :show-overflow-tooltip="true" sortable="custom"></yu-xtable-column>
+    <div class="curd-table" v-editor.curd-table="{ id: data.id }">
+      <yu-xtable ref="refTable" :data="testData" row-number border>
+        <yu-xtable-column v-for="column in data.columns" :key="column.prop" :label="column.label" :prop="column.prop" :show-overflow-tooltip="true" sortable="custom"></yu-xtable-column>
+        <yu-xtable-column v-if="data.itemActions && data.itemActions.length" label="操作" width="100" fixed="right" align="center">
+          <template slot-scope="scope">
+            <el-button v-for="action in data.itemActions" :key="action.key" class="yu-action-btn" @click.native.prevent="customerViewFn(scope.row)" type="text">{{
+              action.value.split("-")[0]
+            }}</el-button>
+          </template>
+        </yu-xtable-column>
       </yu-xtable>
     </div>
   </div>
@@ -41,40 +42,31 @@ export default {
   name: "RenderCurd",
   props: {
     id: String,
+    data: {
+      type: Object,
+      default: () => ({}),
+    },
   },
   data() {
     return {
       queryFormData: {},
+      testData: [],
       dataUrl: backend.custService + "/api/custdepanalybycst/depchglist",
-      curdConfig: {
-        type: "curd",
-        api: "/xx/xxx/xxx",
-        columns: [
-          { lable: "客户名称", prop: "custName" },
-          { lable: "客户名称1", prop: "custName1" },
-          {
-            type: "action",
-            label: "操作",
-            buttons: [
-              {
-                label: "编辑",
-                type: "button",
-                actionType: "dialog",
-              },
-            ],
-          },
-        ],
-        headerToolbar: [
-          {
-            label: "新增",
-            type: "button",
-            actionType: "dialog",
-          },
-        ],
-      },
     };
   },
-  mounted() {},
+  watch: {
+    data: {
+      handler() {
+        console.log(this.data, "zxl");
+        this.data.columns.map((item) => {
+          this.testData[0] = this.testData[0] || {};
+          this.testData[0][item.prop] = "测试数据";
+        });
+      },
+      immediate: true,
+      deep: true,
+    },
+  },
   methods: {
     hoverFn(e) {
       console.log(e, 111);

@@ -1,3 +1,11 @@
+/*
+ * @Descripttion:
+ * @Author: gaocz
+ * @Date: 2022-03-07 15:08:22
+ * @LastEditors: gaocz
+ * @LastEditTime: 2022-05-17 15:26:07
+ * @FilePath: /edmp-web/src/config.ts
+ */
 // 服务端地址
 export const baseUrl = "http://192.168.46.2:8080"; // 金融云  107075/123456
 // export const baseUrl = 'http://192.16.68.153:8080'; // 测试
@@ -18,5 +26,6 @@ export const backend = {
   dataSupplement: "/yscrm-business-center", // 业务中心
   teamCenter: "/yscrm-team-center", // 团队中心
   mgrMkt: "/yscrm-mgr-mkt", // 营销中心
-  mgrCockpit: "/yscrm-mgr-cockpit", // 营销中心
+  mgrCockpit: "/yscrm-mgr-cockpit", // 大屏
+  comptMgrService: "/yusp-compt-mgr", // 组件
 };

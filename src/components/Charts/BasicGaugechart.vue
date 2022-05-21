@@ -3,10 +3,10 @@
  * @Author: gaocz
  * @Date: 2022-04-21 08:31:44
  * @LastEditors: gaocz
- * @LastEditTime: 2022-05-19 20:19:06
- * @FilePath: /edmp-web/src/components/charts/BasicLineChart.vue
+ * @LastEditTime: 2022-05-20 10:46:55
+ * @FilePath: /edmp-web/src/components/charts/BasicGaugechart.vue
 -->
-<!-- 基础折线图 -->
+<!-- 仪表盘 -->
 <template>
   <div :style="{ height: height, width: width }" />
 </template>
@@ -25,7 +25,7 @@ export interface IChartData {
 }
 
 @Component({
-  name: "BasicLineChart",
+  name: "BasicGaugechart",
 })
 export default class extends mixins(ResizeMixin) {
   @Prop({ required: true }) private chartData!: IChartData;
@@ -71,58 +71,25 @@ export default class extends mixins(ResizeMixin) {
           data: this.chartData.data.map((ele) => ele[item.key]),
         };
       });
-      console.log(series);
       this.chart.setOption({
-        grid: {
-          top: 20,
-          left: 40,
-          right: 20,
-          bottom: 30,
-          containLabel: true,
-        },
         tooltip: {
-          trigger: "axis",
-          axisPointer: {
-            type: "cross",
+          formatter: "{a} <br/>{b} : {c}%",
+        },
+        series: [
+          {
+            name: "Pressure",
+            type: "gauge",
+            detail: {
+              formatter: "{value}",
+            },
+            data: [
+              {
+                value: 50,
+                name: "SCORE",
+              },
+            ],
           },
-          position: function (point: any, params: any, dom: any, rect: any, size: any) {
-            // 提示框位置
-            let x = 0,
-              y = 0;
-            // 鼠标位置 特殊情况，去除左边菜单栏的宽度
-            let pointX = point[0],
-              pointY = point[1];
-            // 外面div大小
-            let viweWdith = size.viewSize[0],
-              viewHeight = size.viewSize[1];
-            //提示框大小
-            let boxWdith = size.contentSize[0],
-              boxHeight = size.contentSize[1];
-
-            if (boxWdith > pointX) {
-              x = 5;
-            } else {
-              x = pointX - boxWdith - 10;
-            }
-
-            if (boxHeight > pointY) {
-              y = 5;
-            } else {
-              y = pointY - boxHeight - 10;
-            }
-
-            return [x, y];
-          },
-          padding: 8,
-        },
-        xAxis: {
-          type: "category",
-          data: this.chartData.data.map((item) => item[this.chartData.xAxis[0].key]),
-        },
-        yAxis: {
-          type: "value",
-        },
-        series,
+        ],
       });
     }
   }
