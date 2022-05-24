@@ -14,26 +14,28 @@
           v-debounce="[fieldNameChangeFn, 'input', 300]"
         ></yu-xform-item-part>
       </div>
-      <CheckboxList :multiple="false" title="指标" v-model="quota" :data="dsField" height="calc(100% - 102px)" @change="quotaChange" />
+      <checkbox-list :multiple="false" title="指标" v-model="quota" :data="dsField" height="calc(100% - 102px)" @change="quotaChange"></checkbox-list>
     </div>
     <div class="config-section">
       <div class="config-section__title">配置区域</div>
       <div class="center-section">
         <!--卡片一-->
-        <Card1 @change="card1ChangeFn" :data="cardConfig" />
+        <card-1 @change="card1ChangeFn" :data="cardConfig"></card-1>
       </div>
     </div>
     <div class="switch-section">
       <div class="switch-section__title">指标卡切换</div>
       <div class="card-box">
-        <div class="card-item active" v-for="(item, index) in cardTypes" :key="item.type"><img :src="require(`@/assets/images/lowCode/card/card${index + 1}.png`)" alt="" /></div>
+        <div :class="{ 'card-item': true, active: activeCardType === item.type }" v-for="(item, index) in cardTypes" :key="item.type">
+          <img :src="require(`@/assets/images/lowCode/card/card${index + 1}.png`)" alt="" />
+        </div>
       </div>
     </div>
     <div class="side-config-section">
       <div class="right-panel-arrow" @click="toggleRightPanel"><i :class="`el-icon-caret-${showRightPanel ? 'right' : 'left'}`"></i></div>
       <div class="side-config-section__cont" v-if="showRightPanel">
         <div class="side-config-section__title">属性</div>
-        <CardConfig1 :type="configType" :data="cardItemData" />
+        <card-config-1 :type="configType" :data="cardItemData"></card-config-1>
       </div>
     </div>
   </div>
@@ -41,8 +43,6 @@
 
 <script lang="tsx">
 import { Component, Vue, Prop, Ref, Watch } from "vue-property-decorator";
-import { backend } from "@/config";
-import { CreateElement } from "vue";
 import CheckboxList from "../components/CheckboxList.vue";
 import CommonSection from "../components/CommonSection.vue";
 import Card1 from "./card1/index.vue";
@@ -72,28 +72,41 @@ export interface Options {
 export default class extends Vue {
   @Prop() private instance!: any;
   @Ref("compFormRef") compFormRef: any;
-  private activeName = "1";
+  @Prop() private data!: any;
+
+  activeName = "1";
   // 数据模型
-  private dsId = "";
-  private dsList = [];
-  private fieldName = "";
+  dsId = "";
+  dsList = [];
+  fieldName = "";
   // 数据集字段信息
-  private dsField = [];
+  dsField = [];
   // 数据集字段数据
-  private dsData = [];
-  private quota = "";
+  dsData = [];
+  quota = "";
 
   // 左侧配置列表
-  private showRightPanel = false;
+  showRightPanel = false;
   // 当前点击的某个块
-  private configType = "";
-  private cardItemData = {};
+  configType = "";
+  cardItemData = {};
 
   // 指标卡类型
-  private cardTypes = [{ type: "1", name: "卡片一" }];
+  cardTypes = [{ type: "1", name: "卡片一" }];
+  activeCardType = "1";
 
   // 指标卡配置
-  private cardConfig: any = [];
+  get cardConfig() {
+    return LowCodeModule.cardConfig;
+  }
+
+  // 编辑时的回显逻辑
+  @Watch("data", { immediate: true })
+  onDataChange(data: any) {
+    LowCodeModule.SET_CARD_CONFIG(data);
+    this.dsId = data[0]?.dsId;
+    this.dsId && this.dsChangeFn();
+  }
 
   mounted() {
     this.getDsInfo();
@@ -158,21 +171,28 @@ export default class extends Vue {
 
   // 指标卡1配置点击
   card1ChangeFn(configType: string) {
-    this.configType = configType;
     this.showRightPanel = true;
-    this.quota = "";
+    this.configType = configType;
+    this.quota = (this.cardConfig as any)[Number(this.configType)].key;
   }
 
   // 指标变化
   quotaChange(key: string) {
-    let curData: any = this.cardConfig[Number(this.configType)] || {};
-    let data: any = this.dsField.find((item: Options) => item.key === key) || {};
-    curData.name = data.value;
-    curData.value = this.dsData[0][data.key];
-    this.cardItemData = { ...curData };
-    this.cardConfig[Number(this.configType)] = curData;
-
-    console.log(this.cardConfig, 888);
+    let cardQuota: Options = this.dsField.find((item: Options) => item.key === key) || { key: "", value: "" };
+    let value = this.dsData[0][cardQuota.key];
+    LowCodeModule.SET_SELECT_CARD_QUATO({
+      ...cardQuota,
+      data: value,
+    });
+    let cardConfig: any[] = [...this.cardConfig];
+    let cardSection: any = cardConfig[Number(this.configType)] || {};
+    cardSection.name = cardQuota.value;
+    cardSection.value = value; // 数据，未来要改
+    cardSection.dsId = this.dsId; // 数据集id
+    cardSection.key = cardQuota.key;
+    cardSection.cardType = this.activeCardType;
+    cardConfig[Number(this.configType)] = { ...cardSection };
+    LowCodeModule.SET_CARD_CONFIG(cardConfig);
   }
 }
 </script>

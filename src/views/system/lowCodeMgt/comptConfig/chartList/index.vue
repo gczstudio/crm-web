@@ -1,6 +1,15 @@
 <template>
   <div class="chartList-container">
-    <yu-xform-item-part class="search-input" placeholder="输入组件名称/创建人" ctype="input" suffix-icon="el-icon-search" name="searchText"></yu-xform-item-part>
+    <yu-xform-item-part
+      class="search-input"
+      placeholder="输入组件名称/创建人"
+      ctype="input"
+      suffix-icon="el-icon-search"
+      v-model="searchText"
+      v-debounce="[searchTextChange, 'input']"
+      clearable
+      @clear="searchTextChange"
+    ></yu-xform-item-part>
     <MainLayout is-tab>
       <template v-slot:header>
         <el-button icon="el-icon-plus" @click="addCompFn">新增</el-button>
@@ -69,7 +78,7 @@ export default class extends Vue {
   @Ref("refTable") refTable: any;
   @Prop() type!: string;
 
-  private dataUrl = backend.comptMgrService + "/api/busimodule/list";
+  dataUrl = backend.comptMgrService + "/api/busimodule/list";
   private compForm = {};
   private addCompVisible = false;
   private compStatus = "add";
@@ -81,10 +90,22 @@ export default class extends Vue {
   private contentVisible = false;
   private curItem = {};
 
+  searchText = "";
+
   mounted() {
     this.searchFn({
       condition: JSON.stringify({
         modType: this.type,
+      }),
+    });
+  }
+
+  searchTextChange() {
+    console.log(this.searchText, 99);
+    this.searchFn({
+      condition: JSON.stringify({
+        modType: this.type,
+        searchText: this.searchText,
       }),
     });
   }
@@ -96,6 +117,7 @@ export default class extends Vue {
   addCompFn() {
     // this.$message.warning('请先选择左侧目录');
     this.contentVisible = true;
+    this.curItem = {};
   }
 
   saveCompFn() {

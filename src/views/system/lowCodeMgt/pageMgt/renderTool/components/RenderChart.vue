@@ -4,17 +4,16 @@
  * @Date: 2022-04-28 15:08:11
  * @LastEditors: gaocz
  * @LastEditTime: 2022-05-20 10:41:27
- * @FilePath: /edmp-web/src/views/system/lowCodeMgt/pageMgt/renderTool/components/RenderChartById.vue
+ * @FilePath: /edmp-web/src/views/system/lowCodeMgt/pageMgt/renderTool/components/RenderChart.vue
 -->
 <template>
   <charts v-editor.chart="{ id: data.id }" :type="type" :chart-data="chartData" />
 </template>
 
 <script>
-import Chart from "@/components/charts/index.vue";
 import { queryDsData } from "@/api/lowCode";
 export default {
-  name: "RenderChartById",
+  name: "RenderChart",
   props: {
     data: {
       type: Object,

@@ -16,14 +16,16 @@
       </el-collapse>
     </div>
     <SelectChartDialog :visible.sync="selectChartVisible" @sure="selectChartFn" />
+    <SelectCardDialog :visible.sync="selectCardVisible" @sure="selectCardFn" />
     <CurdDialog :visible.sync="selectCurdVisible" @sure="selectCurdFn" />
     <FormDialog :visible.sync="selectFormVisible" @sure="selectFormFn" />
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop, Ref, Watch } from "vue-property-decorator";
+import { Component, Vue } from "vue-property-decorator";
 import SelectChartDialog from "@/components/dialogs/SelectChartDialog.vue";
+import SelectCardDialog from "@/components/dialogs/SelectCardDialog.vue";
 import CurdDialog from "@/components/dialogs/CurdDialog.vue";
 import FormDialog from "@/components/dialogs/FormDialog.vue";
 import { LowCodeModule } from "@/store/modules/lowCode";
@@ -47,14 +49,15 @@ export interface ICompItem {
   name: "CompList",
   components: {
     SelectChartDialog,
+    SelectCardDialog,
     CurdDialog,
     FormDialog,
   },
 })
 export default class extends Vue {
-  private activeNames = ["1", "2", "3", "4"];
-  private active = "";
-  private compList = [
+  activeNames = ["1", "2", "3", "4"];
+  active = "";
+  compList = [
     {
       type: "1",
       name: "功能",
@@ -76,9 +79,10 @@ export default class extends Vue {
       ],
     },
   ];
-  private selectChartVisible = false;
-  private selectCurdVisible = false;
-  private selectFormVisible = false;
+  selectChartVisible = false;
+  selectCurdVisible = false;
+  selectFormVisible = false;
+  selectCardVisible = false;
 
   get layout() {
     return LowCodeModule.layout;
@@ -102,6 +106,9 @@ export default class extends Vue {
       case "chart":
         this.selectChartVisible = true;
         break;
+      case "card":
+        this.selectCardVisible = true;
+        break;
       case "curd":
         this.selectCurdVisible = true;
         break;
@@ -119,9 +126,26 @@ export default class extends Vue {
     let curLayoutItem = (this.pageConfig.body[0] as any).body[this.activeFixedLayoutItem];
     curLayoutItem = {
       ...curLayoutItem,
+      ...chart,
       type: "chart",
       id: this.$util.guid(),
-      ...chart,
+    };
+    if (this.layout === "fixed") {
+      (this.pageConfig.body[0] as any).body[this.activeFixedLayoutItem] = curLayoutItem;
+      LowCodeModule.SET_PAGE_CONFIG({ ...this.pageConfig });
+    } else {
+      appendToPageById(this.dataId, curLayoutItem);
+    }
+  }
+
+  // 选择某个卡片
+  selectCardFn(card: IChartItem) {
+    let curLayoutItem = (this.pageConfig.body[0] as any).body[this.activeFixedLayoutItem];
+    curLayoutItem = {
+      ...curLayoutItem,
+      ...card,
+      type: "card",
+      id: this.$util.guid(),
     };
     if (this.layout === "fixed") {
       (this.pageConfig.body[0] as any).body[this.activeFixedLayoutItem] = curLayoutItem;

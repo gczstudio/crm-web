@@ -9,24 +9,24 @@
 
 <template>
   <div class="config-container">
-    <!--top配置项-->
-    <yu-xform v-if="type === '0'" ref="searchForm" :model="formTopData" label-width="70px" key="1">
-      <yu-xform-group :column="1">
+    <yu-xform ref="searchForm" :model="formData" :key="type">
+      <!--top配置项-->
+      <yu-xform-group :column="1" v-if="type === '0'">
         <yu-xform-item label="图标路径" ctype="input" name="iconUrl" placeholder="以@/assets/images/开头"></yu-xform-item>
         <yu-xform-item label="名称" ctype="input" name="name" :rules="globalRules.input50"></yu-xform-item>
         <yu-xform-item label="值格式" ctype="select" name="formatType" data-code="LC_FORMAT_TYPE"></yu-xform-item>
-        <yu-xform-item v-if="formTopData.formatType === '1'" label="单位" ctype="select" name="unitType" data-code="LC_UNIT_TYPE" key="1"></yu-xform-item>
+        <yu-xform-item v-if="formData.formatType === '1'" label="单位" ctype="select" name="unitType" data-code="LC_UNIT_TYPE" key="1"></yu-xform-item>
         <yu-xform-item v-else label="单位" ctype="input" name="unitType" :rules="globalRules.input50" key="2"></yu-xform-item>
+        <yu-xform-item label="是否显示正负号" ctype="radio" name="isShowSymbol" data-code="YESNO"></yu-xform-item>
       </yu-xform-group>
-    </yu-xform>
-    <!-- botton配置项 -->
-    <yu-xform v-else ref="searchForm" :model="formBottomData" label-width="100px" key="2">
-      <yu-xform-group :column="1">
+      <!-- botton配置项 -->
+      <yu-xform-group :column="1" v-else>
         <yu-xform-item label="名称" ctype="input" name="name" :rules="globalRules.input50"></yu-xform-item>
         <yu-xform-item label="是否显示图标" ctype="radio" name="isShowIcon" data-code="YESNO"></yu-xform-item>
         <yu-xform-item label="值格式" ctype="select" name="formatType" data-code="LC_FORMAT_TYPE"></yu-xform-item>
-        <yu-xform-item v-if="formBottomData.formatType === '1'" label="单位" ctype="select" name="unitType" data-code="LC_UNIT_TYPE" key="1"></yu-xform-item>
-        <yu-xform-item v-else label="单位" ctype="input" name="unitType" :rules="globalRules.input50" key="2"></yu-xform-item>
+        <yu-xform-item v-if="formData.formatType === '1'" label="单位" ctype="select" name="unitType" data-code="LC_UNIT_TYPE" key="3"></yu-xform-item>
+        <yu-xform-item v-else label="单位" ctype="input" name="unitType" :rules="globalRules.input50" key="4"></yu-xform-item>
+        <yu-xform-item label="是否显示正负号" ctype="radio" name="isShowSymbol" data-code="YESNO"></yu-xform-item>
       </yu-xform-group>
     </yu-xform>
   </div>
@@ -41,16 +41,43 @@ import { LowCodeModule } from "@/store/modules/lowCode";
 export default class extends Vue {
   @Prop() type!: string;
   @Prop() data!: any;
-  private formTopData = {};
-  private formBottomData = {};
+  formData = {
+    name: "",
+    value: "",
+  };
 
-  @Watch("data", { immediate: true })
-  onCardConfigChange(config: any) {
-    if (this.type === "0") {
-      this.formTopData = config || {};
-    } else {
-      this.formBottomData = config || {};
-    }
+  get selectCardQuota() {
+    return LowCodeModule.selectCardQuota;
+  }
+
+  get cardConfig() {
+    return LowCodeModule.cardConfig;
+  }
+
+  @Watch("type", { immediate: true })
+  onTypeChange() {
+    this.formData = {
+      ...(this.cardConfig as any)[Number(this.type)],
+    };
+  }
+
+  @Watch("selectCardQuota")
+  onSelectCardQuotaChange(data: any) {
+    console.log(3);
+    this.formData.name = data.value;
+    this.formData.value = data.data;
+  }
+
+  @Watch("formData", { immediate: true, deep: true })
+  onFormDataChange(data: any) {
+    console.log(4);
+    LowCodeModule.SET_CARD_QUATO_CONFIG(data);
+    let cardConfig: Record<string, unknown>[] = [...this.cardConfig];
+    cardConfig[Number(this.type)] = {
+      ...cardConfig[Number(this.type)],
+      ...this.formData,
+    };
+    LowCodeModule.SET_CARD_CONFIG(cardConfig);
   }
 }
 </script>

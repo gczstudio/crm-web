@@ -61,7 +61,7 @@ import { backend } from "@/config";
 import request from "@/utils/request";
 import { getUserInfo } from "@/utils";
 export default {
-  name: "SelectChartDialog",
+  name: "SelectCardDialog",
   props: {
     type: {
       type: String,
@@ -73,7 +73,7 @@ export default {
     },
     title: {
       type: String,
-      default: "图表组件",
+      default: "指标卡组件",
     },
     required: {
       // 是否必选
@@ -89,7 +89,7 @@ export default {
       queryFormData: {},
       baseParams: {
         condition: JSON.stringify({
-          modType: "chart",
+          modType: "card",
         }),
       },
       nowNode: {},

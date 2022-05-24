@@ -31,8 +31,11 @@ export interface ILowCodeState {
   hoverEditorId: string;
   activeEditorId: string;
   activeWidgetsAuth: string[];
-  widgetsMap: object;
+  widgetsMap: Record<string, unknown>;
   showRightPanel: boolean;
+  cardConfig: Record<string, unknown>[];
+  selectCardQuota: Record<string, unknown>;
+  cardQuotaConfig: Record<string, unknown>;
 }
 
 @Module({ dynamic: true, store, name: "lowCode" })
@@ -55,6 +58,10 @@ class LowCode extends VuexModule implements ILowCodeState {
   activeWidgetsAuth = [];
   widgetsMap = {};
   showRightPanel = false;
+  // 指标卡配置相关
+  cardConfig = [];
+  selectCardQuota = {};
+  cardQuotaConfig = {};
 
   @Mutation
   SET_LAYOUT(payload: any) {
@@ -104,6 +111,21 @@ class LowCode extends VuexModule implements ILowCodeState {
   @Mutation
   SET_SHOW_RIGHT_PANEL(payload: any) {
     this.showRightPanel = payload;
+  }
+
+  @Mutation
+  SET_CARD_CONFIG(payload: any) {
+    this.cardConfig = payload;
+  }
+
+  @Mutation
+  SET_SELECT_CARD_QUATO(payload: any) {
+    this.selectCardQuota = payload;
+  }
+
+  @Mutation
+  SET_CARD_QUATO_CONFIG(payload: any) {
+    this.cardQuotaConfig = payload;
   }
 }
 

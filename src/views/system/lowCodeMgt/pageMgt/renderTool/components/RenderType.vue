@@ -9,7 +9,8 @@
 <template>
   <div :class="{ 'render-type': true, 'render-type__fixed': layout === 'fixed' }">
     <div v-for="(item, index) in data" :key="index">
-      <RenderChartById v-if="item.type === 'chart'" :data="item" />
+      <RenderChart v-if="item.type === 'chart'" :data="item" />
+      <RenderCard v-if="item.type === 'card'" :data="item" />
       <RenderCurd v-if="item.type === 'curd'" :data="item" />
       <RenderDialog v-if="item.type === 'dialog'" :data="item" />
       <RenderForm v-if="item.type === 'form'" :data="item" />
@@ -18,7 +19,8 @@
 </template>
 
 <script>
-import RenderChartById from "./RenderChartById.vue";
+import RenderChart from "./RenderChart.vue";
+import RenderCard from "./RenderCard.vue";
 import RenderCurd from "./RenderCurd.vue";
 import RenderDialog from "./RenderDialog.vue";
 import RenderForm from "./RenderForm.vue";
@@ -26,7 +28,8 @@ import { LowCodeModule } from "@/store/modules/lowCode";
 export default {
   name: "RenderType",
   components: {
-    RenderChartById,
+    RenderChart,
+    RenderCard,
     RenderCurd,
     RenderDialog,
     RenderForm,

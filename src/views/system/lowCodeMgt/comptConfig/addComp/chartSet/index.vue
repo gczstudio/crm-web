@@ -92,7 +92,7 @@ export default class extends Vue {
     { name: "基本折线图", type: "BasicLineChart", icon: "icon-zhexiantu", disabled: true },
     { name: "基础柱状图", type: "BasicBarChart", icon: "icon-zhuzhuangtu", disabled: true },
     { name: "基础饼图", type: "BasicPieChart", icon: "icon-bingtu", disabled: true },
-    { name: "环形图", type: "DoughnutChart", icon: "icon-huanxingtu", disabled: true },
+    { name: "环形图", type: "DoughnutChart", icon: "icon-huanxingtusvg", disabled: true },
     { name: "雷达图", type: "BasicRadarChart", icon: "icon-leidatu", disabled: true },
     { name: "K线图", type: "BasicCandlestick", icon: "icon-kxiantu", disabled: true },
     { name: "漏斗图", type: "FunnelChart", icon: "icon-loudoutu", disabled: true },

@@ -12,7 +12,7 @@ import { LowCodeModule } from "@/store/modules/lowCode";
 import { guid } from "@/utils";
 import PreviewWidgets from "./components/PreviewWidgets.vue";
 import RenderType from "./components/RenderType.vue";
-import RenderChartById from "./components/RenderChartById.vue";
+import RenderChart from "./components/RenderChart.vue";
 import RenderCurd from "./components/RenderCurd.vue";
 import RenderDialog from "./components/RenderDialog.vue";
 import RenderForm from "./components/RenderForm.vue";
@@ -22,7 +22,7 @@ import RenderForm from "./components/RenderForm.vue";
   components: {
     PreviewWidgets,
     RenderType,
-    RenderChartById,
+    RenderChart,
     RenderCurd,
     RenderDialog,
     RenderForm,

@@ -2,15 +2,15 @@
   <div class="addChartComp-container">
     <div class="comp-header">
       <el-tabs v-model="activeName">
-        <el-tab-pane label="图表组件" name="1"></el-tab-pane>
-        <el-tab-pane label="指标卡" name="2"></el-tab-pane>
+        <el-tab-pane label="图表组件" name="chart"></el-tab-pane>
+        <el-tab-pane label="指标卡" name="card"></el-tab-pane>
       </el-tabs>
       <div class="comp-btns">
         <el-button class="yu-button-text" icon="el-icon-circle-close" @click="closeFn">取消</el-button>
         <el-button type="primary" @click="nextFn">下一步</el-button>
       </div>
     </div>
-    <ChartSet ref="chartSet" :data="modConfig" v-if="activeName === '1'" />
+    <ChartSet ref="chartSet" :data="modConfig" v-if="activeName === 'chart'" />
     <CardSet v-else :data="modConfig" />
     <yu-dialog title="新增组件" :visible.sync="addChartCompVisible" width="500px">
       <yu-xform ref="compFormRef" :model="compForm" label-width="100px">
@@ -34,6 +34,7 @@ import { CreateElement } from "vue";
 import ChartSet from "./chartSet/index.vue";
 import CardSet from "./cardSet/index.vue";
 import { saveBusiModule, deleteBusiModule } from "@/api/lowCode";
+import { LowCodeModule } from "@/store/modules/lowCode";
 
 export interface Options {
   key: string;
@@ -52,7 +53,7 @@ export default class extends Vue {
   @Prop() private data!: any;
   @Ref("compFormRef") compFormRef: any;
   @Ref("chartSet") chartSet: any;
-  private activeName = "1";
+  private activeName = "chart";
   private modelValue = "";
 
   // 目录配置
@@ -122,12 +123,19 @@ export default class extends Vue {
 
   private modConfig = {};
 
-  @Watch("data", { immediate: true })
-  onDataChange() {
-    this.modConfig = this.data?.modConfig?.includes("{") ? JSON.parse(this.data.modConfig) : {};
+  get cardCofig() {
+    return LowCodeModule.cardConfig;
   }
 
-  createFn() {}
+  @Watch("data", { immediate: true })
+  onDataChange() {
+    this.activeName = this.data.modType || "chart";
+    try {
+      this.modConfig = JSON.parse(this.data.modConfig);
+    } catch (err) {
+      this.modConfig = this.data.modType === "chart" ? {} : [];
+    }
+  }
 
   nextFn() {
     this.addChartCompVisible = true;
@@ -142,13 +150,15 @@ export default class extends Vue {
   saveCompFn() {
     let params = {
       ...this.compForm,
-      modType: this.activeName === "1" ? "chart" : "card",
+      modType: this.activeName,
       modSts: "0",
       modConfig: "",
     };
-    if (this.activeName === "1") {
+    if (this.activeName === "chart") {
       let chartConfig = this.chartSet.getConfig();
       params.modConfig = JSON.stringify(chartConfig);
+    } else {
+      params.modConfig = JSON.stringify(this.cardCofig);
     }
 
     saveBusiModule(params).then((res) => {

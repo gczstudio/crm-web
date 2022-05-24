@@ -1,17 +1,15 @@
 <template>
-  <div class="Charts-component">
+  <div class="Cards-component">
     <component :is="type" v-bind="$attrs"></component>
   </div>
 </template>
 
 <script>
-import BasicLineChart from "./BasicLineChart";
-import MixedLineAndBar from "./MixedLineAndBar";
+import Card1 from "./Card1";
 export default {
-  name: "Charts",
+  name: "Cards",
   components: {
-    BasicLineChart,
-    MixedLineAndBar,
+    Card1,
   },
   props: {
     type: {
@@ -21,9 +19,10 @@ export default {
   data() {
     return {};
   },
-  mounted() {
-    console.log(this.$attrs, 888);
-  },
 };
 </script>
-<style lang="scss"></style>
+<style lang="scss">
+.Cards-component {
+  height: 100%;
+}
+</style>
