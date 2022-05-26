@@ -8,22 +8,32 @@
 -->
 <template>
   <div class="side-config-container">
-    <CurdActionConfig v-if="configType === 'curd-action'" :data="configData" />
+    <component :is="compObj[configType]" :data="configData"></component>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop, Ref } from "vue-property-decorator";
+import { Component, Vue, Prop, Ref, Watch } from "vue-property-decorator";
 import CurdActionConfig from "./components/CurdActionConfig.vue";
+import CurdFormConfig from "./components/CurdFormConfig.vue";
+import CurdTableConfig from "./components/CurdTableConfig.vue";
 import { LowCodeModule } from "@/store/modules/lowCode";
 import { getCompConfigById } from "@/utils/lowCode";
 @Component({
   name: "SideConfig",
   components: {
     CurdActionConfig,
+    CurdFormConfig,
+    CurdTableConfig,
   },
 })
 export default class extends Vue {
+  private compObj = {
+    "curd-action": "CurdActionConfig",
+    "curd-form": "CurdFormConfig",
+    "curd-table": "CurdTableConfig",
+  };
+
   get configType() {
     return (LowCodeModule.widgetsMap as any)[LowCodeModule.activeEditorId]?.type;
   }
@@ -32,6 +42,16 @@ export default class extends Vue {
     let config = (LowCodeModule.widgetsMap as any)[LowCodeModule.activeEditorId];
     let data = getCompConfigById(config.dataId);
     return data;
+  }
+
+  @Watch("configType", { immediate: true })
+  onConfigTypeChange() {
+    if (!(this.compObj as any)[this.configType]) {
+      LowCodeModule.SET_SHOW_RIGHT_PANEL(false);
+      LowCodeModule.SET_HAS_SIDE_CONFIG(false);
+    } else {
+      LowCodeModule.SET_HAS_SIDE_CONFIG(true);
+    }
   }
 }
 </script>

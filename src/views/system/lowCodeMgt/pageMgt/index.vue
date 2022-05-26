@@ -25,7 +25,7 @@
         <MainLayout class="yu-main-wrapper">
           <template v-slot:header>
             <el-button icon="el-icon-plus" @click="addPageFn">新增</el-button>
-            <el-button icon="el-icon-share">发布</el-button>
+            <el-button icon="el-icon-share" @click="publishFn">发布</el-button>
           </template>
           <template v-slot:form>
             <yu-xform ref="searchForm" :model="queryFormData" related-table-name="refTable" form-type="search">
@@ -36,7 +36,7 @@
             </yu-xform>
           </template>
           <template v-slot:table>
-            <yu-xtable ref="refTable" :data-url="dataUrl" row-number :dynamic-height="true" border>
+            <yu-xtable ref="refTable" :data-url="dataUrl" selection-type="checkbox" row-number :dynamic-height="true" border>
               <yu-xtable-column label="页面名称" prop="pageName" :show-overflow-tooltip="true" sortable="custom"></yu-xtable-column>
               <yu-xtable-column label="状态" prop="pageSts" data-code="LC_STATUS" :show-overflow-tooltip="true" sortable="custom"></yu-xtable-column>
               <yu-xtable-column label="创建人" prop="createUserName" :show-overflow-tooltip="true" sortable="custom"></yu-xtable-column>
@@ -78,7 +78,7 @@ import { Component, Vue, Prop, Ref } from "vue-property-decorator";
 import { backend } from "@/config";
 import { getUserInfo } from "@/utils";
 import AddPageComp from "./addPageComp/index.vue";
-import { savePageCataLog, deletePageCataLog, deletePage } from "@/api/lowCode";
+import { savePageCataLog, deletePageCataLog, savePage, deletePage } from "@/api/lowCode";
 import { LowCodeModule } from "../../../../store/modules/lowCode";
 
 export interface IMenuItem {
@@ -213,6 +213,23 @@ export default class extends Vue {
       }),
     }).then((res) => {
       this.$message.success("删除成功");
+      this.refTable.remoteData();
+    });
+  }
+
+  // 发布
+  publishFn() {
+    let selections = this.refTable.selections;
+    if (selections.length !== 1) {
+      this.$message.warning("请选择一条数据");
+      return;
+    }
+    let params = {
+      ...selections[0],
+      pageSts: "1",
+    };
+    savePage(params).then((res) => {
+      this.$message.success("发布成功");
       this.refTable.remoteData();
     });
   }

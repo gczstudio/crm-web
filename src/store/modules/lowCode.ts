@@ -36,6 +36,7 @@ export interface ILowCodeState {
   cardConfig: Record<string, unknown>[];
   selectCardQuota: Record<string, unknown>;
   cardQuotaConfig: Record<string, unknown>;
+  hasSideConfig: boolean; // 是否有左侧配置信息
 }
 
 @Module({ dynamic: true, store, name: "lowCode" })
@@ -62,6 +63,7 @@ class LowCode extends VuexModule implements ILowCodeState {
   cardConfig = [];
   selectCardQuota = {};
   cardQuotaConfig = {};
+  hasSideConfig = true;
 
   @Mutation
   SET_LAYOUT(payload: any) {
@@ -126,6 +128,11 @@ class LowCode extends VuexModule implements ILowCodeState {
   @Mutation
   SET_CARD_QUATO_CONFIG(payload: any) {
     this.cardQuotaConfig = payload;
+  }
+
+  @Mutation
+  SET_HAS_SIDE_CONFIG(payload: any) {
+    this.hasSideConfig = payload;
   }
 }
 

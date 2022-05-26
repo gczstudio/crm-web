@@ -77,7 +77,7 @@
           </template>
         </MainLayout>
         <yu-dialog :title="propStatus === 'add' ? '新增属性' : '修改属性'" :visible.sync="addPropVisible" width="800px">
-          <yu-xform ref="cpropFormRef" :model="propForm" label-width="100px">
+          <yu-xform ref="propFormRef" :model="propForm" label-width="100px">
             <yu-xform-group :column="2">
               <yu-xform-item label="属性标识" placeholder="组件注册名" name="proId" ctype="input" :rules="globalRules.requiredInput50"></yu-xform-item>
               <yu-xform-item label="属性名称" placeholder="组件名称" name="proName" ctype="input" :rules="globalRules.requiredInput50"></yu-xform-item>
@@ -116,6 +116,7 @@ export interface ICompItem {
 }
 
 export interface IPropItem {
+  id: string;
   proId: string;
   proName: string;
   proType: string;
@@ -193,6 +194,7 @@ export default class extends Vue {
       this.$message.warning("请先选择组件");
       return;
     }
+    this.propForm = {};
     this.addPropVisible = true;
     this.propFormRef && this.propFormRef.resetFields();
   }
@@ -221,7 +223,7 @@ export default class extends Vue {
   deletePropFn(row: IPropItem) {
     deleteSysModuleProp({
       condition: JSON.stringify({
-        id: row.proId,
+        id: row.id,
       }),
     }).then((res) => {
       this.$message.success("删除成功");

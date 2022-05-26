@@ -2,7 +2,7 @@
   <div class="addPageComp-container">
     <div class="header">
       <div class="yu-button-group">
-        <el-button class="yu-button-text" icon="iconfont icon-37yulan"><i></i>预览</el-button>
+        <!-- <el-button class="yu-button-text" icon="iconfont icon-37yulan"><i></i>预览</el-button> -->
         <el-button class="yu-button-text" icon="iconfont icon-baocun" @click="saveFn">保存</el-button>
         <el-button class="yu-button-text" icon="iconfont icon-fabu" @click="publishFn">发布</el-button>
         <el-button class="yu-button-text" icon="iconfont icon-fanhui1" @click="backFn">返回</el-button>
@@ -30,7 +30,7 @@
         <RenderTool :data="pageConfig" />
       </div>
       <div v-if="activeEditorId" :class="{ 'right-box': true, 'hide-right-panel': !showRightPanel }">
-        <div class="right-panel-arrow" @click="toggleRightPanel"><i :class="`el-icon-caret-${showRightPanel ? 'right' : 'left'}`"></i></div>
+        <div v-if="hasSideConfig" class="right-panel-arrow" @click="toggleRightPanel"><i :class="`el-icon-caret-${showRightPanel ? 'right' : 'left'}`"></i></div>
         <SideConfig v-show="showRightPanel" />
       </div>
     </div>
@@ -116,6 +116,10 @@ export default class extends Vue {
     return LowCodeModule.pageConfig;
   }
 
+  get hasSideConfig() {
+    return LowCodeModule.hasSideConfig;
+  }
+
   @Watch("showRightPanel")
   onShowRightPanelChange() {
     this.updateActiveWidgetsWidth();
@@ -164,10 +168,12 @@ export default class extends Vue {
 
   updateActiveWidgetsWidth() {
     // 执行动画效果有300ms
+    let activeDom = document.querySelector(`div[data-editor-id="${this.activeEditorId}"]`) as HTMLElement;
+    let activeWidgetsDom = document.querySelector(".editor-hlbox.selected") as HTMLElement;
+    activeWidgetsDom.style.display = "none";
     setTimeout(() => {
-      let activeDom = document.querySelector(`div[data-editor-id="${this.activeEditorId}"]`) as HTMLElement;
-      let activeWidgetsDom = document.querySelector(".editor-hlbox.selected") as HTMLElement;
       if (activeWidgetsDom) {
+        activeWidgetsDom.style.display = "block";
         activeWidgetsDom.style.width = activeDom.clientWidth + "px";
         activeWidgetsDom.style.height = activeDom.clientHeight + "px";
       }
@@ -268,18 +274,18 @@ export default class extends Vue {
     }
     .center-box {
       flex: 1;
+      width: 500px;
       background: #f2f2f4;
     }
     .right-box {
       position: relative;
-      flex: 0 0 auto;
-      width: 300px;
+      flex: 0 0 350px;
       height: 100%;
       border-left: 1px solid #e6e6e8;
       box-shadow: 0 6px 6px 2px rgba(0, 0, 0, 0.15);
       transition: all 0.3s;
       &.hide-right-panel {
-        width: 0;
+        flex: 0 0 0;
       }
     }
     .left-panel-arrow {

@@ -63,14 +63,12 @@ export default class extends Vue {
 
   @Watch("selectCardQuota")
   onSelectCardQuotaChange(data: any) {
-    console.log(3);
     this.formData.name = data.value;
     this.formData.value = data.data;
   }
 
   @Watch("formData", { immediate: true, deep: true })
   onFormDataChange(data: any) {
-    console.log(4);
     LowCodeModule.SET_CARD_QUATO_CONFIG(data);
     let cardConfig: Record<string, unknown>[] = [...this.cardConfig];
     cardConfig[Number(this.type)] = {

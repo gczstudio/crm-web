@@ -25,6 +25,9 @@ export default {
     };
   },
   watch: {
+    value: function (val) {
+      this.componentValue = val;
+    },
     conponentValue: function (val) {
       this.$emit("input", val);
     },

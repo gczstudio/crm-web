@@ -102,7 +102,6 @@ export default class extends Vue {
   }
 
   exportFn(showTipModal?: boolean) {
-    console.log(this, 222);
     var searchQuery: any = (this as any)._.assign({}, this.searchForm.searchModel, {
       fileName: "公司类指标排名",
       queryField: this.searchForm.searchQueryField,
