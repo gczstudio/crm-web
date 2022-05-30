@@ -51,7 +51,7 @@
 import { Component, Vue, Prop, Watch } from "vue-property-decorator";
 import JsonEditor from "@/components/JsonEditor/index.vue";
 import { setCompConfigById } from "@/utils/lowCode";
-import FormItemDialog from "@/components/dialogs/FormItemDialog.vue";
+import FormItemDialog from "@/components/Dialogs/FormItemDialog.vue";
 import request from "@/utils/request";
 import { backend } from "@/config";
 import { formatConfitItem } from "@/utils/lowCode";

@@ -9,7 +9,7 @@
 import { Component, Vue, Prop } from "vue-property-decorator";
 import { mixins } from "vue-class-component";
 import * as echarts from "echarts";
-import ResizeMixin from "@/components/charts/mixins/resize";
+import ResizeMixin from "@/components/Charts/mixins/resize";
 import * as customerApi from "@/api/customer";
 
 @Component({

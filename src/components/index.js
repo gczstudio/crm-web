@@ -37,8 +37,8 @@ import YufpTreeSelect from "./YufpTreeSelect/index.vue";
 import YufpTagSelector from "./YufpTagSelector/index.vue";
 import CstgroupModal from "./CstgroupModal/index.vue";
 import YufpCstgroupModal from "./CstgroupModal/YufpCstgroupModal.vue";
-import Charts from "./charts/index.vue";
-import Cards from "./cards/index.vue";
+import Charts from "./Charts/index.vue";
+import Cards from "./Cards/index.vue";
 import DetailPanel from "./DetailPanel.vue";
 import RenderType from "@/views/system/lowCodeMgt/pageMgt/renderTool/components/RenderType.vue";
 const components = [

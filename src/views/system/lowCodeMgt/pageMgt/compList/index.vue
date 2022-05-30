@@ -24,10 +24,10 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import SelectChartDialog from "@/components/dialogs/SelectChartDialog.vue";
-import SelectCardDialog from "@/components/dialogs/SelectCardDialog.vue";
-import CurdDialog from "@/components/dialogs/CurdDialog.vue";
-import FormDialog from "@/components/dialogs/FormDialog.vue";
+import SelectChartDialog from "@/components/Dialogs/SelectChartDialog.vue";
+import SelectCardDialog from "@/components/Dialogs/SelectCardDialog.vue";
+import CurdDialog from "@/components/Dialogs/CurdDialog.vue";
+import FormDialog from "@/components/Dialogs/FormDialog.vue";
 import { LowCodeModule } from "@/store/modules/lowCode";
 import { appendToPageById } from "@/utils/lowCode";
 

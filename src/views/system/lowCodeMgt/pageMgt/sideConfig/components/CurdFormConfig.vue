@@ -44,7 +44,7 @@
 import { Component, Vue, Prop, Ref, Watch } from "vue-property-decorator";
 import JsonEditor from "@/components/JsonEditor/index.vue";
 import { setCompConfigById, formatConfitItem } from "@/utils/lowCode";
-import FormItemDialog from "@/components/dialogs/FormItemDialog.vue";
+import FormItemDialog from "@/components/Dialogs/FormItemDialog.vue";
 import request from "@/utils/request";
 import { backend } from "@/config";
 import Draggable from "vuedraggable";

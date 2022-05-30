@@ -14,7 +14,7 @@
 
 <script lang="ts">
 import { Component, Vue, Prop, Ref, InjectReactive, Watch } from "vue-property-decorator";
-import FixedLayoutDialog from "@/components/dialogs/FixedLayoutDialog.vue";
+import FixedLayoutDialog from "@/components/Dialogs/FixedLayoutDialog.vue";
 import { LowCodeModule } from "@/store/modules/lowCode";
 export interface ILayoutItem {
   type: string;

@@ -78,7 +78,7 @@
 import { Component, Vue, Prop, Ref, Watch } from "vue-property-decorator";
 import JsonEditor from "@/components/JsonEditor/index.vue";
 import { setCompConfigById } from "@/utils/lowCode";
-import FormActionDialog from "@/components/dialogs/FormActionDialog.vue";
+import FormActionDialog from "@/components/Dialogs/FormActionDialog.vue";
 import Draggable from "vuedraggable";
 export interface IAction {
   key: string;

@@ -6,7 +6,7 @@
 import * as echarts from "echarts";
 import { Component, Prop, Watch } from "vue-property-decorator";
 import { mixins } from "vue-class-component";
-import ResizeMixin from "@/components/charts/mixins/resize";
+import ResizeMixin from "@/components/Charts/mixins/resize";
 
 export interface ILineChartData {
   title: string;
