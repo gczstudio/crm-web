@@ -50,7 +50,7 @@
     <yu-dialog :title="teamType === 'edit' ? '编辑团队' : '新建团队'" :visible.sync="teamVisible" width="500px" @close="closeTeamFn" top="20vh">
       <div>
         <yu-xform ref="teamRef" :model="formData" label-width="100px">
-          <yu-xform-item label="团队名称" placeholder="团队名称" ctype="input" name="teamNm" :rules="globalRules.requiredInput30"></yu-xform-item>
+          <yu-xform-item label="团队名称" placeholder="团队名称" ctype="input" name="teamNm" :rules="globalRules.requiredInput50"></yu-xform-item>
         </yu-xform>
       </div>
       <div slot="footer" class="operate-btns tr">

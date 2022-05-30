@@ -24,7 +24,6 @@ import RenderCard from "./RenderCard.vue";
 import RenderCurd from "./RenderCurd.vue";
 import RenderDialog from "./RenderDialog.vue";
 import RenderForm from "./RenderForm.vue";
-import { LowCodeModule } from "@/store/modules/lowCode";
 export default {
   name: "RenderType",
   components: {
@@ -35,14 +34,10 @@ export default {
     RenderForm,
   },
   props: {
+    layout: String,
     data: {
       type: Array,
       default: () => [],
-    },
-  },
-  computed: {
-    layout() {
-      return LowCodeModule.layout;
     },
   },
   data() {

@@ -28,13 +28,13 @@ export interface IChartData {
   name: "BasicBarChart",
 })
 export default class extends mixins(ResizeMixin) {
-  @Prop({ required: true }) private chartData!: IChartData;
-  @Prop({ default: "100%" }) private width!: string;
-  @Prop({ default: "100%" }) private height!: string;
+  @Prop({ required: true }) chartData!: IChartData;
+  @Prop({ default: "100%" }) width!: string;
+  @Prop({ default: "100%" }) height!: string;
 
   @Watch("chartData", { immediate: true, deep: true })
-  private onChartDataChange(value: IChartData) {
-    this.setOptions(value);
+  private onChartDataChange() {
+    this.setOptions();
   }
 
   mounted() {
@@ -54,7 +54,7 @@ export default class extends mixins(ResizeMixin) {
   private initChart() {
     if (!this.$el) return;
     this.chart = echarts.init(this.$el as HTMLDivElement, "macarons");
-    this.setOptions(this.chartData);
+    this.setOptions();
   }
 
   private formatMinVal(val: any) {
@@ -62,13 +62,13 @@ export default class extends mixins(ResizeMixin) {
     return val;
   }
 
-  private setOptions(chartData: IChartData) {
+  private setOptions() {
     if (this.chart) {
       let series = this.chartData.yAxis.map((item) => {
         return {
           type: "bar",
           name: item.value,
-          data: this.chartData.data.map((ele) => ele[item.key]),
+          data: this.chartData.data ? this.chartData.data.map((ele) => ele[item.key]) : [],
         };
       });
       console.log(series);
@@ -117,7 +117,7 @@ export default class extends mixins(ResizeMixin) {
         },
         xAxis: {
           type: "category",
-          data: this.chartData.data.map((item) => item[this.chartData.xAxis[0].key]),
+          data: this.chartData.data ? this.chartData.data.map((item) => item[this.chartData.xAxis[0].key]) : [],
         },
         yAxis: {
           type: "value",

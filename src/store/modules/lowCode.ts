@@ -134,6 +134,38 @@ class LowCode extends VuexModule implements ILowCodeState {
   SET_HAS_SIDE_CONFIG(payload: any) {
     this.hasSideConfig = payload;
   }
+
+  // 清除页面配置
+  @Mutation
+  CLEAR_PAGE_CONFIG() {
+    this.layout = "none";
+    this.activeFixedLayoutItem = -1;
+    this.pageConfig = {
+      type: "page",
+      body: [
+        {
+          layout: "none",
+          body: [],
+        },
+      ],
+    };
+    this.hoverWidgets = { width: "0px", height: "0px", top: "0px", left: "0px" };
+    this.activeWidgets = { width: "0px", height: "0px", top: "0px", left: "0px" };
+    this.hoverEditorId = "";
+    this.activeEditorId = "";
+    this.activeWidgetsAuth = [];
+    this.widgetsMap = {};
+    this.showRightPanel = false;
+  }
+
+  // 清除卡片配置
+  @Mutation
+  CLEAR_CARD_CONFIG() {
+    this.cardConfig = [];
+    this.selectCardQuota = {};
+    this.cardQuotaConfig = {};
+    this.hasSideConfig = true;
+  }
 }
 
 export const LowCodeModule = getModule(LowCode);

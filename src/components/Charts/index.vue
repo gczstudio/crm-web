@@ -45,9 +45,6 @@ export default {
   data() {
     return {};
   },
-  mounted() {
-    console.log(this.$attrs, 888);
-  },
 };
 </script>
 <style lang="scss">

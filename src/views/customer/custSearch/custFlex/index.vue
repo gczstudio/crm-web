@@ -110,7 +110,7 @@
     <yu-dialog title="保存方案" :visible.sync="planVisible" width="500px" @close="closePlanFn" top="20vh">
       <div>
         <yu-xform ref="nameRef" :model="formData" label-width="100px">
-          <yu-xform-item label="方案名称" placeholder="方案名称" ctype="input" name="name" :rules="globalRules.requiredInput30"></yu-xform-item>
+          <yu-xform-item label="方案名称" placeholder="方案名称" ctype="input" name="name" :rules="globalRules.requiredInput50"></yu-xform-item>
         </yu-xform>
       </div>
       <div slot="footer" class="operate-btns tr">

@@ -7,8 +7,8 @@
  * @FilePath: /edmp-web/src/views/system/lowCodeMgt/pageMgt/renderTool/components/RenderCurd.vue
 -->
 <template>
-  <div class="curd-editor" v-editor.curd="{ id: data.id, action: ['delete'] }">
-    <div class="curd-toolbar" v-editor.curd-action="{ id: data.id }">
+  <div class="curd-editor">
+    <div class="curd-toolbar">
       <div class="curd-title">{{ data.title }}</div>
       <div class="yu-button-group tr">
         <el-button v-for="item in data.bulkActions" :key="item.key" class="yu-button-text" :icon="item.icon">{{ item.value }}</el-button>

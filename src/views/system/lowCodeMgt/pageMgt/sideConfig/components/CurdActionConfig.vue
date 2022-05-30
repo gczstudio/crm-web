@@ -10,38 +10,46 @@
   <div class="curd-action-config">
     <el-tabs v-model="activeTab" type="card">
       <el-tab-pane label="属性" name="1">
-        <yu-xform-item-part label="标题" placeholder="标题" ctype="input" v-model="title" :rules="globalRules.input" @input="titleChangeFn"></yu-xform-item-part>
+        <yu-xform-item-part label="标题" placeholder="标题" ctype="input" v-model="title" :rules="globalRules.input" @input="titleChangeFn" clearable></yu-xform-item-part>
         <div class="action-btn__add" @click="addFn"><i class="el-icon-plus">添加功能</i></div>
         <el-collapse v-model="activeCollapse" accordion>
-          <el-collapse-item v-for="(item, index) in actionBtns" :key="item.key" :title="item.value" :name="item.key">
-            <div class="action-btns">
-              <div class="action-btn">
-                <yu-xform ref="searchForm" :model="item" label-width="100px">
-                  <div class="action-btn__type">
-                    <span :class="{ custom: item.type === '2' }">{{ item.type === "1" ? "内置" : "自定义" }}</span>
-                  </div>
-                  <div class="action-btn__delete" @click="deleteFn(index)"><i class="el-icon-delete"></i></div>
-                  <yu-xform-group :column="1">
-                    <yu-xform-item label="名称" ctype="input" name="value" :rules="globalRules.requiredInput50"></yu-xform-item>
-                    <yu-xform-item label="按钮标识" ctype="input" name="key" :rules="globalRules.requiredInput50" :disabled="item.type === '1'"></yu-xform-item>
-                    <yu-xform-item label="显示位置" ctype="radio" name="showPos" data-code="LC_ACTION_TYPE"></yu-xform-item>
-                    <yu-xform-item label="是否控制权限" ctype="radio" name="isPermission" data-code="YESNO"></yu-xform-item>
-                    <yu-xform-item
-                      label="权限标识"
-                      v-if="item.isPermission === '1'"
-                      ctype="input"
-                      name="permissionCode"
-                      :rules="item.isPermission === '1' ? globalRules.requiredInput50 : null"
-                    ></yu-xform-item>
-                    <template v-if="diffConfig[item.key] && diffConfig[item.key].length">
-                      <yu-xform-item v-for="(config, index) in diffConfig[item.key]" :key="item.key + index" v-bind="config"></yu-xform-item>
-                    </template>
-                    <yu-xform-item label="自定义事件" ctype="button" type="text" name="eventFunc" icon="el-icon-s-tools" @click="showJsonEditFn(item)"></yu-xform-item>
-                  </yu-xform-group>
-                </yu-xform>
+          <draggable v-model="actionBtns" animation="300" handle=".mover" @start="drag = true" @end="drag = false">
+            <el-collapse-item v-for="(item, index) in actionBtns" :key="item.key" :name="item.key">
+              <template slot="title"
+                >{{ item.value }}
+                <div class="action-operator">
+                  <i class="el-icon-rank mover"></i>
+                  <i class="el-icon-delete" @click="deleteFn(index)"></i>
+                </div>
+              </template>
+              <div class="action-btns">
+                <div class="action-btn">
+                  <yu-xform ref="searchForm" :model="item" label-width="100px">
+                    <div class="action-btn__type">
+                      <span :class="{ custom: item.type === '2' }">{{ item.type === "1" ? "内置" : "自定义" }}</span>
+                    </div>
+                    <yu-xform-group :column="1">
+                      <yu-xform-item label="名称" ctype="input" name="value" :rules="globalRules.requiredInput50"></yu-xform-item>
+                      <yu-xform-item label="按钮标识" ctype="input" name="key" :rules="globalRules.requiredInput50" :disabled="item.type === '1'"></yu-xform-item>
+                      <yu-xform-item label="显示位置" ctype="radio" name="showPos" data-code="LC_ACTION_TYPE"></yu-xform-item>
+                      <yu-xform-item label="是否控制权限" ctype="radio" name="isPermission" data-code="YESNO"></yu-xform-item>
+                      <yu-xform-item
+                        label="权限标识"
+                        v-if="item.isPermission === '1'"
+                        ctype="input"
+                        name="permissionCode"
+                        :rules="item.isPermission === '1' ? globalRules.requiredInput50 : null"
+                      ></yu-xform-item>
+                      <template v-if="diffConfig[item.key] && diffConfig[item.key].length">
+                        <yu-xform-item v-for="(config, index) in diffConfig[item.key]" :key="item.key + index" v-bind="config"></yu-xform-item>
+                      </template>
+                      <yu-xform-item label="自定义事件" ctype="button" type="text" name="eventFunc" icon="el-icon-s-tools" @click="showJsonEditFn(item)"></yu-xform-item>
+                    </yu-xform-group>
+                  </yu-xform>
+                </div>
               </div>
-            </div>
-          </el-collapse-item>
+            </el-collapse-item>
+          </draggable>
         </el-collapse>
       </el-tab-pane>
     </el-tabs>
@@ -71,6 +79,7 @@ import { Component, Vue, Prop, Ref, Watch } from "vue-property-decorator";
 import JsonEditor from "@/components/JsonEditor/index.vue";
 import { setCompConfigById } from "@/utils/lowCode";
 import FormActionDialog from "@/components/dialogs/FormActionDialog.vue";
+import Draggable from "vuedraggable";
 export interface IAction {
   key: string;
   value: string;
@@ -82,6 +91,7 @@ export interface IAction {
   components: {
     JsonEditor,
     FormActionDialog,
+    Draggable,
   },
 })
 export default class extends Vue {
@@ -93,13 +103,15 @@ export default class extends Vue {
     }),
   })
   data!: any;
-  private activeTab = "1";
-  private activeCollapse = "1";
-  private queryFormData = {};
-  private title = "";
-  private actionBtns: IAction[] = [];
+  drag = false;
+  dragDisabled = true;
+  activeTab = "1";
+  activeCollapse = "1";
+  queryFormData = {};
+  title = "";
+  actionBtns: IAction[] = [];
 
-  private diffConfig = {
+  diffConfig = {
     create: [{ label: "关联组件", ctype: "input", name: "relationComp" }],
     edit: [{ label: "关联组件", ctype: "input", name: "relationComp" }],
     delete: [

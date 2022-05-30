@@ -7,7 +7,7 @@
  * @FilePath: /edmp-web/src/views/system/lowCodeMgt/pageMgt/renderTool/components/RenderChart.vue
 -->
 <template>
-  <charts v-editor.chart="{ id: data.id }" :type="type" :chart-data="chartData" />
+  <charts :type="type" :chart-data="chartData" />
 </template>
 
 <script>

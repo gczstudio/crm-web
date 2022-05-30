@@ -224,7 +224,7 @@ export default class extends Vue {
     }
   }
   .none-layout {
-    padding: 16px;
+    // padding: 16px;
   }
 }
 </style>

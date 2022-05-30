@@ -167,3 +167,19 @@ export const queryUrlField = (params: any) =>
     method: "get",
     params,
   });
+
+// 新建/编辑校验规则信息
+export const saveRule = (data: any) =>
+  request({
+    url: backend.comptMgrService + "/api/verifyrule/save",
+    method: "post",
+    data,
+  });
+
+// 删除校验规则信息
+export const deleteRule = (params: any) =>
+  request({
+    url: backend.comptMgrService + "/api/verifyrule/delete",
+    method: "get",
+    params,
+  });

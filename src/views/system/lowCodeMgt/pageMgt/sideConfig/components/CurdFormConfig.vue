@@ -4,25 +4,35 @@
       <div class="action-btn__add" @click="addFn"><i class="el-icon-plus">添加条件</i></div>
       <el-tab-pane label="属性" name="1">
         <el-collapse v-model="activeCollapse" accordion>
-          <el-collapse-item v-for="(item, index) in formItems" :key="item.prop" :title="item.label" :name="item.prop">
-            <div class="action-btns">
-              <div class="action-btn">
-                <yu-xform ref="searchForm" :model="item" label-width="100px">
-                  <div class="action-btn__delete" @click="deleteFn(index)"><i class="el-icon-delete"></i></div>
-                  <yu-xform-group :column="1">
-                    <yu-xform-item
-                      :disabled="config.proId === 'name'"
-                      v-for="config in itemConfigList"
-                      :key="config.id + index"
-                      :name="config.proId"
-                      :label="config.proId"
-                      :placeholder="config.proName"
-                    ></yu-xform-item>
-                  </yu-xform-group>
-                </yu-xform>
+          <draggable v-model="formItems" animation="300" handle=".mover" @start="drag = true" @end="drag = false">
+            <el-collapse-item v-for="(item, index) in formItems" :key="item.prop" :name="item.prop">
+              <template slot="title"
+                >{{ item.label }}
+                <div class="action-operator">
+                  <i class="el-icon-rank mover"></i>
+                  <i class="el-icon-delete" @click="deleteFn(index)"></i>
+                </div>
+              </template>
+              <div class="action-btns">
+                <div class="action-btn">
+                  <yu-xform ref="searchForm" :model="item" label-width="100px">
+                    <yu-xform-group :column="1">
+                      <yu-xform-item
+                        :disabled="config.proId === 'name'"
+                        v-for="config in itemConfigList"
+                        :key="config.id + index"
+                        :name="config.proId"
+                        :label="config.proId"
+                        :placeholder="config.proName"
+                        :ctype="config.ctype || 'input'"
+                        :options="config.options"
+                      ></yu-xform-item>
+                    </yu-xform-group>
+                  </yu-xform>
+                </div>
               </div>
-            </div>
-          </el-collapse-item>
+            </el-collapse-item>
+          </draggable>
         </el-collapse>
       </el-tab-pane>
     </el-tabs>
@@ -33,16 +43,17 @@
 <script lang="ts">
 import { Component, Vue, Prop, Ref, Watch } from "vue-property-decorator";
 import JsonEditor from "@/components/JsonEditor/index.vue";
-import { setCompConfigById, getCompConfigById } from "@/utils/lowCode";
+import { setCompConfigById, formatConfitItem } from "@/utils/lowCode";
 import FormItemDialog from "@/components/dialogs/FormItemDialog.vue";
 import request from "@/utils/request";
 import { backend } from "@/config";
-import { queryUrlField } from "@/api/lowCode";
+import Draggable from "vuedraggable";
 @Component({
   name: "CurdActionConfig",
   components: {
     JsonEditor,
     FormItemDialog,
+    Draggable,
   },
 })
 export default class extends Vue {
@@ -59,6 +70,7 @@ export default class extends Vue {
   queryFormData = {};
   formItems: any[] = [];
   itemConfigList = [];
+  drag = false;
 
   // 添加条件
   addVisible = false;
@@ -108,6 +120,7 @@ export default class extends Vue {
         },
       }).then((res) => {
         this.itemConfigList = res.data;
+        formatConfitItem(res.data);
       });
     }
   }

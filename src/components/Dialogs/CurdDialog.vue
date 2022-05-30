@@ -53,30 +53,36 @@
             <yu-xform-item-part v-model="scope.row.isSearch" ctype="radio" data-code="YESNO" :key="scope.row.isSearch"></yu-xform-item-part>
           </template>
         </yu-xtable-column>
-        <yu-xtable-column label="查询组件" prop="ctype" :show-overflow-tooltip="true">
-          <template slot-scope="scope">
-            <yu-xform-item-part v-model="scope.row.ctype" ctype="select" :options="ctypeOptions"></yu-xform-item-part>
-          </template>
-        </yu-xtable-column>
         <yu-xtable-column label="是否展示列" prop="isShowCol" width="130" :render-header="renderHeaderFn">
           <template slot-scope="scope">
             <yu-xform-item-part v-model="scope.row.isShowCol" ctype="radio" data-code="YESNO" :key="scope.row.isShowCol"></yu-xform-item-part>
           </template>
         </yu-xtable-column>
-        <yu-xtable-column label="校验规则" prop="rules" :show-overflow-tooltip="true">
+        <yu-xtable-column label="查询组件" prop="ctype" :show-overflow-tooltip="true">
           <template slot-scope="scope">
-            <yu-xform-item-part v-model="scope.row.rules" ctype="select" :options="rulesOptions"></yu-xform-item-part>
+            <yu-xform-item-part v-model="scope.row.ctype" ctype="select" :options="ctypeOptions" clearable></yu-xform-item-part>
           </template>
         </yu-xtable-column>
-        <yu-xtable-column label="固定方式" prop="align" :show-overflow-tooltip="true">
+        <yu-xtable-column label="码值" prop="dataCode" :show-overflow-tooltip="true">
+          <template slot-scope="scope">
+            <yu-xform-item-part v-model="scope.row.dataCode" ctype="input" clearable></yu-xform-item-part>
+          </template>
+        </yu-xtable-column>
+        <yu-xtable-column label="校验规则" prop="rules" :show-overflow-tooltip="true">
+          <template slot-scope="scope">
+            <yu-xform-item-part v-model="scope.row.rules" ctype="select" :options="rulesOptions" clearable></yu-xform-item-part>
+          </template>
+        </yu-xtable-column>
+        <yu-xtable-column label="固定方式" prop="fixed" :show-overflow-tooltip="true">
           <template slot-scope="scope">
             <yu-xform-item-part
-              v-model="scope.row.align"
+              v-model="scope.row.fixed"
               ctype="select"
               :options="[
                 { key: 'left', value: '左侧' },
                 { key: 'right', value: '右侧' },
               ]"
+              clearable
             ></yu-xform-item-part>
           </template>
         </yu-xtable-column>
@@ -146,6 +152,7 @@ export default {
   created() {
     this.dialogVisible = this.visible;
     this.getCtypeOptions();
+    this.getRules();
   },
   methods: {
     // 获取表单项组件
@@ -166,6 +173,25 @@ export default {
           return {
             key: modRegName,
             value: modName,
+          };
+        });
+      });
+    },
+    // 获取验证规则
+    getRules() {
+      request({
+        url: backend.comptMgrService + "/api/verifyrule/list",
+        method: "get",
+        params: {
+          page: 1,
+          size: 100,
+        },
+      }).then((res) => {
+        this.rulesOptions = res.data.map((ele) => {
+          const { ruleNo, ruleName } = ele;
+          return {
+            key: ruleNo,
+            value: ruleName,
           };
         });
       });
@@ -191,9 +217,6 @@ export default {
         item[scope.column.property] = value;
         return item;
       });
-    },
-    getRuleOptions() {
-      console.log(1);
     },
     show() {
       this.$emit("update:visible", true);

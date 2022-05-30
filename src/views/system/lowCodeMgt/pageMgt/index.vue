@@ -183,16 +183,7 @@ export default class extends Vue {
       return;
     }
     this.contentVisible = true;
-    let initPageConfig = {
-      type: "page",
-      body: [
-        {
-          layout: "none",
-          body: [],
-        },
-      ],
-    };
-    LowCodeModule.SET_PAGE_CONFIG(initPageConfig);
+    LowCodeModule.CLEAR_PAGE_CONFIG();
     this.curPageRow = {
       ...this.clickNode,
       catalogId: (this.clickNode as IMenuItem).id,
@@ -236,4 +227,41 @@ export default class extends Vue {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss">
+.pageMgt-container {
+  .el-collapse-item__header {
+    position: relative;
+    padding-left: 20px;
+    .el-collapse-item__arrow {
+      margin: 0;
+      position: absolute;
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
+      &.is-active {
+        transform: translateY(-50%) rotate(90deg);
+      }
+    }
+    .action-operator {
+      position: absolute;
+      top: 50%;
+      right: 10px;
+      transform: translateY(-50%);
+      i {
+        cursor: pointer;
+        display: inline-block;
+        border: 1px solid #ccc;
+        padding: 2px;
+        border-radius: 2px;
+        color: #007eff;
+        &:hover {
+          border-color: #007eff;
+        }
+        & + i {
+          margin-left: 5px;
+        }
+      }
+    }
+  }
+}
+</style>

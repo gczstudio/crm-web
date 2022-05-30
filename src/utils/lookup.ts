@@ -25,7 +25,11 @@ class Lookup {
     const typeArr = types.split(",");
     const needPostType = typeArr.filter((type) => !CommonModule.lookupMgr[type]);
     if (!needPostType.join(",")) {
-      typeof callback === "function" && callback();
+      const lookupObj = {};
+      typeArr.map((item) => {
+        lookupObj[item] = CommonModule.lookupMgr[item];
+      });
+      typeof callback === "function" && callback(Object.keys(lookupObj).length ? lookupObj : undefined);
       return;
     }
     getWebList({ [this.options.remoteParamName]: needPostType.join(",") }).then((res: any) => {
@@ -75,9 +79,7 @@ class Lookup {
    * @param callback function,可选
    */
   reg(types: string, callback: Function) {
-    const typeArr = types.split(",");
-    const needPostType = typeArr.filter((type) => !CommonModule.lookupMgr[type]).join(",");
-    this.loadRemote(needPostType, callback);
+    this.loadRemote(types, callback);
   }
 
   /**

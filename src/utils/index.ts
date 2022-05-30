@@ -471,3 +471,20 @@ export const dashToCamel = (str: string) => {
     return x.slice(1).toUpperCase();
   });
 };
+
+/**
+ * 获取url中所有的参数
+ */
+export const getUrlParams = (url?: string) => {
+  url = url || document.location.toString();
+  let arrObj = url.split("?");
+  const params = Object.create(null);
+  if (arrObj.length > 1) {
+    arrObj = arrObj[1].split("&");
+    arrObj.forEach((item: any) => {
+      item = item.split("=");
+      params[item[0]] = item[1];
+    });
+  }
+  return params;
+};

@@ -85,7 +85,21 @@
               <yu-xform-item label="常用属性" placeholder="常用属性" name="proComm" ctype="select" data-code="YESNO"></yu-xform-item>
               <yu-xform-item label="启用" name="proSts" ctype="switch"></yu-xform-item>
               <yu-xform-item label="值类型" placeholder="值类型" name="valType" data-code="LC_VAL_TYPE" ctype="select"></yu-xform-item>
-              <yu-xform-item label="可选值" placeholder="多个值需要用逗号隔开" name="valChoose" ctype="input"></yu-xform-item>
+              <yu-xform-item label="可选值" placeholder="可选值" name="valChoose" ctype="input">
+                <template v-slot:label>
+                  可选值
+                  <el-popover placement="top-start" width="400" trigger="hover">
+                    <div>
+                      <p>支持3种方式:</p>
+                      <p>1.多个值以逗号分隔，例如true,false或者true[是],false[否]</p>
+                      <p>2.支持码值，例如YESNO</p>
+                      <p>3.支持接口(支持参数传递)，例如api/test/getdata?id=1</p>
+                    </div>
+                    <i slot="reference" class="iconfont icon-bangzhu"></i>
+                  </el-popover>
+                  ：</template
+                >
+              </yu-xform-item>
               <yu-xform-item label="默认值" placeholder="默认值" name="valDefault" ctype="input"></yu-xform-item>
             </yu-xform-group>
             <yu-xform-group :column="1">
@@ -194,6 +208,7 @@ export default class extends Vue {
       this.$message.warning("请先选择组件");
       return;
     }
+    this.propStatus = "add";
     this.propForm = {};
     this.addPropVisible = true;
     this.propFormRef && this.propFormRef.resetFields();
@@ -213,6 +228,7 @@ export default class extends Vue {
   }
 
   editPropFn(row: IPropItem) {
+    this.propStatus = "edit";
     this.propForm = {
       ...row,
       proSts: row.proSts === "1",

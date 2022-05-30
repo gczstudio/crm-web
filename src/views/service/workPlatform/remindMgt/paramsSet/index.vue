@@ -41,7 +41,7 @@
       <div>
         <yu-xform ref="ruleRef" :model="formData" label-width="150px">
           <yu-xform-item label="规则类型" placeholder="规则类型" ctype="input" name="remindSubclassNm" disabled></yu-xform-item>
-          <!-- <yu-xform-item label="规则名称" placeholder="规则名称" ctype="input" name="remindRuleNm" :rules="globalRules.requiredInput30"></yu-xform-item> -->
+          <!-- <yu-xform-item label="规则名称" placeholder="规则名称" ctype="input" name="remindRuleNm" :rules="globalRules.requiredInput50"></yu-xform-item> -->
           <yu-xform-item label="状态" placeholder="状态" ctype="select" name="status" data-code="RULE_TYPE" :rules="globalRules.required"></yu-xform-item>
           <yu-xform-item label="适用范围" placeholder="适用范围" ctype="select" name="appScope" data-code="RULE_RANGE" :rules="globalRules.required"></yu-xform-item>
           <!-- 大额动账设置金额，其他设置天数 -->

@@ -9,6 +9,9 @@
 
 import { LowCodeModule } from "@/store/modules/lowCode";
 import _ from "lodash";
+import request from "@/utils/request";
+import lookup from "./lookup";
+import { getUrlParams } from "@/utils";
 /**
  * 根据id获取某个组件的配置数据
  * @param id
@@ -29,6 +32,19 @@ export const getCompConfigById = (id: string) => {
 export const setCompConfigById = (id: string, configData: any) => {
   const pageConfig = recursionFn(id, (item: any) => {
     item = Object.assign(item, configData);
+  });
+  LowCodeModule.SET_PAGE_CONFIG(pageConfig);
+};
+
+/**
+ * 删除某个组件
+ * @param id
+ * @param configData
+ */
+export const clearCompConfig = (id: string) => {
+  const pageConfig = recursionFn(id, (item: any, body: any) => {
+    const indexs = body.map((ele: any) => ele.id);
+    body.splice(indexs.indexOf(id), 1);
   });
   LowCodeModule.SET_PAGE_CONFIG(pageConfig);
 };
@@ -62,7 +78,7 @@ export const recursionFn = (id: string, callback: Function) => {
     for (let i = 0; i < data.length; i++) {
       const item = data[i];
       if (item.id && item.id === id) {
-        callback && callback(item);
+        callback && callback(item, data);
       } else {
         item.body?.length && fn(item.body);
       }
@@ -70,4 +86,83 @@ export const recursionFn = (id: string, callback: Function) => {
   };
   fn(pageConfig.body);
   return pageConfig;
+};
+
+/**
+ * 对从组件注册中获取属性的可选值的处理-下拉框数据处理
+ * @param configList
+ */
+export const formatConfitItem = (configList: any) => {
+  const codeObj: any = {},
+    urlObj: any = {},
+    urlParamsObj: any = {};
+  configList.map((item: any, index: number) => {
+    if (item.valChoose) {
+      item.ctype = "select";
+      if (item.valChoose.includes(",")) {
+        item.options = item.valChoose.split(",").map((option: any) => {
+          const index = option.indexOf("[");
+          if (index !== -1) {
+            return {
+              key: option.slice(0, index),
+              value: option.slice(index + 1, -1),
+            };
+          }
+          return {
+            key: option,
+            value: option,
+          };
+        });
+      } else if (item.valChoose.includes("/")) {
+        urlObj[item.valChoose] = urlObj[item.valChoose] || [];
+        urlObj[item.valChoose].push(index);
+      } else {
+        codeObj[item.valChoose] = codeObj[item.valChoose] || [];
+        codeObj[item.valChoose].push(index);
+      }
+    }
+  });
+  if (Object.keys(codeObj).length) {
+    lookup.reg(Object.keys(codeObj).join(","), (data: any) => {
+      Object.keys(codeObj).map((code: string) => {
+        codeObj[code].map((idx: number) => {
+          configList[idx].options = data[code];
+        });
+      });
+    });
+  }
+  if (Object.keys(urlObj).length) {
+    const promises = Object.keys(urlObj).map((url) => {
+      let params = {};
+      if (url.includes("?")) {
+        params = getUrlParams(url);
+        urlParamsObj[url] = params;
+      }
+      return request({
+        url: url.split("?")[0],
+        method: "get",
+        params: {
+          condition: JSON.stringify(params),
+          page: 1,
+          size: 200,
+        },
+      });
+    });
+    Promise.all(promises).then((results) => {
+      Object.keys(urlObj).map((url: string, index: number) => {
+        urlObj[url].map((idx: number) => {
+          if (urlParamsObj[url]?.key) {
+            (configList[idx] as any).options = results[index].data.map((ele: any) => {
+              return {
+                key: ele[urlParamsObj[url].key],
+                value: ele[urlParamsObj[url].value],
+              };
+            });
+          } else {
+            configList[idx].options = results[index].data;
+          }
+        });
+      });
+    });
+  }
 };

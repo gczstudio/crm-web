@@ -7,7 +7,7 @@
  * @FilePath: /edmp-web/src/views/system/lowCodeMgt/pageMgt/renderTool/components/RenderCurd.vue
 -->
 <template>
-  <div class="curd-editor" v-editor.curd="{ id: data.id, action: ['delete'] }">
+  <div class="curd-editor" v-editor.curd="{ id: data.id, action: ['delete', 'drag'] }" :key="data.id">
     <div class="curd-toolbar" v-editor.curd-action="{ id: data.id }">
       <div class="curd-title">{{ data.title }}</div>
       <div class="yu-button-group tr">
@@ -22,9 +22,10 @@
       </yu-xform>
     </div>
     <div class="curd-table" v-editor.curd-table="{ id: data.id }">
-      <yu-xtable ref="refTable" :data="testData" row-number border>
+      <yu-xtable ref="refTable" :data="testData" row-number border :key="JSON.stringify(data.columns)">
         <yu-xtable-column
           v-for="column in data.columns"
+          v-bind="column"
           :key="column.prop"
           :label="column.label"
           :prop="column.prop"
@@ -65,6 +66,7 @@ export default {
   watch: {
     data: {
       handler() {
+        console.log("zxl");
         this.data.columns.map((item) => {
           this.testData[0] = this.testData[0] || {};
           this.testData[0][item.prop] = "测试数据";
@@ -75,9 +77,6 @@ export default {
     },
   },
   methods: {
-    hoverFn(e) {
-      console.log(e, 111);
-    },
     getActionWidth(data) {
       let width = 0;
       data.map((item) => {
@@ -89,6 +88,9 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.curd-editor {
+  padding: 16px;
+}
 .curd-toolbar {
   position: relative;
   height: 36px;

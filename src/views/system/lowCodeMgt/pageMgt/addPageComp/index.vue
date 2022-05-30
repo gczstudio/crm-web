@@ -198,6 +198,7 @@ export default class extends Vue {
     savePage(params).then((res) => {
       this.$message.success("保存成功");
       this.backFn();
+      LowCodeModule.CLEAR_PAGE_CONFIG();
     });
   }
 
@@ -205,11 +206,13 @@ export default class extends Vue {
   publishFn() {
     this.submitType = "publish";
     this.addPageVisible = true;
+    LowCodeModule.CLEAR_PAGE_CONFIG();
   }
 
   // 返回
   backFn() {
     this.instance.hide();
+    LowCodeModule.CLEAR_PAGE_CONFIG();
   }
 }
 </script>

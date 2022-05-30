@@ -13,7 +13,7 @@
       <div class="editor-toolbar" v-if="widgetsConfig.length">
         <template v-for="item in widgetsConfig">
           <el-tooltip popper-class="editor-popper" effect="dark" :content="item.content" placement="bottom" :key="item.key">
-            <el-button :icon="item.icon"></el-button>
+            <el-button :icon="item.icon" @click="clickFn(item)"></el-button>
           </el-tooltip>
         </template>
       </div>
@@ -24,6 +24,7 @@
 <script lang="ts">
 import { Component, Vue, Prop, Ref } from "vue-property-decorator";
 import { LowCodeModule } from "@/store/modules/lowCode";
+import { clearCompConfig } from "@/utils/lowCode";
 
 export interface IWidgets {
   key: string;
@@ -58,6 +59,20 @@ export default class extends Vue {
 
   get widgetsConfig() {
     return this.widgets.filter((item: IWidgets) => (LowCodeModule.activeWidgetsAuth as string[]).includes(item.key));
+  }
+
+  get widgetsMap() {
+    return LowCodeModule.widgetsMap;
+  }
+
+  clickFn(item: IWidgets) {
+    switch (item.key) {
+      case "delete":
+        console.log((this.widgetsMap as any)[this.activeEditorId].dataId, 8888);
+
+        clearCompConfig((this.widgetsMap as any)[this.activeEditorId].dataId);
+        break;
+    }
   }
 }
 </script>

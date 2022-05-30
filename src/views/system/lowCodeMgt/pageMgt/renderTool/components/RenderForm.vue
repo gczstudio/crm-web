@@ -7,7 +7,7 @@
  * @FilePath: /edmp-web/src/views/system/lowCodeMgt/pageMgt/renderTool/components/RenderForm.vue
 -->
 <template>
-  <div class="render-form" v-editor.form="{ id: data.id }">
+  <div class="render-form" v-editor.form="{ id: data.id, action: ['delete'] }">
     <yu-xform ref="searchForm" :model="formData" label-width="80px">
       <yu-xform-group v-for="(item, index) in groupData" :key="index" :column="parseFloat(groupData[index][0].column)">
         <yu-xform-item v-editor.form="{ id: data.id }" v-for="child in item" :key="child.name" :placeholder="child.label" v-bind="item"></yu-xform-item>
@@ -43,11 +43,12 @@ export default {
   methods: {
     formatData(data) {
       let groupData = [[]];
+      console.log(data, 999);
       data.map((item, index) => {
         if (index === 0) {
           groupData[0].push(item);
         } else {
-          if (item.column === data[index - 1]) {
+          if (item.column === data[index - 1].column) {
             groupData[groupData.length - 1].push(item);
           } else {
             let len = groupData.length;
@@ -56,6 +57,7 @@ export default {
           }
         }
       });
+      console.log(groupData, 7777);
       return groupData;
     },
   },

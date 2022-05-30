@@ -1,5 +1,5 @@
 <template>
-  <cards v-editor.chart="{ id: data.id }" :type="type" :card-data="cardData" />
+  <cards :type="type" :card-data="cardData" />
 </template>
 
 <script>
