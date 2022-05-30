@@ -10,33 +10,33 @@
   <yu-dialog class="form-dialog-container" :title="title" :visible.sync="dialogVisible" width="1000px" @close="hide" top="5vh">
     <yu-xform :model="queryFormData" label-width="80px" style="width: 400px">
       <yu-xform-group :column="1">
-        <yu-xform-item label="接口地址" placeholder="获取数据库字段信息" name="api" ctype="input" v-debounce="[apiChangeFn, 'input']" @close="apiChangeFn"></yu-xform-item>
+        <yu-xform-item label="接口地址" placeholder="获取数据库字段信息" name="api" ctype="input" v-debounce="[apiChangeFn, 'input']" @clear="apiChangeFn"></yu-xform-item>
       </yu-xform-group>
     </yu-xform>
-    <yu-xtable ref="tableRef" :data="tableData" row-key="name" selection-type="checkbox" :init-selection="false" border :pageable="false">
+    <yu-xtable ref="tableRef" :data="tableData" row-key="id" selection-type="checkbox" :init-selection="false" border :pageable="false">
       <yu-xtable-column label="标题" prop="label" :show-overflow-tooltip="true">
         <template slot-scope="scope">
-          <yu-xform-item-part v-model="scope.row.label" ctype="input" :key="scope.row.name" clearable></yu-xform-item-part>
+          <yu-xform-item-part v-model="scope.row.label" ctype="input" :key="scope.row.id" clearable></yu-xform-item-part>
         </template>
       </yu-xtable-column>
       <yu-xtable-column label="字段名" prop="name" :show-overflow-tooltip="true">
         <template slot-scope="scope">
-          <yu-xform-item-part v-model="scope.row.name" ctype="input" :key="scope.row.name" clearable></yu-xform-item-part>
+          <yu-xform-item-part v-model="scope.row.name" ctype="input" :key="scope.row.id" clearable></yu-xform-item-part>
         </template>
       </yu-xtable-column>
       <yu-xtable-column label="组件" prop="ctype" :show-overflow-tooltip="true">
         <template slot-scope="scope">
-          <yu-xform-item-part v-model="scope.row.ctype" ctype="select" :options="ctypeOptions" :key="scope.row.name" clearable></yu-xform-item-part>
+          <yu-xform-item-part v-model="scope.row.ctype" ctype="select" :options="ctypeOptions" :key="scope.row.id" clearable></yu-xform-item-part>
         </template>
       </yu-xtable-column>
       <yu-xtable-column label="校验规则" prop="rules" :show-overflow-tooltip="true">
         <template slot-scope="scope">
-          <yu-xform-item-part v-model="scope.row.rules" ctype="select" :options="rulesOptions" :key="scope.row.name" clearable></yu-xform-item-part>
+          <yu-xform-item-part v-model="scope.row.rules" ctype="select" :options="rulesOptions" :key="scope.row.id" clearable></yu-xform-item-part>
         </template>
       </yu-xtable-column>
       <yu-xtable-column label="列数" prop="column" :show-overflow-tooltip="true">
         <template slot-scope="scope">
-          <yu-xform-item-part v-model="scope.row.column" ctype="input" :key="scope.row.name" clearable></yu-xform-item-part>
+          <yu-xform-item-part v-model="scope.row.column" ctype="input" :key="scope.row.id" clearable></yu-xform-item-part>
         </template>
       </yu-xtable-column>
       <yu-xtable-column label="操作" prop="action" :show-overflow-tooltip="true">
@@ -58,10 +58,6 @@
 import { backend } from "@/config";
 import request from "@/utils/request";
 import { queryUrlField } from "@/api/lowCode";
-const initColumn = {
-  label: "自定义名称",
-  name: "custom",
-};
 export default {
   name: "CurdDialog",
   props: {
@@ -77,7 +73,11 @@ export default {
   data() {
     return {
       dialogVisible: false,
-      tableData: [initColumn],
+      tableData: [
+        {
+          id: this.$util.guid(),
+        },
+      ],
       queryFormData: {},
       ctypeOptions: [],
       rulesOptions: [],
@@ -109,17 +109,17 @@ export default {
     },
     addFn() {
       this.tableData.push({
-        label: "自定义名称",
-        name: "custom_" + this.$util.guid(4),
+        id: this.$util.guid(),
       });
     },
     deleteFn(index) {
       this.tableData.splice(index, 1);
     },
     // 接口地址变化
-    apiChangeFn() {
+    async apiChangeFn() {
+      await this.$nextTick();
       if (!this.queryFormData.api) {
-        this.tableData = [initColumn];
+        this.tableData = [];
         return;
       }
       queryUrlField({
@@ -129,6 +129,7 @@ export default {
       }).then((res) => {
         this.tableData = res.data.map((item) => {
           return {
+            id: this.$util.guid(),
             name: this.$util.dashToCamel(item.fieldEn),
             ctype: "input",
             label: item.fieldZh,

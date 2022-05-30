@@ -25,7 +25,7 @@ class Lookup {
     const typeArr = types.split(",");
     const needPostType = typeArr.filter((type) => !CommonModule.lookupMgr[type]);
     if (!needPostType.join(",")) {
-      const lookupObj = {};
+      const lookupObj: Record<string, unknown> = {};
       typeArr.map((item) => {
         lookupObj[item] = CommonModule.lookupMgr[item];
       });

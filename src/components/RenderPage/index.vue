@@ -48,7 +48,7 @@ export default class extends Vue {
 
   changeSize() {
     if (!this.chunkRef) return;
-    let boxWidth = this.$el.parentNode.clientWidth;
+    let boxWidth = (this.$el.parentNode as any).clientWidth;
     this.chunkHeight = (boxWidth / 4 - 16) * 0.618;
   }
 
