@@ -1,3 +1,7 @@
 <template>
-    <div>产品中心</div>
+    <div class="CustMgt-container">
+        <div class="yu-main-wrapper">
+            1111
+        </div>
+    </div>
 </template>
