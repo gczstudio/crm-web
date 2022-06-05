@@ -1,35 +1,21 @@
-<!--
- * @Descripttion: 
- * @Author: gaocz
- * @Date: 2022-04-28 09:12:04
- * @LastEditors: gaocz
- * @LastEditTime: 2022-05-18 18:04:51
- * @FilePath: /edmp-web/src/views/system/lowCodeMgt/pageMgt/renderTool/index.vue
--->
+<!--编辑-->
 <script lang="tsx">
-import { Component, Vue, Prop, Ref, Watch } from "vue-property-decorator";
+import { Component, Vue, Prop, Ref, Watch, Provide } from "vue-property-decorator";
 import { LowCodeModule } from "@/store/modules/lowCode";
 import { guid } from "@/utils";
 import PreviewWidgets from "./components/PreviewWidgets.vue";
 import RenderType from "./components/RenderType.vue";
-import RenderChart from "./components/RenderChart.vue";
-import RenderCurd from "./components/RenderCurd.vue";
-import RenderDialog from "./components/RenderDialog.vue";
-import RenderForm from "./components/RenderForm.vue";
 
 @Component({
   name: "RenderTool",
   components: {
     PreviewWidgets,
     RenderType,
-    RenderChart,
-    RenderCurd,
-    RenderDialog,
-    RenderForm,
   },
 })
 export default class extends Vue {
   @Ref("chunkRef") chunkRef: any;
+  @Provide("type") type = "edit";
   private chunkHeight = 0;
   private activeFixedLayoutItem = -1;
   private pageConfigData: any = {};
@@ -60,7 +46,6 @@ export default class extends Vue {
 
   @Watch("pagConfig", { immediate: true })
   onPageConfigChange(val: any) {
-    console.log(val, 999);
     this.pageConfigData = val;
     LowCodeModule.SET_LAYOUT(val.body[0].layout);
   }

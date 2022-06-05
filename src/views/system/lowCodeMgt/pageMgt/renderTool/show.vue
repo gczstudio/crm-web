@@ -1,13 +1,6 @@
-<!--
- * @Descripttion: 
- * @Author: gaocz
- * @Date: 2022-04-28 09:12:04
- * @LastEditors: gaocz
- * @LastEditTime: 2022-05-18 18:04:51
- * @FilePath: /edmp-web/src/views/system/lowCodeMgt/pageMgt/renderTool/index.vue
--->
+<!--展示-->
 <script lang="tsx">
-import { Component, Vue, Prop, Ref, Watch } from "vue-property-decorator";
+import { Component, Vue, Prop, Ref, Watch, Provide } from "vue-property-decorator";
 import { guid } from "@/utils";
 import request from "@/utils/request";
 import { backend } from "@/config";
@@ -15,6 +8,7 @@ import { backend } from "@/config";
   name: "RenderTool",
 })
 export default class extends Vue {
+  @Provide("type") type = "show";
   @Ref("chunkRef") chunkRef: any;
   private chunkHeight = 0;
   private pageConfigData: any = {};
@@ -75,7 +69,7 @@ export default class extends Vue {
                         (item.body as any[]).map((ele: any, index: number) => {
                           return (
                             <div class="layout-item" key={index} style={this.getChunkStyle(ele)}>
-                              <rrender-page-type data={[ele]} layout={item.layout}></rrender-page-type>
+                              <render-type data={[ele]} layout={item.layout}></render-type>
                             </div>
                           );
                         })}
@@ -83,7 +77,7 @@ export default class extends Vue {
                   )}
                   {item.layout === "none" && (
                     <div class="none-layout">
-                      <render-page-type data={item.body}></render-page-type>
+                      <render-type data={item.body}></render-type>
                     </div>
                   )}
                 </div>

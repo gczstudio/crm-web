@@ -6,6 +6,7 @@ import { arrayToTree, getCheckedRole } from "@/utils";
 import Layout from "@/layout/index.vue";
 import Blank from "@/layout/components/Blank.vue";
 import router from "@/router";
+import RenderPage from "@/views/system/lowCodeMgt/pageMgt/renderTool/show.vue";
 
 const addAsyncRoutes = (menu: any) => {
   // 讲menu转换成route结构
@@ -14,6 +15,11 @@ const addAsyncRoutes = (menu: any) => {
     const urlsLen = urls.length;
     const name = urls.slice(-1)[0];
     let component = urlsLen === 2 ? Layout : urlsLen === 3 ? Blank : () => import(`@/views${item.funcUrl}/index.vue`);
+
+    // 如果关联组件存在时
+    if (item.pageId) {
+      component = RenderPage;
+    }
     // 大屏驾驶舱特殊处理
     if (urls.includes("cockpit") && urlsLen === 2) {
       component = Blank;
@@ -24,6 +30,7 @@ const addAsyncRoutes = (menu: any) => {
       component,
       name: name.charAt(0).toUpperCase() + name.slice(1),
       meta: {
+        pageId: item.pageId,
         title: item.menuName,
         icon: item.menuIcon,
         hidden: item.funcUrl === "/customer/custSearch/custBank" && getCheckedRole().orgCode === "T", // 总行看不到全行客户的菜单，可以通过顶部栏搜索
@@ -51,7 +58,7 @@ const addAsyncRoutes = (menu: any) => {
       ],
     };
   }
-
+  console.log(asyncRoutes, 888);
   router.addRoutes(asyncRoutes);
   return asyncRoutes;
 };

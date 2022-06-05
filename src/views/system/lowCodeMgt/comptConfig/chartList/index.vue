@@ -101,7 +101,6 @@ export default class extends Vue {
   }
 
   searchTextChange() {
-    console.log(this.searchText, 99);
     this.searchFn({
       condition: JSON.stringify({
         modType: this.type,

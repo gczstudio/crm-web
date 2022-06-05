@@ -42,7 +42,7 @@ export default {
 
     this.jsonEditor.setValue(this.value);
     this.jsonEditor.on("change", (cm) => {
-      this.$emit("changed", cm.getValue());
+      this.$emit("change", cm.getValue());
       this.$emit("input", cm.getValue());
     });
   },

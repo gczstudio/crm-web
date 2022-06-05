@@ -68,6 +68,8 @@ export default class extends Vue {
   clickFn(item: IWidgets) {
     switch (item.key) {
       case "delete":
+        console.log((this.widgetsMap as any)[this.activeEditorId].dataId, 8888);
+
         clearCompConfig((this.widgetsMap as any)[this.activeEditorId].dataId);
         break;
     }

@@ -392,6 +392,11 @@ aside {
     border-radius: 2px;
   }
 
+  .el-input-number{
+    height: 30px;
+    line-height: 30px;
+  }
+
 
   // 按钮样式
   .el-button {
@@ -611,6 +616,11 @@ aside {
       height: 28px;
       line-height: 28px;
     }
+    .el-input-number{
+      height: 26px;
+      line-height: 26px;
+    }
+
     .el-input {
       font-size: 13px;
     }
@@ -620,6 +630,7 @@ aside {
     .el-form-item__label {
       font-size: 13px;
       line-height: 28px;
+      height: 28px;
     }
     .el-button {
       padding: 6px 14px;

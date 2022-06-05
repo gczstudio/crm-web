@@ -1,23 +1,23 @@
 <template>
-  <div class="curd-table-config">
+  <div class="form-config">
     <el-tabs v-model="activeTab" type="card">
-      <el-tab-pane label="表格" name="1">
-        <yu-xform :model="tableConfigForm" label-width="100px" key="table">
+      <el-tab-pane label="表单属性" name="1">
+        <yu-xform :model="formConfigForm" label-width="100px" key="form">
           <yu-xform-group :column="1">
-            <yu-xform-item v-for="config in tableConfigList" :key="config.id" :name="config.proId" :label="config.proName" :placeholder="config.proId"></yu-xform-item>
+            <yu-xform-item v-for="config in formConfigList" :key="config.id" :name="config.proId" :label="config.proName" :placeholder="config.proId"></yu-xform-item>
           </yu-xform-group>
         </yu-xform>
       </el-tab-pane>
-      <el-tab-pane label="列属性" name="2">
-        <div class="action-btn__add" @click="addFn"><i class="el-icon-plus">添加列</i></div>
+      <el-tab-pane label="表单项属性" name="2">
+        <div class="action-btn__add" @click="addFn"><i class="el-icon-plus">添加表单项</i></div>
         <el-collapse v-model="activeCollapse" accordion>
-          <draggable v-model="tableColumns" animation="300" handle=".mover" @start="drag = true" @end="drag = false">
-            <el-collapse-item v-for="(item, index) in tableColumns" :key="item.prop" :name="item.prop">
+          <draggable v-model="formColumns" animation="300" handle=".mover" @start="drag = true" @end="drag = false">
+            <el-collapse-item v-for="(item, index) in formColumns" :key="item.prop" :name="item.prop">
               <template slot="title"
                 >{{ item.label }}
                 <div class="action-operator">
                   <i class="el-icon-rank mover"></i>
-                  <i class="el-icon-delete" @click="deleteFn(index)"></i>
+                  <i class="el-icon-delete" @click.stop="deleteFn(index)"></i>
                 </div>
               </template>
               <div class="action-btns">
@@ -25,7 +25,6 @@
                   <yu-xform :model="item" label-width="100px" :key="item.prop">
                     <yu-xform-group :column="1">
                       <yu-xform-item
-                        :disabled="config.proId === 'prop'"
                         v-for="config in itemConfigList"
                         :key="config.id + index"
                         :name="config.proId"
@@ -43,7 +42,7 @@
         </el-collapse>
       </el-tab-pane>
     </el-tabs>
-    <form-item-dialog :data-id="data.id" :data="tableColumns" :visible.sync="addVisible" @sure="sureAddFuncFn"></form-item-dialog>
+    <form-dialog :data-id="data.id" :data="formColumns" :visible.sync="addVisible" @sure="sureAddFuncFn"></form-dialog>
   </div>
 </template>
 
@@ -51,16 +50,16 @@
 import { Component, Vue, Prop, Watch } from "vue-property-decorator";
 import JsonEditor from "@/components/JsonEditor/index.vue";
 import { setCompConfigById } from "@/utils/lowCode";
-import FormItemDialog from "@/components/Dialogs/FormItemDialog.vue";
+import FormDialog from "@/components/Dialogs/FormDialog.vue";
 import request from "@/utils/request";
 import { backend } from "@/config";
 import { formatConfitItem } from "@/utils/lowCode";
 import Draggable from "vuedraggable";
 @Component({
-  name: "CurdActionConfig",
+  name: "FormConfig",
   components: {
     JsonEditor,
-    FormItemDialog,
+    FormDialog,
     Draggable,
   },
 })
@@ -76,11 +75,11 @@ export default class extends Vue {
   activeTab = "1";
   activeCollapse = "1";
 
-  // 表格配置
-  tableConfigList = [];
-  tableConfigForm = {};
-  // 表格属性配置
-  tableColumns: any[] = [];
+  // 表单配置
+  formConfigList = [];
+  formConfigForm = {};
+  // 表单属性配置
+  formColumns: any[] = [];
   itemConfigList = [];
   drag = false;
 
@@ -94,11 +93,11 @@ export default class extends Vue {
 
   @Watch("data", { immediate: true })
   onDataChange() {
-    const { columns } = this._.cloneDeep(this.data);
-    this.tableColumns = [...columns];
+    const { items } = this._.cloneDeep(this.data);
+    this.formColumns = [...items];
   }
 
-  @Watch("tableColumns", { deep: true })
+  @Watch("formColumns", { deep: true })
   onActionBtnsChange() {
     this.updateConfig();
   }
@@ -106,19 +105,19 @@ export default class extends Vue {
   updateConfig() {
     let config = {
       ...this.data,
-      columns: this.tableColumns,
+      items: this.formColumns,
     };
     setCompConfigById(this.data.id, config);
   }
 
-  // 获取表格配置信息
+  // 获取表单配置信息
   async getTableConfig() {
     let res = await request({
       url: backend.comptMgrService + "/api/sysmodule/list",
       method: "get",
       params: {
         condition: JSON.stringify({
-          modRegName: "yu-xtable",
+          modRegName: "yu-xform",
         }),
       },
     });
@@ -132,7 +131,7 @@ export default class extends Vue {
           }),
         },
       }).then((res) => {
-        this.tableConfigList = res.data;
+        this.formConfigList = res.data;
         formatConfitItem(res.data);
       });
     }
@@ -145,7 +144,7 @@ export default class extends Vue {
       method: "get",
       params: {
         condition: JSON.stringify({
-          modRegName: "xtable-column",
+          modRegName: "yu-xform-item",
         }),
       },
     });
@@ -166,7 +165,7 @@ export default class extends Vue {
   }
 
   deleteFn(index: number) {
-    this.tableColumns.splice(index, 1);
+    this.formColumns.splice(index, 1);
     this.updateConfig();
   }
 
@@ -175,19 +174,7 @@ export default class extends Vue {
   }
   // 确认添加
   sureAddFuncFn(data: any) {
-    let props = this.tableColumns.map((item) => item.prop);
-    this.tableColumns = data.map((item: any) => {
-      if (props.includes(item.fieldEn)) {
-        item = this.tableColumns.find((ele) => ele.prop === item.fieldEn);
-      } else {
-        item = {
-          prop: item.fieldEn,
-          label: item.fieldZh,
-          ctype: "input",
-        };
-      }
-      return item;
-    });
+    this.formColumns = this.formColumns.concat(data);
   }
 }
 </script>
@@ -205,7 +192,7 @@ export default class extends Vue {
 </style>
 
 <style lang="scss" scoped>
-.curd-table-config {
+.form-config {
   height: 100%;
   ::v-deep .el-collapse {
     position: relative;

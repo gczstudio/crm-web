@@ -67,13 +67,16 @@ export default class extends Vue {
         { type: "table", name: "表格", icon: "biaoge" },
         { type: "chart", name: "图表", icon: "tubiao1" },
         { type: "card", name: "指标卡", icon: "zhibiaoka" },
+        { type: "leftTree", name: "左侧树", icon: "zhibiaoka" },
+        { type: "commonSearch", name: "通用搜索", icon: "zhibiaoka" },
       ],
     },
     {
       type: "2",
       name: "容器",
       children: [
-        { type: "tab", name: "选项卡", icon: "xuanxiangqia" },
+        { type: "div", name: "div标签", icon: "xuanxiangqia" },
+        { type: "tab", name: "标签页", icon: "xuanxiangqia" },
         { type: "grid", name: "分栏", icon: "fenlan" },
         { type: "dialog", name: "弹出框", icon: "danchuceng" },
       ],
@@ -117,6 +120,21 @@ export default class extends Vue {
         break;
       case "form":
         this.selectFormVisible = true;
+        break;
+      case "grid":
+        this.setGridFn();
+        break;
+      case "leftTree":
+        this.setLeftTreeFn();
+        break;
+      case "commonSearch":
+        this.setCommonSearchFn();
+        break;
+      case "tab":
+        this.setTabFn();
+        break;
+      case "div":
+        this.setDivFn();
         break;
     }
   }
@@ -182,6 +200,80 @@ export default class extends Vue {
       id: this.$util.guid(),
       type: "form",
       items: result,
+    });
+  }
+
+  // 选择分栏
+  setGridFn() {
+    appendToPageById(this.dataId, {
+      id: this.$util.guid(),
+      type: "grid",
+      gutter: 16,
+      body: [
+        {
+          type: "col",
+          id: this.$util.guid(),
+          span: 12,
+          body: [],
+        },
+        {
+          type: "col",
+          id: this.$util.guid(),
+          span: 12,
+          body: [],
+        },
+      ],
+    });
+  }
+
+  // 选择左侧机构树
+  setLeftTreeFn() {
+    appendToPageById(this.dataId, {
+      id: this.$util.guid(),
+      type: "left-tree",
+    });
+  }
+
+  // 选择通用搜索
+  setCommonSearchFn() {
+    appendToPageById(this.dataId, {
+      id: this.$util.guid(),
+      type: "common-search",
+    });
+  }
+
+  // 选择选项卡
+  setTabFn() {
+    appendToPageById(this.dataId, {
+      id: this.$util.guid(),
+      type: "tab",
+      tabType: "normal",
+      body: [
+        {
+          id: this.$util.guid(),
+          label: "选项卡1",
+          name: "tab1",
+          sortFields: [],
+          body: [],
+        },
+        {
+          id: this.$util.guid(),
+          label: "选项卡2",
+          name: "tab2",
+          sortFields: [],
+          body: [],
+        },
+      ],
+    });
+  }
+
+  // 选择div标签
+  setDivFn() {
+    appendToPageById(this.dataId, {
+      id: this.$util.guid(),
+      type: "div",
+      styles: "",
+      body: [],
     });
   }
 }

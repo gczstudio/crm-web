@@ -17,6 +17,12 @@ import { Component, Vue, Prop, Ref, Watch } from "vue-property-decorator";
 import CurdActionConfig from "./components/CurdActionConfig.vue";
 import CurdFormConfig from "./components/CurdFormConfig.vue";
 import CurdTableConfig from "./components/CurdTableConfig.vue";
+import FormConfig from "./components/FormConfig.vue";
+import GridConfig from "./components/GridConfig.vue";
+import LeftTreeConfig from "./components/LeftTreeConfig.vue";
+import CommonSearchConfig from "./components/CommonSearchConfig.vue";
+import TabConfig from "./components/TabConfig.vue";
+import DivConfig from "./components/DivConfig.vue";
 import { LowCodeModule } from "@/store/modules/lowCode";
 import { getCompConfigById } from "@/utils/lowCode";
 @Component({
@@ -25,13 +31,25 @@ import { getCompConfigById } from "@/utils/lowCode";
     CurdActionConfig,
     CurdFormConfig,
     CurdTableConfig,
+    FormConfig,
+    GridConfig,
+    LeftTreeConfig,
+    CommonSearchConfig,
+    TabConfig,
+    DivConfig,
   },
 })
 export default class extends Vue {
-  private compObj = {
+  compObj: { [key: string]: string } = {
     "curd-action": "CurdActionConfig",
     "curd-form": "CurdFormConfig",
     "curd-table": "CurdTableConfig",
+    form: "FormConfig",
+    grid: "GridConfig",
+    "left-tree": "LeftTreeConfig",
+    "common-search": "CommonSearchConfig",
+    tab: "TabConfig",
+    div: "DivConfig",
   };
 
   get configType() {

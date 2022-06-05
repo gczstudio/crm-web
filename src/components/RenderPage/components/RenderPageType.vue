@@ -1,11 +1,3 @@
-<!--
- * @Descripttion: 渲染弹出框
- * @Author: gaocz
- * @Date: 2022-04-28 15:08:11
- * @LastEditors: gaocz
- * @LastEditTime: 2022-05-17 15:11:05
- * @FilePath: /edmp-web/src/views/system/lowCodeMgt/pageMgt/renderTool/components/RenderType.vue
--->
 <template>
   <div :class="{ 'render-type': true, 'render-type__fixed': layout === 'fixed' }">
     <div v-for="(item, index) in data" :key="index">
@@ -14,6 +6,10 @@
       <RenderCurd v-if="item.type === 'curd'" :data="item" />
       <RenderDialog v-if="item.type === 'dialog'" :data="item" />
       <RenderForm v-if="item.type === 'form'" :data="item" />
+      <RenderGrid v-if="item.type === 'grid'" :data="item" />
+      <RenderLeftTree v-if="item.type === 'left-tree'" :data="item" />
+      <RenderCommonSeach v-if="item.type === 'common-search'" :data="item" />
+      <RenderCommonTabs v-if="item.type === 'common-tabs'" :data="item" />
     </div>
   </div>
 </template>
@@ -24,20 +20,33 @@ import RenderCard from "./RenderCard.vue";
 import RenderCurd from "./RenderCurd.vue";
 import RenderDialog from "./RenderDialog.vue";
 import RenderForm from "./RenderForm.vue";
+import RenderGrid from "./RenderGrid.vue";
+import RenderLeftTree from "./RenderLeftTree.vue";
+import RenderCommonSeach from "./RenderCommonSeach.vue";
+import RenderCommonTabs from "./RenderCommonTabs.vue";
+import { LowCodeModule } from "@/store/modules/lowCode";
 export default {
-  name: "RenderType",
+  name: "RenderPageType",
   components: {
     RenderChart,
     RenderCard,
     RenderCurd,
     RenderDialog,
     RenderForm,
+    RenderGrid,
+    RenderLeftTree,
+    RenderCommonSeach,
+    RenderCommonTabs,
   },
   props: {
-    layout: String,
     data: {
       type: Array,
       default: () => [],
+    },
+  },
+  computed: {
+    layout() {
+      return LowCodeModule.layout;
     },
   },
   data() {

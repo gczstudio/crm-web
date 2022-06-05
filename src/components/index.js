@@ -41,6 +41,7 @@ import Charts from "./Charts/index.vue";
 import Cards from "./Cards/index.vue";
 import DetailPanel from "./DetailPanel.vue";
 import RenderType from "@/views/system/lowCodeMgt/pageMgt/renderTool/components/RenderType.vue";
+
 const components = [
   YuXform,
   YuXformItem,
@@ -79,5 +80,10 @@ const components = [
 ];
 
 components.forEach((component) => {
-  Vue.component(component.name, component);
+  // 针对于ts写法
+  if (component.extendOptions) {
+    Vue.component(component.extendOptions.name, component.extendOptions);
+  } else {
+    Vue.component(component.name, component);
+  }
 });

@@ -52,7 +52,7 @@
         </MainLayout>
       </el-col>
     </el-row>
-    <content-modal :visible.sync="contentVisible">
+    <content-modal :visible.sync="contentVisible" @close="closeAddPageFn">
       <template slot-scope="scope">
         <add-page-comp :instance="scope" :data="curPageRow" />
       </template>
@@ -187,6 +187,7 @@ export default class extends Vue {
     this.curPageRow = {
       ...this.clickNode,
       catalogId: (this.clickNode as IMenuItem).id,
+      id: null,
     };
   }
 
@@ -223,6 +224,11 @@ export default class extends Vue {
       this.$message.success("发布成功");
       this.refTable.remoteData();
     });
+  }
+
+  // 关闭新增页面时
+  closeAddPageFn() {
+    this.refTable.remoteData();
   }
 }
 </script>

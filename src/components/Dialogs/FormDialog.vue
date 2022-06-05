@@ -29,6 +29,11 @@
           <yu-xform-item-part v-model="scope.row.ctype" ctype="select" :options="ctypeOptions" :key="scope.row.id" clearable></yu-xform-item-part>
         </template>
       </yu-xtable-column>
+      <yu-xtable-column label="码值" prop="dataCode" :show-overflow-tooltip="true">
+        <template slot-scope="scope">
+          <yu-xform-item-part v-model="scope.row.dataCode" ctype="input" :key="scope.row.id" clearable></yu-xform-item-part>
+        </template>
+      </yu-xtable-column>
       <yu-xtable-column label="校验规则" prop="rules" :show-overflow-tooltip="true">
         <template slot-scope="scope">
           <yu-xform-item-part v-model="scope.row.rules" ctype="select" :options="rulesOptions" :key="scope.row.id" clearable></yu-xform-item-part>
@@ -89,6 +94,8 @@ export default {
     },
   },
   created() {
+    this.getRules();
+    this.getCtypeOptions();
     this.dialogVisible = this.visible;
   },
   methods: {

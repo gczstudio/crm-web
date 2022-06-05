@@ -187,14 +187,17 @@ export default class extends Vue {
   }
 
   savePageFn() {
-    const { pageName, pageType, pageSts, catalogId } = this.pageForm as IPageItem;
-    let params = {
+    const { pageName, pageType, catalogId, id } = this.pageForm as IPageItem;
+    let params: any = {
       catalogId,
       pageName,
       pageType,
       pageSts: this.submitType === "save" ? "0" : "1",
       pageConfig: JSON.stringify(this.pageConfig),
     };
+    if (id) {
+      params.id = id;
+    }
     savePage(params).then((res) => {
       this.$message.success("保存成功");
       this.backFn();

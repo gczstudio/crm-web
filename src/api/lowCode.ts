@@ -33,6 +33,14 @@ export const updateLayoutSts = (params: any) =>
     params,
   });
 
+// 获取系统组件信息
+export const querySysModule = (params: any) =>
+  request({
+    url: backend.comptMgrService + "/api/sysmodule/list",
+    method: "get",
+    params,
+  });
+
 // 新建/编辑系统组件信息
 export const saveSysModule = (data: any) =>
   request({
@@ -45,6 +53,14 @@ export const saveSysModule = (data: any) =>
 export const deleteSysModule = (params: any) =>
   request({
     url: backend.comptMgrService + "/api/sysmodule/delete",
+    method: "get",
+    params,
+  });
+
+// 获取系统组件属性信息
+export const querySysModuleProp = (params: any) =>
+  request({
+    url: backend.comptMgrService + "/api/sysmodule/property/list",
     method: "get",
     params,
   });

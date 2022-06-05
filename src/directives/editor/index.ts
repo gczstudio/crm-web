@@ -12,12 +12,13 @@ import { LowCodeModule } from "@/store/modules/lowCode";
 
 export const editor: DirectiveOptions = {
   inserted(el, binding, vnode: any) {
+    if (vnode.context?.data?.type === "show") return;
     const id = guid();
     el.setAttribute("data-editor-id", id);
     LowCodeModule.SET_WIDGETS_MAP({
       [id]: {
         type: Object.keys(binding.modifiers)[0],
-        dataId: vnode.context?.data?.id,
+        dataId: binding.value?.id || vnode.context?.data?.id,
         actions: binding.value?.action,
       },
     });

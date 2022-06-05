@@ -11,7 +11,7 @@ import { LowCodeModule } from "@/store/modules/lowCode";
 import _ from "lodash";
 import request from "@/utils/request";
 import lookup from "./lookup";
-import { getUrlParams } from "@/utils";
+import { getUrlParams, guid } from "@/utils";
 /**
  * 根据id获取某个组件的配置数据
  * @param id
@@ -76,9 +76,10 @@ export const recursionFn = (id: string, callback: Function) => {
   const pageConfig = LowCodeModule.pageConfig;
   const fn = (data: any) => {
     for (let i = 0; i < data.length; i++) {
-      const item = data[i];
+      let item = data[i];
       if (item.id && item.id === id) {
         callback && callback(item, data);
+        item = _.cloneDeep(item);
       } else {
         item.body?.length && fn(item.body);
       }
@@ -92,13 +93,23 @@ export const recursionFn = (id: string, callback: Function) => {
  * 对从组件注册中获取属性的可选值的处理-下拉框数据处理
  * @param configList
  */
-export const formatConfitItem = (configList: any) => {
+export const formatConfitItem = (configList: any, callback?: Function) => {
   const codeObj: any = {},
     urlObj: any = {},
     urlParamsObj: any = {};
+
   configList.map((item: any, index: number) => {
+    if (item.valType === "number") {
+      item.ctype = "input-number";
+    }
+
+    if (item.valType === "boolean") {
+      item.ctype = "switch";
+    }
+
     if (item.valChoose) {
       item.ctype = "select";
+      item.id = guid();
       if (item.valChoose.includes(",")) {
         item.options = item.valChoose.split(",").map((option: any) => {
           const index = option.indexOf("[");
@@ -129,6 +140,7 @@ export const formatConfitItem = (configList: any) => {
           configList[idx].options = data[code];
         });
       });
+      callback && callback();
     });
   }
   if (Object.keys(urlObj).length) {
@@ -163,6 +175,8 @@ export const formatConfitItem = (configList: any) => {
           }
         });
       });
+      callback && callback();
     });
   }
+  callback && callback();
 };

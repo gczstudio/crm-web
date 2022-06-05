@@ -32,6 +32,7 @@
               <yu-xform-group :column="1">
                 <yu-xform-item label="菜单名称" :rules="globalRules.requiredInput" name="menuName" ctype="input"></yu-xform-item>
                 <yu-xform-item label="业务功能" @focus="nameFocus" placeholder="请从业务功能列表选择" :clearable="true" name="funcName" ctype="input"></yu-xform-item>
+                <yu-xform-item label="页面组件" @focus="pageFocus" placeholder="请从页面组件列表选择" :clearable="true" name="pageName" ctype="input"></yu-xform-item>
                 <yu-xform-item label="排序" name="menuOrder" ctype="input"></yu-xform-item>
                 <yu-xform-item label="图标" name="menuIcon" ctype="input"></yu-xform-item>
                 <yu-xform-item
@@ -88,6 +89,19 @@
                 >
                 </yu-left-tree>
               </el-collapse-item>
+              <el-collapse-item title="页面组件列表" name="pageList">
+                <yu-xform :model="pageParams" :search="queryPageFn" form-type="search">
+                  <yu-xform-group :column="2">
+                    <yu-xform-item placeholder="页面名称" name="pageName" ctype="input" :rules="globalRules.input"></yu-xform-item>
+                  </yu-xform-group>
+                </yu-xform>
+                <yu-xtable ref="pageTable" :height="515" :data-url="pageUrl" @row-click="pageSelect" :default-load="true">
+                  <yu-xtable-column label="页面名称" prop="pageName" :show-overflow-tooltip="true" sortable="custom"></yu-xtable-column>
+                  <yu-xtable-column label="状态" prop="pageSts" data-code="LC_STATUS" :show-overflow-tooltip="true" sortable="custom"></yu-xtable-column>
+                  <yu-xtable-column label="创建人" prop="createUserName" :show-overflow-tooltip="true" sortable="custom"></yu-xtable-column>
+                  <yu-xtable-column label="创建时间" prop="createTime" :show-overflow-tooltip="true" sortable="custom"></yu-xtable-column>
+                </yu-xtable>
+              </el-collapse-item>
             </el-collapse>
           </div>
         </div>
@@ -132,12 +146,17 @@ export default {
       icons: [],
       query: {},
       menuForm: {},
+      // 页面组件
+      pageUrl: backend.comptMgrService + "/api/page/list",
+      pageParams: {},
     };
   },
   methods: {
     nameFocus: function () {
-      this.expandCollapseName = [];
-      this.expandCollapseName.push("funcList");
+      this.expandCollapseName = ["funcList"];
+    },
+    pageFocus: function () {
+      this.expandCollapseName = ["pageList"];
     },
     upMenuNameFocus: function () {
       this.expandCollapseName = [];
@@ -146,6 +165,15 @@ export default {
     queryMainGridFn: function () {
       var param = { condition: JSON.stringify(this.query) };
       this.$refs.funcTable.remoteData(param);
+    },
+    queryPageFn: function () {
+      var param = {
+        condition: JSON.stringify({
+          ...this.pageParams,
+          pageSts: "1",
+        }),
+      };
+      this.$refs.pageTable.remoteData(param);
     },
     saveFn: function () {
       var me = this;
@@ -270,6 +298,13 @@ export default {
       var formModel = this._.cloneDeep(this.menuForm);
       formModel.funcId = row.funcId;
       formModel.funcName = row.funcName;
+      this.menuForm = this._.cloneDeep(formModel);
+    },
+    // 页面组件列表选择
+    pageSelect: function (row) {
+      var formModel = this._.cloneDeep(this.menuForm);
+      formModel.pageId = row.id;
+      formModel.pageName = row.pageName;
       this.menuForm = this._.cloneDeep(formModel);
     },
     // 删除菜单

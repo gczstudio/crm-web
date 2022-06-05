@@ -29,6 +29,10 @@ const mixin = {
           { validator: validator.speChar, message: "输入信息包含特殊字符" },
           { max: 50, message: "输入信息不能超过50个字", trigger: "blur" },
         ],
+        input50: [
+          { validator: validator.speChar, message: "输入信息包含特殊字符" },
+          { max: 50, message: "输入信息不能超过50个字", trigger: "blur" },
+        ],
         amountInput: [
           { validator: validator.float, message: "数字类型错误" },
           { max: 30, message: "输入信息不能超过30个字", trigger: "blur" },

@@ -101,6 +101,7 @@
                 >
               </yu-xform-item>
               <yu-xform-item label="默认值" placeholder="默认值" name="valDefault" ctype="input"></yu-xform-item>
+              <yu-xform-item label="排序" placeholder="排序" name="orderBy" ctype="input"></yu-xform-item>
             </yu-xform-group>
             <yu-xform-group :column="1">
               <yu-xform-item label="备注" placeholder="备注" name="remark" ctype="input" type="textarea" :rules="globalRules.desc"></yu-xform-item>

@@ -1,22 +1,15 @@
-<!--
- * @Descripttion: 渲染弹出框
- * @Author: gaocz
- * @Date: 2022-04-28 15:08:11
- * @LastEditors: gaocz
- * @LastEditTime: 2022-05-17 10:37:41
- * @FilePath: /edmp-web/src/views/system/lowCodeMgt/pageMgt/renderTool/components/RenderForm.vue
--->
 <template>
   <div class="render-form" v-editor.form="{ id: data.id, action: ['delete'] }">
     <yu-xform ref="searchForm" :model="formData" label-width="80px">
       <yu-xform-group v-for="(item, index) in groupData" :key="index" :column="parseFloat(groupData[index][0].column)">
-        <yu-xform-item v-editor.form="{ id: data.id }" v-for="child in item" :key="child.name" :placeholder="child.label" v-bind="item"></yu-xform-item>
+        <yu-xform-item v-for="child in item" :key="child.id" :placeholder="child.label" :rules="globalRules[child.rules] || $validator[child.rules]" v-bind="child"></yu-xform-item>
       </yu-xform-group>
     </yu-xform>
   </div>
 </template>
 
 <script>
+import request from "@/utils/request";
 import { backend } from "@/config";
 export default {
   name: "RenderForm",
@@ -30,6 +23,7 @@ export default {
     return {
       formData: {},
       groupData: [],
+      rulesOptions: [],
     };
   },
   watch: {
@@ -38,6 +32,7 @@ export default {
         this.groupData = this.formatData(val.items);
       },
       immediate: true,
+      deep: true,
     },
   },
   methods: {
@@ -57,7 +52,6 @@ export default {
           }
         }
       });
-      console.log(groupData, 7777);
       return groupData;
     },
   },
