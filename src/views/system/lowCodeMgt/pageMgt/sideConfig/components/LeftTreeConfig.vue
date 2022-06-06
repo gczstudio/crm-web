@@ -137,7 +137,9 @@ export default class extends Vue {
   @Watch("data", { immediate: true })
   onDataChange() {
     this.formConfigForm = { ...this.data };
-    this.actionBtns = [...this.data.actions];
+    if (this.data.actions) {
+      this.actionBtns = [...this.data.actions];
+    }
   }
 
   @Watch("formColumns", { deep: true })

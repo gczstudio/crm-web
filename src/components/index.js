@@ -42,6 +42,9 @@ import Cards from "./Cards/index.vue";
 import DetailPanel from "./DetailPanel.vue";
 import RenderType from "@/views/system/lowCodeMgt/pageMgt/renderTool/components/RenderType.vue";
 
+// 自定义表格
+import ProductTable from './CustomTables/ProductTable.vue'
+
 const components = [
   YuXform,
   YuXformItem,
@@ -77,6 +80,7 @@ const components = [
   Cards,
   DetailPanel,
   RenderType,
+  ProductTable,
 ];
 
 components.forEach((component) => {

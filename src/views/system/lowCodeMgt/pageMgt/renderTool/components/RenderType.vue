@@ -10,6 +10,7 @@ import { Component, Vue, Prop } from "vue-property-decorator";
 import RenderChart from "./RenderChart.vue";
 import RenderCard from "./RenderCard.vue";
 import RenderCurd from "./RenderCurd.vue";
+import RenderTable from "./RenderTable.vue";
 import RenderDialog from "./RenderDialog.vue";
 import RenderForm from "./RenderForm.vue";
 import RenderGrid from "./RenderGrid.vue";
@@ -24,6 +25,7 @@ import RenderDiv from "./RenderDiv.vue";
     RenderChart,
     RenderCard,
     RenderCurd,
+    RenderTable,
     RenderDialog,
     RenderForm,
     RenderGrid,

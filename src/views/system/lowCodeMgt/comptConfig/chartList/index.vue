@@ -16,31 +16,33 @@
       </template>
       <template v-slot:table>
         <yu-xtable ref="refTable" :data-url="dataUrl" type="custom" :dynamic-height="true" :default-load="false">
-          <div class="custom-container" slot-scope="scope">
-            <el-row :gutter="16">
-              <el-col :span="8" v-for="item in scope.tableData" :key="item.rowId">
-                <div class="card-item">
-                  <div class="card-item-top">
-                    <div class="card-item__img">
-                      <img src="https://t7.baidu.com/it/u=3180010982,1201664165&fm=74&app=80&size=f256,256&n=0&f=JPEG&fmt=auto?sec=1650560400&t=bd9ca514e4a0343cb1ab8d1dd62d594c" alt="" />
+          <template v-slot:custom="scope">
+            <div class="custom-container">
+              <el-row :gutter="16">
+                <el-col :span="8" v-for="item in scope.tableData" :key="item.rowId">
+                  <div class="card-item">
+                    <div class="card-item-top">
+                      <div class="card-item__img">
+                        <img src="https://t7.baidu.com/it/u=3180010982,1201664165&fm=74&app=80&size=f256,256&n=0&f=JPEG&fmt=auto?sec=1650560400&t=bd9ca514e4a0343cb1ab8d1dd62d594c" alt="" />
+                      </div>
+                      <div class="card-item__info">
+                        <p class="card-item__title">{{ item.modName }}</p>
+                        <p class="c2"><i class="el-icon-user"></i>创建人：{{ item.createUser }}</p>
+                        <p class="c2"><i class="el-icon-time"></i>创建时间：{{ item.createTime }}</p>
+                      </div>
                     </div>
-                    <div class="card-item__info">
-                      <p class="card-item__title">{{ item.modName }}</p>
-                      <p class="c2"><i class="el-icon-user"></i>创建人：{{ item.createUser }}</p>
-                      <p class="c2"><i class="el-icon-time"></i>创建时间：{{ item.createTime }}</p>
+                    <div class="card-bts">
+                      <template v-if="item.modSts === '0'">
+                        <el-button @click="editFn(item)">编辑</el-button>
+                        <el-button @click="deleteFn(item)">删除</el-button>
+                      </template>
+                      <el-button @click="startOrStopFn(item)">{{ item.modSts === "0" ? "启用" : "停用" }}</el-button>
                     </div>
                   </div>
-                  <div class="card-bts">
-                    <template v-if="item.modSts === '0'">
-                      <el-button @click="editFn(item)">编辑</el-button>
-                      <el-button @click="deleteFn(item)">删除</el-button>
-                    </template>
-                    <el-button @click="startOrStopFn(item)">{{ item.modSts === "0" ? "启用" : "停用" }}</el-button>
-                  </div>
-                </div>
-              </el-col>
-            </el-row>
-          </div>
+                </el-col>
+              </el-row>
+            </div>
+          </template>
         </yu-xtable>
       </template>
     </MainLayout>

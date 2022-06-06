@@ -75,6 +75,11 @@ export default class extends Vue {
 }
 .tab-custom {
   ::v-deep &.el-tabs {
+    .el-tabs__header {
+      padding: 20px;
+      margin: 0;
+      background: #fff;
+    }
     .el-tabs__item {
       height: 25px;
       line-height: 25px;
@@ -95,8 +100,8 @@ export default class extends Vue {
 
 .sort {
   position: absolute;
-  top: 5px;
-  right: 16px;
+  top: 25px;
+  right: 20px;
   color: #666666;
   .sort-field {
     cursor: pointer;

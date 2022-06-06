@@ -23,6 +23,7 @@ import LeftTreeConfig from "./components/LeftTreeConfig.vue";
 import CommonSearchConfig from "./components/CommonSearchConfig.vue";
 import TabConfig from "./components/TabConfig.vue";
 import DivConfig from "./components/DivConfig.vue";
+import TableConfig from "./components/TableConfig.vue";
 import { LowCodeModule } from "@/store/modules/lowCode";
 import { getCompConfigById } from "@/utils/lowCode";
 @Component({
@@ -31,6 +32,7 @@ import { getCompConfigById } from "@/utils/lowCode";
     CurdActionConfig,
     CurdFormConfig,
     CurdTableConfig,
+    TableConfig,
     FormConfig,
     GridConfig,
     LeftTreeConfig,
@@ -44,6 +46,7 @@ export default class extends Vue {
     "curd-action": "CurdActionConfig",
     "curd-form": "CurdFormConfig",
     "curd-table": "CurdTableConfig",
+    table: "TableConfig",
     form: "FormConfig",
     grid: "GridConfig",
     "left-tree": "LeftTreeConfig",

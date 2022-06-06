@@ -33,7 +33,7 @@ export default class extends Vue {
         }),
       },
     }).then((res) => {
-      this.pageConfigData = JSON.parse(res.data[7].pageConfig);
+      this.pageConfigData = JSON.parse(res.data[4].pageConfig);
     });
   }
 
@@ -113,7 +113,7 @@ export default class extends Vue {
     overflow: auto;
   }
   .none-layout {
-    background: #fff;
+    // background: #fff;
   }
 }
 </style>

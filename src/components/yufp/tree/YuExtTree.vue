@@ -86,6 +86,7 @@ export default {
       return this.$refs.tree;
     },
     remoteData() {
+      if (!this.dataUrl) return;
       if (CommonModule.treeMgr[this.treeKey]) {
         this.treeData = this.updataTreeDataByLevel();
         this.$emit("get-tree-datas", CommonModule.treeOriginMgr[this.treeKey]);

@@ -27,7 +27,7 @@
       </el-table>
     </div>
     <div v-else class="yu-xtable__custom" ref="customRef" :style="{ height: tableHeight ? tableHeight + 'px' : 'auto' }">
-      <slot :tableData="tableData"></slot>
+      <slot name="custom" :tableData="tableData"></slot>
       <Empty v-if="!tableData.length" />
     </div>
     <div class="yu-pagination" v-if="pageable">

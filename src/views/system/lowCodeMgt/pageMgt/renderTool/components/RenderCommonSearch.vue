@@ -1,6 +1,6 @@
 <template>
   <div class="render-common-search" v-editor.common-search="{ action: ['delete'] }">
-    <common-search v-model="inputVal"></common-search>
+    <common-search v-model="inputVal" v-bind="data"></common-search>
   </div>
 </template>
 <script>

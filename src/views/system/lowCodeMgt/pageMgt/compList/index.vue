@@ -19,15 +19,19 @@
     <SelectCardDialog :visible.sync="selectCardVisible" @sure="selectCardFn" />
     <CurdDialog :visible.sync="selectCurdVisible" @sure="selectCurdFn" />
     <FormDialog :visible.sync="selectFormVisible" @sure="selectFormFn" />
+    <TableDialog :visible.sync="selectTableVisible" @sure="selectTableFn" />
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+import request from "@/utils/request";
+import { backend } from "@/config";
 import SelectChartDialog from "@/components/Dialogs/SelectChartDialog.vue";
 import SelectCardDialog from "@/components/Dialogs/SelectCardDialog.vue";
 import CurdDialog from "@/components/Dialogs/CurdDialog.vue";
 import FormDialog from "@/components/Dialogs/FormDialog.vue";
+import TableDialog from "@/components/Dialogs/TableDialog.vue";
 import { LowCodeModule } from "@/store/modules/lowCode";
 import { appendToPageById } from "@/utils/lowCode";
 
@@ -52,6 +56,7 @@ export interface ICompItem {
     SelectCardDialog,
     CurdDialog,
     FormDialog,
+    TableDialog,
   },
 })
 export default class extends Vue {
@@ -85,6 +90,7 @@ export default class extends Vue {
   selectChartVisible = false;
   selectCurdVisible = false;
   selectFormVisible = false;
+  selectTableVisible = false;
   selectCardVisible = false;
 
   get layout() {
@@ -115,6 +121,9 @@ export default class extends Vue {
       case "curd":
         this.selectCurdVisible = true;
         break;
+      case "table":
+        this.selectTableVisible = true;
+        break;
       case "dialog":
         this.setDialogFn();
         break;
@@ -137,6 +146,39 @@ export default class extends Vue {
         this.setDivFn();
         break;
     }
+  }
+
+  // 获取配置属性
+  async getTableConfig(componentName: string) {
+    let res = await request({
+      url: backend.comptMgrService + "/api/sysmodule/list",
+      method: "get",
+      params: {
+        condition: JSON.stringify({
+          modRegName: componentName,
+        }),
+      },
+    });
+    let propRes = await request({
+      url: backend.comptMgrService + "/api/sysmodule/property/list",
+      method: "get",
+      params: {
+        condition: JSON.stringify({
+          moduleId: res.data[0]?.id,
+        }),
+      },
+    });
+    let result: Record<string, unknown> = {};
+    propRes.data.map((item: any) => {
+      if (item.valDefault === "true") {
+        item.valDefault = true;
+      }
+      if (item.valDefault === "false") {
+        item.valDefault = false;
+      }
+      result[item.proId] = item.valDefault;
+    });
+    return result;
   }
 
   // 选择某个图表
@@ -200,6 +242,18 @@ export default class extends Vue {
       id: this.$util.guid(),
       type: "form",
       items: result,
+    });
+  }
+
+  // 选择table
+  async selectTableFn(result: any) {
+    let propData = await this.getTableConfig("yu-xtable");
+    appendToPageById(this.dataId, {
+      id: this.$util.guid(),
+      ...propData,
+      ...result,
+      type: "table",
+      tableType: "table",
     });
   }
 

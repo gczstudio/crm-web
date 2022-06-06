@@ -1,10 +1,10 @@
 <template>
-  <div class="curd-table-config">
+  <div class="table-config">
     <el-tabs v-model="activeTab" type="card">
       <el-tab-pane label="表格" name="1">
         <yu-xform :model="tableConfigForm" label-width="100px" key="table">
           <yu-xform-group :column="1">
-            <yu-xform-item v-for="config in tableConfigList" :key="config.id" :name="config.proId" :label="config.proName" :placeholder="config.proId"></yu-xform-item>
+            <yu-xform-item v-for="config in tableConfigList" :key="config.id" :name="config.proId" :label="config.proName" :placeholder="config.proId" v-bind="config"></yu-xform-item>
           </yu-xform-group>
         </yu-xform>
       </el-tab-pane>
@@ -25,7 +25,6 @@
                   <yu-xform :model="item" label-width="100px" :key="item.prop">
                     <yu-xform-group :column="1">
                       <yu-xform-item
-                        :disabled="config.proId === 'prop'"
                         v-for="config in itemConfigList"
                         :key="config.id + index"
                         :name="config.proId"
@@ -43,7 +42,7 @@
         </el-collapse>
       </el-tab-pane>
     </el-tabs>
-    <form-item-dialog :data-id="data.id" :data="tableColumns" :visible.sync="addVisible" @sure="sureAddFuncFn"></form-item-dialog>
+    <table-dialog :data-id="data.id" :data="tableColumns" :visible.sync="addVisible" @sure="sureAddFuncFn"></table-dialog>
   </div>
 </template>
 
@@ -51,34 +50,27 @@
 import { Component, Vue, Prop, Watch } from "vue-property-decorator";
 import JsonEditor from "@/components/JsonEditor/index.vue";
 import { setCompConfigById } from "@/utils/lowCode";
-import FormItemDialog from "@/components/Dialogs/FormItemDialog.vue";
+import TableDialog from "@/components/Dialogs/TableDialog.vue";
 import request from "@/utils/request";
 import { backend } from "@/config";
 import { formatConfitItem } from "@/utils/lowCode";
 import Draggable from "vuedraggable";
 @Component({
-  name: "CurdActionConfig",
+  name: "TableConfig",
   components: {
     JsonEditor,
-    FormItemDialog,
+    TableDialog,
     Draggable,
   },
 })
 export default class extends Vue {
-  @Prop({
-    default: () => ({
-      title: "",
-      bulkActions: [],
-      itemActions: [],
-    }),
-  })
-  data!: any;
+  @Prop({ default: () => {} }) data!: any;
   activeTab = "1";
   activeCollapse = "1";
 
   // 表格配置
   tableConfigList = [];
-  tableConfigForm = {};
+  tableConfigForm: Record<string, unknown> = {};
   // 表格属性配置
   tableColumns: any[] = [];
   itemConfigList = [];
@@ -96,6 +88,16 @@ export default class extends Vue {
   onDataChange() {
     const { columns } = this._.cloneDeep(this.data);
     this.tableColumns = [...columns];
+    this.tableConfigForm = {
+      ...this.data,
+      type: this.data.tableType,
+      "data-url": this.data.api,
+    };
+  }
+
+  @Watch("tableConfigForm", { deep: true })
+  onTableConfigFormChange() {
+    this.updateConfig();
   }
 
   @Watch("tableColumns", { deep: true })
@@ -106,6 +108,9 @@ export default class extends Vue {
   updateConfig() {
     let config = {
       ...this.data,
+      ...this.tableConfigForm,
+      tableType: this.tableConfigForm.type,
+      type: "table",
       columns: this.tableColumns,
     };
     setCompConfigById(this.data.id, config);
@@ -159,8 +164,9 @@ export default class extends Vue {
           }),
         },
       }).then((res) => {
-        this.itemConfigList = res.data;
-        formatConfitItem(res.data);
+        formatConfitItem(res.data, () => {
+          this.itemConfigList = res.data;
+        });
       });
     }
   }
@@ -175,19 +181,7 @@ export default class extends Vue {
   }
   // 确认添加
   sureAddFuncFn(data: any) {
-    let props = this.tableColumns.map((item) => item.prop);
-    this.tableColumns = data.map((item: any) => {
-      if (props.includes(item.fieldEn)) {
-        item = this.tableColumns.find((ele) => ele.prop === item.fieldEn);
-      } else {
-        item = {
-          prop: item.fieldEn,
-          label: item.fieldZh,
-          ctype: "input",
-        };
-      }
-      return item;
-    });
+    this.tableColumns = data.columns;
   }
 }
 </script>
@@ -205,7 +199,7 @@ export default class extends Vue {
 </style>
 
 <style lang="scss" scoped>
-.curd-table-config {
+.table-config {
   height: 100%;
   ::v-deep .el-collapse {
     position: relative;

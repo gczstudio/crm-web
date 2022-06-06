@@ -6,6 +6,27 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "30197242",
+      "name": "thumbs",
+      "font_class": "thumbs",
+      "unicode": "e66b",
+      "unicode_decimal": 58987
+    },
+    {
+      "icon_id": "30197243",
+      "name": "eye",
+      "font_class": "eye",
+      "unicode": "e66c",
+      "unicode_decimal": 58988
+    },
+    {
+      "icon_id": "30197244",
+      "name": "star",
+      "font_class": "star",
+      "unicode": "e66d",
+      "unicode_decimal": 58989
+    },
+    {
       "icon_id": "29842325",
       "name": "漏斗图",
       "font_class": "loudoutu",

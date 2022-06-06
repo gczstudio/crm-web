@@ -74,7 +74,7 @@ export default class extends Vue {
   @Watch("data", { immediate: true, deep: true })
   onDataChange() {
     this.propsData = { ...this.data };
-    let customAction = this.data.actions.filter((item: IAction) => item.type === "2");
+    let customAction = this.data?.actions?.filter((item: IAction) => item.type === "2") || [];
     customAction.map((item: IAction) => {
       this.treeOperates.push({
         label: item.value,
@@ -96,7 +96,7 @@ export default class extends Vue {
 
   // 根据按钮标识获取配置信息
   getActionByKey(key: string): IAction {
-    return this.data.actions.find((item: any) => item.key === key);
+    return this.data?.actions?.find((item: any) => item.key === key) || {};
   }
 
   // 点击目录

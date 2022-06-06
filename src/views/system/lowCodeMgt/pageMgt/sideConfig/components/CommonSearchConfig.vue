@@ -7,7 +7,7 @@
             <yu-xform-item
               v-for="(config, index) in propList"
               :key="config.id + index"
-              :name="config.proName"
+              :name="config.proId"
               :label="config.proName"
               :placeholder="config.proId"
               :ctype="config.ctype || 'input'"
@@ -23,7 +23,7 @@
 <script lang="ts">
 import { Component, Vue, Prop, Watch } from "vue-property-decorator";
 import { querySysModule, querySysModuleProp } from "@/api/lowCode";
-import { formatConfitItem } from "@/utils/lowCode";
+import { formatConfitItem, setCompConfigById } from "@/utils/lowCode";
 import { Options } from "@/types/common";
 
 export interface IProp {
@@ -44,8 +44,26 @@ export default class extends Vue {
   propList: IProp[] = [];
   activeTab = "1";
 
+  @Watch("data", { immediate: true })
+  onDataChange() {
+    this.formData = { ...this.data };
+  }
+
+  @Watch("formData", { deep: true })
+  onFormColumnsChange() {
+    this.updateConfig();
+  }
+
   created() {
     this.getConfig();
+  }
+
+  updateConfig() {
+    let config = {
+      ...this.data,
+      ...this.formData,
+    };
+    setCompConfigById(this.data.id, config);
   }
 
   // 获取配置信息
