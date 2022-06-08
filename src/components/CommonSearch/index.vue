@@ -1,7 +1,7 @@
 <template>
   <div class="common-search">
-    <el-input v-model="inputVal" v-bind="$attrs" @input="inputChange">
-      <template slot="append">搜索</template>
+    <el-input v-model="inputVal" v-bind="$attrs" @input="inputChange" clearable>
+      <template slot="append"><div class="search-btn" @click="searchFn">搜索</div></template>
     </el-input>
   </div>
 </template>
@@ -26,6 +26,9 @@ export default {
     inputChange() {
       this.$emit("input", this.inputVal);
     },
+    searchFn() {
+      this.$emit("submit", this.inputVal);
+    },
   },
 };
 </script>
@@ -38,10 +41,20 @@ export default {
       line-height: 40px;
     }
     .el-input-group__append {
+      padding: 0;
+      width: 68px;
+      height: 38px;
       cursor: pointer;
       background: #007eff;
       color: #fff;
+      border: 1px solid #007eff;
     }
+  }
+  .search-btn {
+    width: 100%;
+    height: 100%;
+    line-height: 38px;
+    text-align: center;
   }
 }
 </style>

@@ -2,7 +2,7 @@
   <div class="render-left-tree" v-editor.left-tree="{ action: ['delete'] }">
     <yu-left-tree
       ref="tree"
-      class="no-border"
+      :class="['no-border', propsData['box-shadow'] && 'box-shadow']"
       :highlight-current="true"
       :height="bHeight - (isMaxScreen ? 283 : 249)"
       @node-xclick="nodeClickFn"
@@ -29,6 +29,7 @@
 <script lang="ts">
 import { Component, Vue, Prop, Watch, Inject, Ref } from "vue-property-decorator";
 import request from "@/utils/request";
+import { LowCodeModule } from "@/store/modules/lowCode";
 export interface IFrom {
   id: string;
   name: string;
@@ -71,6 +72,10 @@ export default class extends Vue {
   curNode: Record<string, string> = {};
   curNodeData: Record<string, string> = {};
 
+  get funcMap(): any {
+    return LowCodeModule.funcMap;
+  }
+
   @Watch("data", { immediate: true, deep: true })
   onDataChange() {
     this.propsData = { ...this.data };
@@ -103,6 +108,13 @@ export default class extends Vue {
   nodeClickFn(obj: Record<string, string>, node: any) {
     this.curNode = node;
     this.curNodeData = obj;
+
+    //  关联组件id存在时
+    let func = this.funcMap[this.propsData["search-comp-id"]];
+    func &&
+      func({
+        [this.propsData["search-key"] || this.propsData["data-id"]]: obj[this.propsData["data-id"]],
+      });
   }
   // 新增
   createFn() {

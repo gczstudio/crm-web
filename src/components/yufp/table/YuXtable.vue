@@ -365,7 +365,7 @@ export default {
       var _this = this;
       this.page = 1;
       this.$refs.table && this.$refs.table.clearSort();
-      this.sort = "";
+      this.sort = params?.sort || "";
       this.$nextTick(function () {
         _this.getTableData(params, clearSelection, callback);
       });
@@ -487,6 +487,7 @@ export default {
   .yu-pagination {
     text-align: right;
     padding: 10px;
+    background: #fff;
     // border-top: 1px solid #D8D8D8;
   }
   .el-table--border th:first-child .cell {

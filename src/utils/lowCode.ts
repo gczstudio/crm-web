@@ -62,7 +62,7 @@ export const appendToPageById = (id: string, configData: any) => {
   });
   // 如果没有找到，直接添加到主layout body中
   if (!Object.keys(itemData).length) {
-    (pageConfig.body[0] as any).body = [...(pageConfig.body[0] as any).body, configData];
+    (pageConfig as any).body = [...pageConfig.body, configData];
   }
   LowCodeModule.SET_PAGE_CONFIG({ ...pageConfig });
 };

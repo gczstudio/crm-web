@@ -20,6 +20,7 @@
     <CurdDialog :visible.sync="selectCurdVisible" @sure="selectCurdFn" />
     <FormDialog :visible.sync="selectFormVisible" @sure="selectFormFn" />
     <TableDialog :visible.sync="selectTableVisible" @sure="selectTableFn" />
+    <SelectPageDialog :visible.sync="selectPageVisible" @sure="selectPageFn" />
   </div>
 </template>
 
@@ -32,6 +33,7 @@ import SelectCardDialog from "@/components/Dialogs/SelectCardDialog.vue";
 import CurdDialog from "@/components/Dialogs/CurdDialog.vue";
 import FormDialog from "@/components/Dialogs/FormDialog.vue";
 import TableDialog from "@/components/Dialogs/TableDialog.vue";
+import SelectPageDialog from "@/components/Dialogs/SelectPageDialog.vue";
 import { LowCodeModule } from "@/store/modules/lowCode";
 import { appendToPageById } from "@/utils/lowCode";
 
@@ -57,6 +59,7 @@ export interface ICompItem {
     CurdDialog,
     FormDialog,
     TableDialog,
+    SelectPageDialog,
   },
 })
 export default class extends Vue {
@@ -74,6 +77,7 @@ export default class extends Vue {
         { type: "card", name: "指标卡", icon: "zhibiaoka" },
         { type: "leftTree", name: "左侧树", icon: "zhibiaoka" },
         { type: "commonSearch", name: "通用搜索", icon: "zhibiaoka" },
+        { type: "page", name: "页面", icon: "zhibiaoka" },
       ],
     },
     {
@@ -92,6 +96,7 @@ export default class extends Vue {
   selectFormVisible = false;
   selectTableVisible = false;
   selectCardVisible = false;
+  selectPageVisible = false;
 
   get layout() {
     return LowCodeModule.layout;
@@ -145,6 +150,9 @@ export default class extends Vue {
       case "div":
         this.setDivFn();
         break;
+      case "page":
+        this.selectPageVisible = true;
+        break;
     }
   }
 
@@ -166,6 +174,7 @@ export default class extends Vue {
         condition: JSON.stringify({
           moduleId: res.data[0]?.id,
         }),
+        size: 100,
       },
     });
     let result: Record<string, unknown> = {};
@@ -257,6 +266,15 @@ export default class extends Vue {
     });
   }
 
+  // 选择页面
+  selectPageFn(data: any) {
+    let pageConfig = JSON.parse(data[0].pageConfig);
+    appendToPageById(this.dataId, {
+      id: this.$util.guid(),
+      ...pageConfig,
+    });
+  }
+
   // 选择分栏
   setGridFn() {
     appendToPageById(this.dataId, {
@@ -297,8 +315,10 @@ export default class extends Vue {
   }
 
   // 选择选项卡
-  setTabFn() {
+  async setTabFn() {
+    let propData = await this.getTableConfig("el-tab");
     appendToPageById(this.dataId, {
+      ...propData,
       id: this.$util.guid(),
       type: "tab",
       tabType: "normal",

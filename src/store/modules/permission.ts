@@ -6,7 +6,7 @@ import { arrayToTree, getCheckedRole } from "@/utils";
 import Layout from "@/layout/index.vue";
 import Blank from "@/layout/components/Blank.vue";
 import router from "@/router";
-import RenderPage from "@/views/system/lowCodeMgt/pageMgt/renderTool/show.vue";
+import RenderShow from "@/views/system/lowCodeMgt/pageMgt/renderTool/show.vue";
 
 const addAsyncRoutes = (menu: any) => {
   // 讲menu转换成route结构
@@ -18,7 +18,7 @@ const addAsyncRoutes = (menu: any) => {
 
     // 如果关联组件存在时
     if (item.pageId) {
-      component = RenderPage;
+      component = RenderShow;
     }
     // 大屏驾驶舱特殊处理
     if (urls.includes("cockpit") && urlsLen === 2) {

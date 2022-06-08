@@ -1,41 +1,33 @@
 <template>
   <div class="render-common-search" v-editor.common-search="{ action: ['delete'] }">
-    <common-search v-model="inputVal" v-bind="data"></common-search>
+    <common-search v-model="inputVal" v-bind="data" @submit="searchFn"></common-search>
   </div>
 </template>
-<script>
-import request from "@/utils/request";
-import { backend } from "@/config";
+<script lang="ts">
+import { Component, Vue, Prop, Inject, Watch } from "vue-property-decorator";
 import CommonSearch from "@/components/CommonSearch/index.vue";
-export default {
+import { LowCodeModule } from "@/store/modules/lowCode";
+@Component({
   name: "RenderCommonSeach",
   components: {
     CommonSearch,
   },
-  props: {
-    data: {
-      type: Object,
-      default: () => ({}),
-    },
-  },
-  data() {
-    return {
-      inputVal: "",
-    };
-  },
-  watch: {
-    data: {
-      handler(val) {
-        console.log("zxl");
-      },
-      immediate: true,
-      deep: true,
-    },
-  },
-  methods: {},
-};
-</script>
-<style lang="scss" scoped>
-.render-left-tree {
+})
+export default class extends Vue {
+  @Inject("type") type!: string;
+  @Prop() data!: any;
+  inputVal = "";
+
+  get funcMap(): any {
+    return LowCodeModule.funcMap;
+  }
+
+  searchFn() {
+    let func = this.funcMap[this.data["search-comp-id"]];
+    func &&
+      func({
+        [this.data["search-key"]]: this.inputVal,
+      });
+  }
 }
-</style>
+</script>

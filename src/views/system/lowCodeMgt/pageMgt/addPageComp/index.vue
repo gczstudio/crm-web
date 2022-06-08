@@ -2,7 +2,7 @@
   <div class="addPageComp-container">
     <div class="header">
       <div class="yu-button-group">
-        <!-- <el-button class="yu-button-text" icon="iconfont icon-37yulan"><i></i>预览</el-button> -->
+        <el-button class="yu-button-text" icon="iconfont icon-37yulan" @click="previewFn"><i></i>预览</el-button>
         <el-button class="yu-button-text" icon="iconfont icon-baocun" @click="saveFn">保存</el-button>
         <el-button class="yu-button-text" icon="iconfont icon-fabu" @click="publishFn">发布</el-button>
         <el-button class="yu-button-text" icon="iconfont icon-fanhui1" @click="backFn">返回</el-button>
@@ -136,24 +136,8 @@ export default class extends Vue {
 
   // 选择布局
   selectLayoutFn(layout: { type: string; name: string; data: ILayoutListItem }) {
-    const { type, name, data } = layout;
-    // 布局格式转换
-    let bodyConfig: any = [];
-    bodyConfig[0] = {
-      layout: type,
-      title: name,
-      body: [],
-    };
-    if (layout.type === "fixed") {
-      bodyConfig[0].body = data.layoutConfig.split(",").map((item: string) => {
-        let curMode = mode.find((ele: IMode) => ele.type === item) as IMode;
-        return {
-          row: curMode.row,
-          col: curMode.col,
-        };
-      });
-    }
-    this.pageConfig.body = bodyConfig;
+    const { type } = layout;
+    this.pageConfig.layout = type;
     LowCodeModule.SET_PAGE_CONFIG(this.pageConfig);
   }
 
@@ -168,16 +152,26 @@ export default class extends Vue {
 
   updateActiveWidgetsWidth() {
     // 执行动画效果有300ms
+    let layoutDom = document.querySelector(".renderTool-container") as HTMLElement;
     let activeDom = document.querySelector(`div[data-editor-id="${this.activeEditorId}"]`) as HTMLElement;
     let activeWidgetsDom = document.querySelector(".editor-hlbox.selected") as HTMLElement;
     activeWidgetsDom.style.display = "none";
     setTimeout(() => {
-      if (activeWidgetsDom) {
+      if (activeWidgetsDom && activeDom) {
+        let activePos = activeDom.getBoundingClientRect(),
+          layoutPos = layoutDom.getBoundingClientRect();
         activeWidgetsDom.style.display = "block";
         activeWidgetsDom.style.width = activeDom.clientWidth + "px";
         activeWidgetsDom.style.height = activeDom.clientHeight + "px";
+        activeWidgetsDom.style.top = activePos.top - layoutPos.top + layoutDom.scrollTop + "px";
+        activeWidgetsDom.style.left = activePos.left - layoutPos.left + +layoutDom.scrollLeft + "px";
       }
     }, 400);
+  }
+
+  // 预览
+  previewFn() {
+    this.$router.push({ name: "Preview" });
   }
 
   // 保存
@@ -280,6 +274,7 @@ export default class extends Vue {
     }
     .center-box {
       flex: 1;
+      padding: 16px;
       width: 500px;
       background: #f2f2f4;
     }

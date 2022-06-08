@@ -134,6 +134,7 @@ export default class extends Vue {
           condition: JSON.stringify({
             moduleId: res.data[0]?.id,
           }),
+          size: 100,
         },
       }).then((res) => {
         this.formConfigList = res.data;
@@ -161,6 +162,7 @@ export default class extends Vue {
           condition: JSON.stringify({
             moduleId: res.data[0]?.id,
           }),
+          size: 100,
         },
       }).then((res) => {
         this.itemConfigList = res.data;

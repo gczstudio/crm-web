@@ -4,6 +4,7 @@
       <el-tab-pane label="选项卡属性" name="1">
         <yu-xform :model="tabConfigForm" label-width="100px">
           <yu-xform-group :column="1">
+            <yu-xform-item name="id" label="组件id" disabled></yu-xform-item>
             <yu-xform-item v-for="config in tabConfigList" :key="config.id" :name="config.proId" :label="config.proName" :placeholder="config.proId" v-bind="config"></yu-xform-item>
           </yu-xform-group>
         </yu-xform>
@@ -26,6 +27,8 @@
                     <yu-xform-group :column="1">
                       <yu-xform-item label="标题" ctype="input" type="text" name="label"></yu-xform-item>
                       <yu-xform-item label="标识符" ctype="input" type="text" name="name"></yu-xform-item>
+                      <yu-xform-item label="查询组件id" ctype="input" type="text" name="search-comp-id"></yu-xform-item>
+                      <yu-xform-item label="查询字段名" ctype="input" type="text" name="search-key"></yu-xform-item>
                     </yu-xform-group>
                   </yu-xform>
                   <div class="sort-fields">
@@ -96,8 +99,10 @@ export default class extends Vue {
   onDataChange() {
     const { body, tabType } = this._.cloneDeep(this.data);
     this.tabColumns = [...body];
-    console.log(tabType, "xxl");
-    this.tabConfigForm.type = tabType;
+    this.tabConfigForm = {
+      ...this.data,
+      type: tabType,
+    };
   }
 
   @Watch("tabConfigForm", { deep: true })
@@ -111,15 +116,13 @@ export default class extends Vue {
   }
 
   updateConfig() {
-    console.log("xxxx");
     let config = {
       ...this.data,
+      ...this.tabConfigForm,
       tabType: this.tabConfigForm.type,
       body: this.tabColumns,
     };
-
-    console.log(config, 9999);
-
+    delete config.type;
     setCompConfigById(this.data.id, config);
   }
 
@@ -141,6 +144,7 @@ export default class extends Vue {
           condition: JSON.stringify({
             moduleId: res.data[0]?.id,
           }),
+          size: 100,
         },
       }).then((res) => {
         formatConfitItem(res.data, () => {

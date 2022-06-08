@@ -1,30 +1,35 @@
 <!--编辑-->
-<script lang="tsx">
-import { Component, Vue, Prop, Ref, Watch, Provide } from "vue-property-decorator";
+<template>
+  <div class="renderTool-container" ref="renderBoxRef">
+    <div class="render-box" v-editor.render>
+      <render-type :data="[pageConfigData]" :layout="pageConfigData.layout"></render-type>
+      <preview-widgets></preview-widgets>
+    </div>
+  </div>
+</template>
+
+<script lang="ts">
+import { Component, Vue, Ref, Provide, Watch } from "vue-property-decorator";
 import { LowCodeModule } from "@/store/modules/lowCode";
-import { guid } from "@/utils";
 import PreviewWidgets from "./components/PreviewWidgets.vue";
-import RenderType from "./components/RenderType.vue";
 
 @Component({
   name: "RenderTool",
   components: {
     PreviewWidgets,
-    RenderType,
   },
 })
 export default class extends Vue {
-  @Ref("chunkRef") chunkRef: any;
+  @Ref("renderBoxRef") renderBoxRef: any;
   @Provide("type") type = "edit";
-  private chunkHeight = 0;
-  private activeFixedLayoutItem = -1;
-  private pageConfigData: any = {};
+
+  pageConfigData: Record<string, unknown> = {};
 
   get layout() {
     return LowCodeModule.layout;
   }
 
-  get pagConfig(): any {
+  get pageConfig(): any {
     return LowCodeModule.pageConfig;
   }
 
@@ -44,27 +49,16 @@ export default class extends Vue {
     return LowCodeModule.hasSideConfig;
   }
 
-  @Watch("pagConfig", { immediate: true })
+  @Watch("pageConfig", { immediate: true, deep: true })
   onPageConfigChange(val: any) {
+    console.log(val, 111);
     this.pageConfigData = val;
-    LowCodeModule.SET_LAYOUT(val.body[0].layout);
   }
 
   mounted() {
-    this.changeSize();
-    window.addEventListener("resize", this.changeSize);
     this.$el.addEventListener("mousemove", this.mousemoveFn);
     this.$el.addEventListener("mouseout", this.mouseoutFn);
     this.$el.addEventListener("click", this.clickFn);
-  }
-
-  destroyed() {
-    window.removeEventListener("resize", this.changeSize);
-  }
-
-  changeSize() {
-    if (!this.chunkRef) return;
-    this.chunkHeight = (this.chunkRef.clientWidth / 4 - 16) * 0.618;
   }
 
   mousemoveFn(e: Event) {
@@ -87,11 +81,11 @@ export default class extends Vue {
 
   findEditorDomUp(target: HTMLElement) {
     // 一直往上找到当前编辑的元素
-    if (target.className === "content") return;
+    if (target.className === "center-box") return;
     if (target.dataset.editorId) {
-      const { top: bTop, left: BLeft } = this.chunkRef.getBoundingClientRect();
+      const { top: bTop, left: BLeft } = this.renderBoxRef.getBoundingClientRect();
       const { width, height, top, left } = target.getBoundingClientRect();
-      let scrollTop = this.chunkRef.scrollTop;
+      let scrollTop = this.renderBoxRef.scrollTop;
       let widgetsInfo = {
         width: width + "px",
         height: height + "px",
@@ -104,112 +98,16 @@ export default class extends Vue {
     }
     target.parentNode && this.findEditorDomUp(target.parentNode as HTMLElement);
   }
-
-  getChunkStyle(item: { row: number; col: number }) {
-    if (!this.chunkHeight) return;
-    return {
-      width: `calc(${25 * item.col}% - 16px)`,
-      height: this.chunkHeight * item.row + (item.row - 1) * 16 + "px",
-    };
-  }
-
-  selectFixedLayoutItem(index: number) {
-    this.activeFixedLayoutItem = index;
-    LowCodeModule.SET_ACTIVE_FIXED_LAYOUT_ITEM(index);
-  }
-
-  render() {
-    return (
-      <div class={{ "renderTool-container": true, fixed: this.layout === "fixed" }} ref="chunkRef">
-        <div class="content">
-          {this.pageConfigData.body &&
-            this.pageConfigData.body.map((item: any) => {
-              return (
-                <div class="editor-main" data-editor-id={guid()}>
-                  {item.layout === "fixed" && (
-                    <div class="fixed-layout clearfix">
-                      {(item.body as any[]).map((ele: any, index: number) => {
-                        return (
-                          <div
-                            class={{ "layout-item": true, active: this.activeFixedLayoutItem === index }}
-                            key={index}
-                            style={this.getChunkStyle(ele)}
-                            onClick={() => this.selectFixedLayoutItem(index)}
-                          >
-                            <render-type data={[ele]}></render-type>
-                            {!ele.type && (
-                              <div class="tip">
-                                <i class="iconfont icon-zujianxinxi"></i>从左侧选择组件
-                              </div>
-                            )}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
-                  {item.layout === "none" && (
-                    <div class="none-layout">
-                      <render-type data={item.body}></render-type>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-        </div>
-        <preview-widgets></preview-widgets>
-      </div>
-    );
-  }
 }
 </script>
 
 <style lang="scss" scoped>
 .renderTool-container {
   position: relative;
-  padding: 16px;
   height: 100%;
   overflow-y: auto;
-  &.fixed {
-    padding: 0 16px 16px 0;
-    .content {
-      background: none;
-      box-shadow: none;
-    }
-  }
-  .content {
-    min-height: 100%;
-    background: #fff;
-    border-radius: 4px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
-  }
-  .layout-item {
-    cursor: pointer;
-    position: relative;
-    float: left;
-    margin: 16px 0 0 16px;
-    width: calc(25% - 16px);
-    height: 3rem;
-    overflow: hidden;
-    background: #fff;
-    border-radius: 5px;
-    position: relative;
-    &.active,
-    &:hover {
-      border: 1px dashed #007eff;
-    }
-    .tip {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      .iconfont {
-        color: #999;
-      }
-      color: #999;
-    }
-  }
-  .none-layout {
-    // padding: 16px;
+  .render-box {
+    padding: 16px;
   }
 }
 </style>

@@ -180,6 +180,7 @@ export default class extends Vue {
           condition: JSON.stringify({
             moduleId: res.data[0]?.id,
           }),
+          size: 100,
         },
       }).then((res) => {
         formatConfitItem(res.data, () => {

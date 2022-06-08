@@ -24,15 +24,15 @@
           </div>
           <div class="product-item__bottom">
             <div class="product-btn">
-              <i class="iconfont icon-eye"></i>
+              <i class="iconfont icon-yanjing1" style="position: relative; top: 1px"></i>
               <span>3255</span>
             </div>
-            <div class="product-btn">
-              <i class="iconfont icon-thumbs"></i>
+            <div class="product-btn dianzan">
+              <i class="iconfont icon-dianzan1"></i>
               <span>3255</span>
             </div>
-            <div class="product-btn">
-              <i class="iconfont icon-star"></i>
+            <div class="product-btn shoucang">
+              <i class="iconfont icon-shoucang"></i>
               <span>3255</span>
             </div>
           </div>
@@ -142,15 +142,28 @@ export default class extends Vue {
       .product-btn {
         flex: 8;
         text-align: center;
-        & > i {
-          vertical-align: middle;
-        }
         & > span {
-          vertical-align: middle;
           margin-left: 9px;
         }
         & + .product-btn {
           border-left: 1px solid #d8d8d8;
+        }
+        .iconfont {
+          color: #333;
+        }
+        &.dianzan {
+          cursor: pointer;
+          color: #f25a5a;
+          .iconfont {
+            color: #f25a5a;
+          }
+        }
+        &.shoucang {
+          cursor: pointer;
+          color: #f4bc28;
+          .iconfont {
+            color: #f4bc28;
+          }
         }
       }
     }

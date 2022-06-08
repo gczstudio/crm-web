@@ -43,7 +43,7 @@ export default class extends Vue {
 
   @Watch("pageConfig", { immediate: true })
   onPageConfigChange() {
-    this.active = this.pageConfig.body[0].layout;
+    this.active = this.pageConfig.layout;
   }
 
   clickFn(item: ILayoutItem) {

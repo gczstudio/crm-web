@@ -1,8 +1,8 @@
 <template>
   <div class="render-tab" v-editor.tab="{ action: ['delete'] }">
-    <el-tabs v-model="activeName" :type="data.tabType" :key="data.tabType" :class="{ 'tab-custom': data.tabType === 'custom' }" v-bind="data">
+    <el-tabs v-model="activeName" :type="data.tabType" :key="data.tabType" :class="{ 'tab-custom': data.tabType === 'custom' }" v-bind="data" @tab-click="tabClickFn">
       <el-tab-pane v-for="tab in tabs" v-bind="tab" :key="tab.id">
-        <div class="tabs-pane" v-editor.tab-pane="{ id: tab.id }">
+        <div v-if="activeName === tab.name" :class="['tabs-pane', type]" v-editor.tab-pane="{ id: tab.id }">
           <render-type v-if="tab.body && tab.body.length" :data="tab.body"></render-type>
         </div>
       </el-tab-pane>
@@ -20,6 +20,7 @@
 </template>
 
 <script lang="ts">
+import { LowCodeModule } from "@/store/modules/lowCode";
 import { Component, Vue, Prop, Inject, Watch } from "vue-property-decorator";
 @Component({
   name: "RenderTab",
@@ -34,10 +35,45 @@ export default class extends Vue {
     return this.data.body.find((item: any) => item.name === this.activeName)?.sortFields;
   }
 
+  get funcMap(): any {
+    return LowCodeModule.funcMap;
+  }
+
   @Watch("data", { immediate: true, deep: true })
   onDataChange() {
     this.tabs = this.data.body;
     this.activeName = this.tabs[0].name;
+  }
+
+  created() {
+    LowCodeModule.SET_ACTIVE_TAB_MAP({
+      [this.data.id]: this.tabs[0].name,
+    });
+  }
+
+  tabClickFn() {
+    // 将当前选中的tab存在vuex中，方便在render-div中使用
+    LowCodeModule.SET_ACTIVE_TAB_MAP({
+      [this.data.id]: this.activeName,
+    });
+    let activeTabData = this.data.body.find((item: any) => item.name === this.activeName);
+    let sort = "";
+    // 排序字段
+    if (activeTabData.sortFields) {
+      let sortData = activeTabData.sortFields && activeTabData.sortFields.find((item: any) => item.sortType);
+      sort = sortData ? `${sortData.key} ${sortData.sortType ? (sortData.sortType === "ascending" ? "asc" : "desc") : null}` : "";
+    }
+
+    console.log(activeTabData, 1312);
+    console.log(sort, 7777);
+    // 执行关联的组件的函数
+    let func = this.funcMap[activeTabData["search-comp-id"]];
+
+    func &&
+      func({
+        [activeTabData["search-key"]]: this.activeName,
+        sort,
+      });
   }
 
   // 点击排序
@@ -53,14 +89,12 @@ export default class extends Vue {
         this.$set(item, "sortType", undefined);
       }
     });
-    console.log(this.sortFields, 444);
+    this.tabClickFn();
   }
   // 获取下一个排序
   getNextSort(type: string) {
-    console.log(type, 222);
     let typeArr = ["ascending", "descending", undefined];
     let sortIndex = typeArr.indexOf(type) + 1;
-    console.log(sortIndex, 333);
     return sortIndex > 2 ? "ascending" : typeArr[sortIndex];
   }
 }
@@ -71,7 +105,9 @@ export default class extends Vue {
   position: relative;
 }
 .tabs-pane {
-  min-height: 40px;
+  &.edit {
+    min-height: 40px;
+  }
 }
 .tab-custom {
   ::v-deep &.el-tabs {

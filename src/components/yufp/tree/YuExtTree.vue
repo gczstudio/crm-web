@@ -1,5 +1,5 @@
 <template>
-  <el-scrollbar wrap-class="scrollbar-wrapper" :style="{ height: height + 'px' }">
+  <el-scrollbar wrap-class="scrollbar-wrapper" :style="{ height: (autoHeight ? curHeight : height) + 'px' }">
     <el-tree ref="tree" :node-key="dataId" :data="treeData" v-bind="$attrs" v-on="$listeners"></el-tree>
   </el-scrollbar>
 </template>
@@ -22,11 +22,15 @@ export default {
     },
     dataParams: {
       type: Object,
-      default: () => {},
+      default: () => ({}),
     },
     height: {
       type: Number,
       default: 500,
+    },
+    autoHeight: {
+      type: Boolean,
+      default: false,
     },
     expandLevel: {
       type: Number,
@@ -48,10 +52,12 @@ export default {
     return {
       originTreeData: [],
       treeData: [],
+      curHeight: 0,
     };
   },
   mounted() {
     this.remoteData();
+    this.curHeight = this.bHeight - this.$refs.tree.$el.getBoundingClientRect().top - this.adaptWidth;
   },
   methods: {
     filterByIds(data, ids) {

@@ -1,12 +1,13 @@
 <template>
   <div :class="{ 'render-type': true, 'render-type__fixed': layout === 'fixed' }">
     <div v-for="(item, index) in data" :key="index">
-      <component :is="'render-' + item.type" :data="item"></component>
+      <component :is="'render-' + item.type" :data="item" :layout="layout"></component>
     </div>
   </div>
 </template>
 <script lang="ts">
-import { Component, Vue, Prop } from "vue-property-decorator";
+import { Component, Vue, Prop, Watch, Inject } from "vue-property-decorator";
+import RenderPage from "./RenderPage.vue";
 import RenderChart from "./RenderChart.vue";
 import RenderCard from "./RenderCard.vue";
 import RenderCurd from "./RenderCurd.vue";
@@ -33,11 +34,17 @@ import RenderDiv from "./RenderDiv.vue";
     RenderCommonSearch,
     RenderTab,
     RenderDiv,
+    RenderPage,
   },
 })
 export default class extends Vue {
   @Prop({ default: () => [] }) data!: any;
   @Prop() layout!: string;
+  @Inject("type") type!: string;
+  @Watch("data")
+  onDataChange(val: any) {
+    console.log(val, "xff");
+  }
 }
 </script>
 <style lang="scss" scoped>

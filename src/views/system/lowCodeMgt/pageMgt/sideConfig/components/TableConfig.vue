@@ -4,6 +4,7 @@
       <el-tab-pane label="表格" name="1">
         <yu-xform :model="tableConfigForm" label-width="100px" key="table">
           <yu-xform-group :column="1">
+            <yu-xform-item name="id" label="组件id" disabled></yu-xform-item>
             <yu-xform-item v-for="config in tableConfigList" :key="config.id" :name="config.proId" :label="config.proName" :placeholder="config.proId" v-bind="config"></yu-xform-item>
           </yu-xform-group>
         </yu-xform>
@@ -109,6 +110,7 @@ export default class extends Vue {
     let config = {
       ...this.data,
       ...this.tableConfigForm,
+      api: this.tableConfigForm["data-url"],
       tableType: this.tableConfigForm.type,
       type: "table",
       columns: this.tableColumns,
@@ -135,6 +137,7 @@ export default class extends Vue {
           condition: JSON.stringify({
             moduleId: res.data[0]?.id,
           }),
+          size: 100,
         },
       }).then((res) => {
         this.tableConfigList = res.data;
@@ -162,6 +165,7 @@ export default class extends Vue {
           condition: JSON.stringify({
             moduleId: res.data[0]?.id,
           }),
+          size: 100,
         },
       }).then((res) => {
         formatConfitItem(res.data, () => {

@@ -37,6 +37,8 @@ export interface ILowCodeState {
   selectCardQuota: Record<string, unknown>;
   cardQuotaConfig: Record<string, unknown>;
   hasSideConfig: boolean; // 是否有左侧配置信息
+  funcMap: Record<string, unknown>;
+  activeTabMap: Record<string, unknown>;
 }
 
 @Module({ dynamic: true, store, name: "lowCode" })
@@ -45,12 +47,8 @@ class LowCode extends VuexModule implements ILowCodeState {
   activeFixedLayoutItem = -1;
   pageConfig = {
     type: "page",
-    body: [
-      {
-        layout: "none",
-        body: [],
-      },
-    ],
+    layout: "none",
+    body: [],
   };
   hoverWidgets = { width: "0px", height: "0px", top: "0px", left: "0px" };
   activeWidgets = { width: "0px", height: "0px", top: "0px", left: "0px" };
@@ -64,6 +62,8 @@ class LowCode extends VuexModule implements ILowCodeState {
   selectCardQuota = {};
   cardQuotaConfig = {};
   hasSideConfig = true;
+  funcMap = {};
+  activeTabMap = {};
 
   @Mutation
   SET_LAYOUT(payload: any) {
@@ -135,6 +135,16 @@ class LowCode extends VuexModule implements ILowCodeState {
     this.hasSideConfig = payload;
   }
 
+  @Mutation
+  SET_FUNC_MAP(payload: any) {
+    this.funcMap = { ...this.funcMap, ...payload };
+  }
+
+  @Mutation
+  SET_ACTIVE_TAB_MAP(payload: any) {
+    this.activeTabMap = { ...this.activeTabMap, ...payload };
+  }
+
   // 清除页面配置
   @Mutation
   CLEAR_PAGE_CONFIG() {
@@ -142,12 +152,8 @@ class LowCode extends VuexModule implements ILowCodeState {
     this.activeFixedLayoutItem = -1;
     this.pageConfig = {
       type: "page",
-      body: [
-        {
-          layout: "none",
-          body: [],
-        },
-      ],
+      layout: "none",
+      body: [],
     };
     this.hoverWidgets = { width: "0px", height: "0px", top: "0px", left: "0px" };
     this.activeWidgets = { width: "0px", height: "0px", top: "0px", left: "0px" };

@@ -6,25 +6,53 @@
   "description": "",
   "glyphs": [
     {
-      "icon_id": "30197242",
-      "name": "thumbs",
-      "font_class": "thumbs",
+      "icon_id": "30209687",
+      "name": "点赞(1)",
+      "font_class": "dianzan1",
       "unicode": "e66b",
       "unicode_decimal": 58987
     },
     {
-      "icon_id": "30197243",
-      "name": "eye",
-      "font_class": "eye",
+      "icon_id": "30209688",
+      "name": "联合 126",
+      "font_class": "custom",
       "unicode": "e66c",
       "unicode_decimal": 58988
     },
     {
-      "icon_id": "30197244",
-      "name": "star",
-      "font_class": "star",
+      "icon_id": "30209689",
+      "name": "列表",
+      "font_class": "liebiao",
       "unicode": "e66d",
       "unicode_decimal": 58989
+    },
+    {
+      "icon_id": "30209690",
+      "name": "收藏(1)",
+      "font_class": "shoucang1",
+      "unicode": "e66e",
+      "unicode_decimal": 58990
+    },
+    {
+      "icon_id": "30209691",
+      "name": "点赞",
+      "font_class": "dianzan",
+      "unicode": "e66f",
+      "unicode_decimal": 58991
+    },
+    {
+      "icon_id": "30209692",
+      "name": "收藏",
+      "font_class": "shoucang",
+      "unicode": "e670",
+      "unicode_decimal": 58992
+    },
+    {
+      "icon_id": "30209693",
+      "name": "眼睛",
+      "font_class": "yanjing1",
+      "unicode": "e671",
+      "unicode_decimal": 58993
     },
     {
       "icon_id": "29842325",

@@ -1,13 +1,13 @@
 <template>
-  <div class="render-table" v-editor.table="{ action: ['delete', 'drag'] }" :key="data.id">
-    <div class="switch-view">
+  <div class="render-table" v-editor.table="{ action: ['delete'] }" :key="data.id">
+    <div class="switch-view" v-if="data['switch-view']">
       <span>切换视图</span>
-      <div class="switch-tab">
-        <i class="iconfont icon-loudoutu active"></i>
-        <i class="iconfont icon-yibiaopan"></i>
+      <div class="switch-tab" @click="switchFn">
+        <i :class="['iconfont', 'icon-custom', active === 'custom' && 'active']"></i>
+        <i :class="['iconfont', 'icon-liebiao', active === 'table' && 'active']"></i>
       </div>
     </div>
-    <yu-xtable ref="refTable" :data="testData" row-number border v-bind="data" :type="data.tableType" :key="JSON.stringify(data)">
+    <yu-xtable ref="refTable" :data="testData" row-number border v-bind="data" :type="active" :key="JSON.stringify(data)">
       <template v-slot:default>
         <yu-xtable-column
           v-for="column in data.columns"
@@ -37,21 +37,26 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop, Watch, Inject } from "vue-property-decorator";
+import { Component, Vue, Prop, Watch, Inject, Ref } from "vue-property-decorator";
 import { backend } from "@/config";
+import { LowCodeModule } from "@/store/modules/lowCode";
 @Component({
   name: "RenderCurd",
 })
 export default class extends Vue {
   @Inject("type") type!: string;
   @Prop() data!: any;
+  @Ref("refTable") refTable: any;
   queryFormData = {};
   testData: any = [];
+  active = "custom";
 
   @Watch("data", { immediate: true, deep: true })
   onDataChange() {
-    let { url } = this.data;
+    console.log(this.data, "表格");
+    let { url, tableType } = this.data;
     console.log(this.data, 777);
+    this.active = tableType;
     if (!url) {
       this.data.columns.map((item: any) => {
         this.testData[0] = this.testData[0] || {};
@@ -62,12 +67,32 @@ export default class extends Vue {
     }
   }
 
+  created() {
+    LowCodeModule.SET_FUNC_MAP({ [this.data.id]: this.searchFn });
+  }
+
   getActionWidth(data: any[]) {
     let width = 0;
     data.map((item) => {
       width += item.value.split("-")[0].length * 15 + 10;
     });
     return width + 40;
+  }
+
+  // 切换视图
+  switchFn() {
+    this.active = this.active === "custom" ? "table" : "custom";
+  }
+
+  // 查询
+  searchFn(params?: any) {
+    let sort = params?.sort || "";
+    if (sort) delete params.sort;
+    this.refTable &&
+      this.refTable.remoteData({
+        condition: JSON.stringify(params),
+        sort,
+      });
   }
 }
 </script>
@@ -85,6 +110,7 @@ export default class extends Vue {
       background: rgba(0, 126, 255, 0.1);
       color: #999;
       border-radius: 10px;
+      user-select: none;
       i {
         cursor: pointer;
         font-size: 12px;
