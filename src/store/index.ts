@@ -18,6 +18,7 @@ import { ICustomerState } from "./modules/customer";
 import { IServiceState } from "./modules/service";
 import { IScreenState } from "./modules/screen";
 import { ILowCodeState } from "./modules/lowCode";
+import { IProductState } from "./modules/product";
 
 Vue.use(Vuex);
 
@@ -32,6 +33,7 @@ export interface IRootState {
   service: IServiceState;
   screen: IScreenState;
   lowCode: ILowCodeState;
+  product: IProductState;
 }
 
 // Declare empty store first, dynamically register all modules later.
